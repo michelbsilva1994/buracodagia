@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Security\RoleRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -25,15 +26,26 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('security.roles.create');
+        } catch (\Throwable $th) {
+            return $th;
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        //
+        try {
+            $role = new Role();
+            $role->name = $request->name;
+            $role->save();
+            return redirect()->route('role.index')->with('status','Perfil cadastrado com sucesso');
+        } catch (\Throwable $th) {
+            return redirect()->route('role.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**

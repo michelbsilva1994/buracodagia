@@ -4,21 +4,40 @@
         <div class="col-12">
             <h1 class="text-secondary mt-2">Perfis</h1>
         </div>
-        <div class="col-12 table-responsive">
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+        <div class="col-8 table-responsive">
             <table class="table align-middle">
                 <thead>
                     <tr>
                         <td>ID</td>
                         <td>Perfil</td>
+                        <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($roles as $role)
                     <tr>
-                        @foreach ($roles as $role)
                             <td>{{$role->id}}</td>
                             <td>{{$role->name}}</td>
-                        @endforeach
+                            <td class="d-flex">
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                <form action="" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <input class="btn btn-sm btn-outline-danger" type="submit" value="Remover">
+                                </form>
+                            </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
