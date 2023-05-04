@@ -14,7 +14,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <div class="col-8 table-responsive">
+        <div class="col-12 table-responsive">
             <table class="table align-middle">
                 <thead>
                     <tr>
@@ -29,8 +29,8 @@
                             <td>{{$role->id}}</td>
                             <td>{{$role->name}}</td>
                             <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
-                                <form action="" method="post">
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('role.edit', ['role'=>$role->id])}}">Editar</a>
+                                <form action="{{route('role.destroy', ['role'=>$role->id])}}" method="post">
                                     @csrf
                                     @method('delete')
                                     <input class="btn btn-sm btn-outline-danger" type="submit" value="Remover">
