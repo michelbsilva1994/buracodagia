@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('role', RoleController::class);
+    Route::resource('permission', PermissionController::class);
 });
 
 require __DIR__.'/auth.php';

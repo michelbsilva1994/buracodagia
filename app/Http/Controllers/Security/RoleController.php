@@ -65,7 +65,7 @@ class RoleController extends Controller
             $role = Role::where('id',$id)->first();
             return view('security.roles.edit', compact('role'));
         } catch (\Throwable $th) {
-            return redirect()->route('role.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('role.edit',$id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
 
     }
