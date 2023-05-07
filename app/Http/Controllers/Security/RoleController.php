@@ -42,9 +42,9 @@ class RoleController extends Controller
             $role = new Role();
             $role->name = $request->name;
             $role->save();
-            return redirect()->route('role.index')->with('status','Perfil cadastrado com sucesso!');
+            return redirect()->route('role.index')->with('status', 'Perfil cadastrado com sucesso!');
         } catch (\Throwable $th) {
-            return redirect()->route('role.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('role.create')->with('error', 'Ops, ocorreu um erro inesperado!' . $th);
         }
     }
 
@@ -62,12 +62,11 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         try {
-            $role = Role::where('id',$id)->first();
+            $role = Role::where('id', $id)->first();
             return view('security.roles.edit', compact('role'));
         } catch (\Throwable $th) {
-            return redirect()->route('role.edit',$id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('role.edit', $id)->with('error', 'Ops, ocorreu um erro inesperado!' . $th);
         }
-
     }
 
     /**
@@ -76,9 +75,9 @@ class RoleController extends Controller
     public function update(RoleRequest $request, string $id)
     {
         try {
-            $role = Role::where('id',$id)->first();
+            $role = Role::where('id', $id)->first();
             $role->update($request->all());
-            return redirect()->route('role.index')->with('status','Perfil alterado com sucesso!');
+            return redirect()->route('role.index')->with('status', 'Perfil alterado com sucesso!');
         } catch (\Throwable $th) {
             return $th;
         }
@@ -92,9 +91,45 @@ class RoleController extends Controller
         try {
             $role = Role::findOrFail($id);
             $role->delete();
-            return redirect()->route('role.index')->with('status','Perfil excluído com sucesso!');
+            return redirect()->route('role.index')->with('status', 'Perfil excluído com sucesso!');
         } catch (\Throwable $th) {
-            return redirect()->route('role.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('role.index')->with('error', 'Ops, ocorreu um erro inesperado!' . $th);
+        }
+    }
+
+    public function permissions($role)
+    {
+        $role = Role::where('id', $role)->first();
+        $permissions = Permission::all();
+
+        foreach ($permissions as $permission) {
+            if ($role->haspermissionTo($permission->name)) {
+                $permission->can = true;
+            } else {
+                $permission->can = false;
+            }
+        }
+
+        return view('security.roles.permissions', compact('role', 'permissions'));
+    }
+
+    public function permissionsSync(Request $request, $role)
+    {
+        try {
+            $permissionRequest = $request->except(['_token', '_method']);
+
+            foreach ($permissionRequest as $key => $value) {
+                $permissions[] = Permission::where('id', $key)->first();
+            }
+            $role = Role::where('id', $role)->first();
+            if (!empty($permissions)) {
+                $role->syncPermissions($permissions);
+            } else {
+                $role->syncPermissions(null);
+            }
+            return redirect()->route('role.permission', $role->id)->with('status','Perfil sincronizado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('role.permission', $role->id)->with('status','Ops, ocorreu um erro inesperado!' . $th);
         }
     }
 }

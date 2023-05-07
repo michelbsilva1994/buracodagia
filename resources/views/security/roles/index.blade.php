@@ -36,8 +36,9 @@
                                 <form action="{{route('role.destroy', ['role'=>$role->id])}}" method="post">
                                     @csrf
                                     @method('delete')
-                                    <input class="btn btn-sm btn-outline-danger" type="submit" value="Remover">
+                                    <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
                                 </form>
+                                <a href="{{route('role.permission', $role->id)}}" class="btn btn-sm btn-outline-info">Permissões</a>
                             </td>
                     </tr>
                     @endforeach
