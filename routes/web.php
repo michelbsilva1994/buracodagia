@@ -4,6 +4,8 @@ use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
+use App\Http\Controllers\Security\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
@@ -36,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('role', RoleController::class);
 
     Route::resource('permission', PermissionController::class);
+
+    Route::resource('user', UserController::class);
 });
 
 require __DIR__.'/auth.php';
