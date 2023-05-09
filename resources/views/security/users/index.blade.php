@@ -33,7 +33,7 @@
                             <td>{{$user->name}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('user.edit', ['user'=>$user->id])}}">Editar</a>
-                                <form action="" method="post">
+                                <form action="{{route('user.destroy', ['user'=>$user->id])}}" method="post">
                                     @csrf
                                     @method('delete')
                                     <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">

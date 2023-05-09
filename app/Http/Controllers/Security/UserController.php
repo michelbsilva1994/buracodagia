@@ -116,6 +116,12 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $user = $this->user->findorfail($id);
+            $user->delete();
+            return redirect()->route('user.index')->with('status','Usuário excluído com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('user.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }
