@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Security\UserRequest;
-use App\Http\Requests\Security\UserUpdateRequest;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 class UserController extends Controller
@@ -80,11 +82,33 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $user = $this->user->findorfail($id);
-        $user->update($request->all());
-        return redirect()->route('user.index')->with('status','Usuário alterado com sucesso!');
+        $request->validate([
+            'name' => ['required', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'password' => ['required'],
+        ],[
+            'name.required' => 'O campo nome é obrigatório!',
+            'name.max' => 'O campo nome deve ter no máximo 255 caracteres!',
+            'email.required' => 'O campo email é obrigatório!',
+            'email.email' => 'Email inválido, por favor informar um email válido!',
+            'email.max' =>  'O campo email deve ter no máximo 255 caracteres!',
+            'email.unique' => 'Email já está sendo utilizado, por favor informar outro email!',
+            'password.required' => 'O campo senha é obrigatório!'
+        ]);
+        try {
+            $user->update($request->all());
+            return redirect()->route('user.index')->with('status','Usuário alterado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('user.edit', $id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
