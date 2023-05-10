@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Security\RoleRequest;
+use App\Http\Requests\Security\RoleUpdateRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -72,7 +73,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, string $id)
+    public function update(RoleUpdateRequest $request, string $id)
     {
         try {
             $role = Role::where('id', $id)->first();
