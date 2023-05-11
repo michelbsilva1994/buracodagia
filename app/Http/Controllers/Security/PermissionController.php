@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Security\PermissionRequest;
+use App\Http\Requests\Security\PermissionUpdateRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,7 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PermissionRequest $request, string $id)
+    public function update(PermissionUpdateRequest $request, string $id)
     {
         try {
             $permission = Permission::findOrFail($id);
