@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Security\PermissionController;
 use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\UserController;
+use App\Http\Controllers\People\PhysicalPersonController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('permission', PermissionController::class);
 
     Route::resource('user', UserController::class);
+
+    Route::resource('physicalPerson', PhysicalPersonController::class);
 });
 
 require __DIR__.'/auth.php';
