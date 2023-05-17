@@ -7,8 +7,9 @@
                 <h2 class="text-secondary mt-2"> Cadastro Pessoa Física</h2>
             </div>
             <div class="col-12">
-                <form class="row" action="{{ route('physicalPerson.store') }}" method="post" class="mt-4" autocomplete="off">
+                <form class="row" action="{{ route('physicalPerson.update', ['physicalPerson'=>$physicalPerson->id]) }}" method="post" class="mt-4" autocomplete="off">
                     @csrf
+                    @method('PUT')
                     <div class="col-md-12">
                         <label for="name" class="text-secondary">Nome</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
@@ -77,7 +78,7 @@
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
-                        <a href="{{route('user.index')}}" class="btn btn-danger">Cancelar</a>
+                        <a href="{{route('physicalPerson.index')}}" class="btn btn-danger">Cancelar</a>
                     </div>
                 </form>
             </div>

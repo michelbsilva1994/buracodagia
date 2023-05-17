@@ -4,6 +4,7 @@ namespace App\Http\Controllers\People;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\People\PhysicalPersonRequest;
+use App\Http\Requests\People\PhysicalPersonUpdateRequest;
 use App\Models\People\PhysicalPerson;
 use Illuminate\Http\Request;
 
@@ -73,9 +74,15 @@ class PhysicalPersonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PhysicalPersonUpdateRequest $request, string $id)
     {
-        //
+        try {
+            $physicalPerson = $this->physicalPerson->findorfail($id);
+            $physicalPerson->update($request->all());
+            return redirect()->route('physicalPerson.index')->with('status','Cadastro alterado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('physicalPerson.edit',$physicalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -83,6 +90,12 @@ class PhysicalPersonController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $physicalPerson = $this->physicalPerson->findorfail($id);
+            $physicalPerson->delete();
+            return redirect()->route('physicalPerson.index')->with('status','Cadastro deletado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }
