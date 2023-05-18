@@ -12,13 +12,13 @@ class LegalPerson extends Model
     protected $fillable = [
         'corporate_name',
         'fantasy_name',
-        'birth_date',
         'email',
+        'telephone',
         'cnpj',
+        'cep',
         'public_place',
         'nr_public_place',
         'city',
-        'cep',
-        'telephone'
+        'state'
     ];
 }
