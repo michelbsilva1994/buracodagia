@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pavements as $pavement)
+                    @foreach ($pavementies as $pavement)
                     <tr>
                             <td>{{$pavement->id}}</td>
                             <td>{{$pavement->name}}</td>

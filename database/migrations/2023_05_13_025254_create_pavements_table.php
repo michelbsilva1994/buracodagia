@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pavements', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('status');
+            $table->char('status', 1);
             $table->timestamps();
         });
     }

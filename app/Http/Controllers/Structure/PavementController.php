@@ -17,8 +17,8 @@ class PavementController extends Controller
      */
     public function index()
     {
-        $pavements = $this->pavement->all();
-        return view('structure.pavement.index', compact('pavements'));
+        $pavementies = $this->pavement->all();
+        return view('structure.pavement.index', compact('pavementies'));
     }
 
     /**
@@ -38,7 +38,8 @@ class PavementController extends Controller
      */
     public function store(Request $request)
     {
-
+        $this->pavement->create($request->all());
+        return redirect()->route('pavement.index')->with('status', 'Pavimento cadastrado com sucesso!');
     }
 
     /**
