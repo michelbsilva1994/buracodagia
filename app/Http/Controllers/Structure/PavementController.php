@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Structure;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Structure\Pavement\PavementeRequest;
+use App\Http\Requests\Structure\Pavement\PavementeUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Structure\Pavement;
 
@@ -38,8 +40,12 @@ class PavementController extends Controller
      */
     public function store(Request $request)
     {
-        $this->pavement->create($request->all());
-        return redirect()->route('pavement.index')->with('status', 'Pavimento cadastrado com sucesso!');
+        try {
+            $this->pavement->create($request->all());
+            return redirect()->route('pavement.index')->with('status', 'Pavimento cadastrado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('pavement.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -55,15 +61,22 @@ class PavementController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pavement = $this->pavement->where('id',$id)->first();
+        return view('structure.pavement.edit', compact('pavement'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PavementeUpdateRequest $request, string $id)
     {
-        //
+        try {
+            $pavement = $this->pavement->where('id',$id)->first();
+            $pavement->update($request->all());
+            return redirect()->route('pavement.index')->with('status', 'Pavimento alterado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('pavement.edit', $pavement->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -71,6 +84,12 @@ class PavementController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $pavement = $this->pavement->where('id',$id)->first();
+            $pavement->delete();
+            return redirect()->route('pavement.index')->with('status', 'Pavimento excluído com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('pavement.edit', $pavement->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }

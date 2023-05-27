@@ -5,17 +5,19 @@ namespace App\Models\Structure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pavement extends Model
+class Store extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'status',
+        'type',
         'description',
-        'status'
+        'id_pavement'
     ];
 
-    public function store() {
-        $this->hasOne(Store::class, 'id_pavement', 'id');
+    public function pavement(){
+        return $this->belongsTo(Pavement::class, 'id_pavement', 'id');
     }
 }
