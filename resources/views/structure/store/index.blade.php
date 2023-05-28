@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Pavimentos</h1>
+            <h1 class="text-secondary mt-2">Lojas</h1>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -22,7 +22,8 @@
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Lojas</td>
+                        <td>Loja</td>
+                        <td>Pavimento</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
@@ -31,6 +32,7 @@
                     <tr>
                             <td>{{$store->id}}</td>
                             <td>{{$store->name}}</td>
+                            <td>{{$store->pavement->name}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('store.edit', ['store'=>$store->id])}}">Editar</a>
                                 <form action="{{route('store.destroy', ['store'=>$store->id])}}" method="post">

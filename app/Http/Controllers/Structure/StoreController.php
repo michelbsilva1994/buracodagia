@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Structure;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Structure\Srote\StoreRequest;
+use App\Http\Requests\Structure\Store\StoreRequest;
+use App\Http\Requests\Structure\Store\StoreUpdateRequest;
 use App\Models\Structure\Pavement;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class StoreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreUpdateRequest $request, string $id)
     {
         try {
             $store = $this->store->where('id',$id)->first();
@@ -91,6 +92,12 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $store = $this->store->where('id',$id)->first();
+            $store->delete();
+            return redirect()->route('store.index')->with('status', 'Loja excluída com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('store.update', $store->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }
