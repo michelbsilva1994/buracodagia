@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Contract\ContractController;
 use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Security\PermissionController;
@@ -49,6 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('legalPerson', LegalPersonController::class);
     Route::resource('pavement', PavementController::class);
     Route::resource('store', StoreController::class);
+
+    Route::resource('contract', ContractController::class);
 });
 
 require __DIR__.'/auth.php';
