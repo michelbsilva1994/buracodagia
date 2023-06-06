@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="mt-2 col-8">
             <div class="col-8">
-                <h2 class="text-secondary mt-2"> Cadastro Pessoa Física</h2>
+                <h2 class="text-secondary mt-2"> Cadastro Contrato</h2>
             </div>
             <div class="col-12">
                 <form class="row" action="{{route('contract.store')}}" method="post" class="mt-4" autocomplete="off">
@@ -29,6 +29,10 @@
                         </select>
                         @error('id_physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
+                    <div class="col-md-12">
+                        <label for="dt_contraction" class="text-secondary">Data inicial do contrato</label>
+                        <input type="date" class="form-control" name="dt_contraction" id="dt_contraction">
+                    </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
                         <a href="{{route('contract.index')}}" class="btn btn-danger">Cancelar</a>
@@ -44,7 +48,11 @@
 
             $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Pessoa Jurídica</label>'+
                                      '<select name="id_legal_person" id="id_legal_person" class="form-select">'+
-                                     '<option selected disabled>Selecione uma opção</option><option value="1">Pessoa Jurídica</option></select>');
+                                     '<option selected disabled>Selecione uma opção</option>'+
+                                     '@foreach($legalPerson as $person)'+
+                                     '<option value="{{$person->id}}">{{$person->fantasy_name}}</option>'+
+                                     '@endforeach'+
+                                     '</select>');
         });
         $("#type_person_pf").click(function(){
             $('#id_physical_person_label').remove();
