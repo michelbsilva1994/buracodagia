@@ -15,7 +15,7 @@
             </div>
         @endif
         <div>
-            <a href="{{route('legalPerson.create')}}" class="btn btn-success my-2"> + Novo Contrato</a>
+            <a href="{{route('contract.create')}}" class="btn btn-success my-2"> + Novo Contrato</a>
         </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">
