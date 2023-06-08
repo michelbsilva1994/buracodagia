@@ -13,6 +13,7 @@ class Contract extends Model
 
     protected $fillable = [
         'type_person',
+        'type_contract',
         'cpf',
         'cnpj',
         'name_contractor',

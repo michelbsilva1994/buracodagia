@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->char('type_person',2);
+            $table->string('type_contract');
             $table->string('cpf')->nullable();
             $table->string('cnpj')->nullable();
             $table->string('name_contractor');

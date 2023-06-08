@@ -44,11 +44,49 @@ class ContractController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->type_person === 'PF'){
-            $physicalPerson = $this->physicalPerson->where('id', $request->id_physical_person)->first();
-        }
-        if($request->type_person === 'PJ'){
-            $legalPerson = $this->legalPerson->where('id', $request->id_legal_person)->first();
+        try {
+            $contract = $this->contract;
+
+            if($request->type_person === 'PF'){
+                $physicalPerson = $this->physicalPerson->where('id', $request->id_physical_person)->first();
+
+                $contract->type_person = $request->type_person;
+                $contract->type_contract = $request->type_contract;
+                $contract->cpf = $physicalPerson->cpf;
+                $contract->name_contractor = $physicalPerson->name;
+                $contract->dt_contraction = $request->dt_contraction;
+                $contract->dt_renovation = null;
+                $contract->dt_finalization = null;
+                $contract->dt_cancellation = null;
+                $contract->dt_signature = null;
+                $contract->id_physical_person = $physicalPerson->id;
+                $contract->id_legal_person = null;
+
+                $contract->save();
+                return redirect()->route('contract.index')->with('status','Contrato Cadastrado com sucesso!');
+            }
+
+            if($request->type_person === 'PJ'){
+                $legalPerson = $this->legalPerson->where('id', $request->id_legal_person)->first();
+
+                $contract->type_person = $request->type_person;
+                $contract->type_contract = $request->type_contract;
+                $contract->cnpj = $legalPerson->cnpj;
+                $contract->name_contractor = $legalPerson->fantasy_name;
+                $contract->dt_contraction = $request->dt_contraction;
+                $contract->dt_renovation = null;
+                $contract->dt_finalization = null;
+                $contract->dt_cancellation = null;
+                $contract->dt_signature = null;
+                $contract->id_physical_person = null;
+                $contract->id_legal_person = $legalPerson->id;
+
+                $contract->save();
+
+                return redirect()->route('contract.index')->with('status','Contrato Cadastrado com sucesso!');
+            }
+        } catch (\Throwable $th) {
+                return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
