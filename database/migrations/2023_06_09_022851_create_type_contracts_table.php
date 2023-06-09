@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_pessoa_fisicas', function (Blueprint $table) {
+        Schema::create('type_contracts', function (Blueprint $table) {
             $table->id();
+            $table->string('value');
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_pessoa_fisicas');
+        Schema::dropIfExists('type_contracts');
     }
 };
