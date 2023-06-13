@@ -10,13 +10,7 @@
                 <form action="{{ route('typeContract.update', ['typeContract'=>$typeContract->id]) }}" method="post" class="mt-4 row" autocomplete="off">
                     @csrf
                     @method('PUT')
-                    <div class="col-md-3">
-                        <label for="value" class="text-secondary">Valor</label>
-                        <input type="text" class="form-control @error('value') is-invalid @enderror" id="value"
-                            name="value" value="{{ old('value') ?? $typeContract->value }}">
-                        @error('value')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="col-md-9">
+                    <div class="col-12">
                         <label for="description" class="text-secondary">Descrição</label>
                         <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
                             name="description" value="{{ old('description') ?? $typeContract->description}}">

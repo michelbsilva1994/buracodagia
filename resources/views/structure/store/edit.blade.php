@@ -35,9 +35,9 @@
                         <label for="type" class="text-secondary">Tipo da Loja</label>
                         <select name="type" id="type" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
-                            <option value="Quiosque" @if ($store->type === 'Quiosque') selected @endif>Quiosque</option>
-                            <option value="Loja" @if ($store->type === 'Loja') selected @endif>Loja</option>
-                            <option value="Galpão" @if ($store->type === 'Galpão') selected @endif>Galpão</option>
+                            @foreach ($storeType as $type)
+                                <option value="{{$type->description}}" @if($type->description === $type->description) selected @endif>{{$type->description}}</option>
+                            @endforeach
                         </select>
                         @error('type')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>

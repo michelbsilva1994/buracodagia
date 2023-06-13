@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Tipo de Contrato</h1>
+            <h1 class="text-secondary mt-2">Tipo de Loja</h1>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -15,7 +15,7 @@
             </div>
         @endif
         <div>
-            <a href="{{route('typeContract.create')}}" class="btn btn-success my-2"> + Novo</a>
+            <a href="{{route('storeType.create')}}" class="btn btn-success my-2"> + Novo</a>
         </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">
@@ -27,13 +27,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($typeContracts as $type)
+                    @foreach ($storeType as $type)
                     <tr>
                             <td>{{$type->id}}</td>
                             <td>{{$type->description}}</td>
                             <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('typeContract.edit', ['typeContract'=>$type->id])}}">Editar</a>
-                                <form action="{{route('typeContract.destroy', ['typeContract'=>$type->id])}}" method="post">
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('storeType.edit', ['storeType'=>$type->id])}}">Editar</a>
+                                <form action="{{route('storeType.destroy', ['storeType'=>$type->id])}}" method="post">
                                     @csrf
                                     @method('delete')
                                     <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">

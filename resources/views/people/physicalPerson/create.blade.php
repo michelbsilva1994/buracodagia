@@ -77,7 +77,7 @@
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
-                        <a href="{{route('user.index')}}" class="btn btn-danger">Cancelar</a>
+                        <a href="{{route('physicalPerson.index')}}" class="btn btn-danger">Cancelar</a>
                     </div>
                 </form>
             </div>

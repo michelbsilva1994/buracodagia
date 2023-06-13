@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Domain;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Domain\TypeContract\TypeContractRequest;
+use App\Http\Requests\Domain\TypeContract\TypeContractUpdateRequest;
 use App\Models\Domain\TypeContract;
 use Illuminate\Http\Request;
 
@@ -36,7 +38,7 @@ class TypeContractController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TypeContractRequest $request)
     {
         try {
             $this->typeContract->create($request->all());
@@ -71,7 +73,7 @@ class TypeContractController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(TypeContractUpdateRequest $request, string $id)
     {
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();

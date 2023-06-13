@@ -34,9 +34,9 @@
                         <label for="type" class="text-secondary">Tipo da Loja</label>
                         <select name="type" id="type" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
-                            <option value="Quiosque">Quiosque</option>
-                            <option value="Loja">Loja</option>
-                            <option value="Galpão">Galpão</option>
+                            @foreach ($storeType as $type)
+                                <option value="{{$type->description}}">{{$type->description}}</option>
+                            @endforeach
                         </select>
                         @error('type')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>

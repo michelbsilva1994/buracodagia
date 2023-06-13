@@ -5,7 +5,7 @@ namespace App\Models\Domain;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TypeContract extends Model
+class StoreType extends Model
 {
     use HasFactory;
 
