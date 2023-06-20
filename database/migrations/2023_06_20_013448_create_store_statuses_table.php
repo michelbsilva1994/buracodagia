@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stores', function (Blueprint $table) {
+        Schema::create('store_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('status');
-            $table->string('type');
-            $table->longText('description');
-
-            $table->bigInteger('id_pavement')->unsigned();
-            $table->foreign('id_pavement')->references('id')->on('pavements');
-
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('store_statuses');
     }
 };

@@ -22,14 +22,11 @@
                         @error('name')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" value="A" @if ($store->status === 'A') checked @endif>
-                            <label class="form-check-label" for="status">Ativo</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" value="I" @if ($store->status === 'I') checked @endif>
-                            <label class="form-check-label" for="status">Inativo</label>
-                        </div>
+                        <label for="status" class="text-secondary">Status</label>
+                        <select name="status" id="status" class="form-select">
+                            <option selected disabled>Selecione uma opção</option>
+                        </select>
+                        @error('status')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label for="type" class="text-secondary">Tipo da Loja</label>

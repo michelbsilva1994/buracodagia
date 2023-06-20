@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Contract\ContractController;
+use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
 use App\Http\Controllers\Domain\TypeContractController;
 use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController;
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('domain')->group(function(){
         Route::resource('typeContract', TypeContractController::class);
         Route::resource('storeType', StoreTypeController::class);
+        Route::resource('storeStatus', StoreStatusController::class);
     });
 
 });
