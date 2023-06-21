@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('store_statuses', function (Blueprint $table) {
             $table->id();
+            $table->char('value',1);
             $table->string('description');
+            $table->char('status',1);
             $table->timestamps();
         });
     }

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Domain\TypeContract;
+namespace App\Http\Requests\Domain\StoreStatus;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class TypeContractRequest extends FormRequest
+class StoreStatusUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +23,8 @@ class TypeContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value'=>['required','max:1','unique:type_contracts'],
-            'description' => ['required', 'max:255', 'unique:type_contracts']
+            'value' => ['required', 'max:1', Rule::unique('store_statuses')->ignore($this->route()->storeStatus)],
+            'description' => ['required', 'max:255', Rule::unique('store_statuses')->ignore($this->route()->storeStatus)]
         ];
     }
 

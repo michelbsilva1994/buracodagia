@@ -23,6 +23,7 @@ class TypeContractUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'value' => ['required', 'max:1', Rule::unique('type_contracts')->ignore($this->route()->typeContract)],
             'description' => ['required', 'max:255', Rule::unique('type_contracts')->ignore($this->route()->typeContract)]
         ];
     }
@@ -30,6 +31,9 @@ class TypeContractUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'value.required' => 'O campo valor é obrigatório!',
+            'value.max' => 'O campo valor deve ter no máximo 255 caracteres!',
+            'value.unique' => 'Valor já cadastrado, por favor verificar!',
             'description.required' => 'O campo descrição é obrigatório!',
             'description.max' => 'O campo descrição deve ter no máximo 255 caracteres!',
             'description.unique' => 'Descrição já cadastrado, por favor verificar!'

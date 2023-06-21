@@ -10,6 +10,8 @@ class StoreType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description'
+        'value',
+        'description',
+        'status'
     ];
 }

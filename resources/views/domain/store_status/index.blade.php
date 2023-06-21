@@ -22,6 +22,7 @@
                 <thead>
                     <tr>
                         <td>ID</td>
+                        <td>Valor</td>
                         <td>Descrição</td>
                         <td>Ações</td>
                     </tr>
@@ -30,6 +31,7 @@
                     @foreach ($storeStatus as $status)
                     <tr>
                             <td>{{$status->id}}</td>
+                            <td>{{$status->value}}</td>
                             <td>{{$status->description}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('storeStatus.edit', ['storeStatus'=>$status->id])}}">Editar</a>

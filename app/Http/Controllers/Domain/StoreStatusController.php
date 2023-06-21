@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Domain;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Domain\StoreStatus\StoreStatusRequest;
+use App\Http\Requests\Domain\StoreStatus\StoreStatusUpdateRequest;
 use App\Models\Domain\StoreStatus;
 use Illuminate\Http\Request;
 
@@ -36,7 +38,7 @@ class StoreStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStatusRequest $request)
     {
         try {
             $this->storeStatus->create($request->all());
@@ -70,7 +72,7 @@ class StoreStatusController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreStatusUpdateRequest $request, string $id)
     {
         try {
             $status = $this->storeStatus->where('id',$id)->first();

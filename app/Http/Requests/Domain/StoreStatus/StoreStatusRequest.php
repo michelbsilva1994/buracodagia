@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Domain\TypeContract;
+namespace App\Http\Requests\Domain\StoreStatus;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TypeContractRequest extends FormRequest
+class StoreStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class TypeContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value'=>['required','max:1','unique:type_contracts'],
-            'description' => ['required', 'max:255', 'unique:type_contracts']
+            'value' => ['required', 'max:1', 'unique:store_statuses'],
+            'description' => ['required', 'max:255', 'unique:store_statuses']
         ];
     }
 
@@ -38,4 +38,5 @@ class TypeContractRequest extends FormRequest
             'description.unique' => 'Descrição já cadastrado, por favor verificar!'
         ];
     }
+
 }

@@ -10,6 +10,8 @@ class TypeContract extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description'
+        'value',
+        'description',
+        'status'
     ];
 }
