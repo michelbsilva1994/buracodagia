@@ -19,14 +19,6 @@
                             <label class="form-check-label" for="type_person">PJ</label>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <label for="type_contract" class="text-secondary">Tipo de contrato</label>
-                        <select name="type_contract" id="type_contract" class="form-select">
-                            <option selected disabled>Selecione uma opção</option>
-                            <option value="aluguel">Aluguel</option>
-                            <option value="compra">Compra</option>
-                        </select>
-                    </div>
                     <div class="col-md-12" id="info_person">
                         <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>
                         <select name="id_physical_person" id="id_physical_person" class="form-select">
@@ -36,6 +28,15 @@
                                     @endforeach
                         </select>
                         @error('id_physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-md-12">
+                        <label for="type_contract" class="text-secondary">Tipo de contrato</label>
+                        <select name="type_contract" id="type_contract" class="form-select">
+                            <option selected disabled>Selecione uma opção</option>
+                            @foreach ($typeContracts as $typeContract)
+                                <option value="{{$typeContract->value}}">{{$typeContract->description}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-md-12">
                         <label for="dt_contraction" class="text-secondary">Data inicial do contrato</label>

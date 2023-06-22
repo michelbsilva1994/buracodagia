@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('status');
-            $table->string('type');
+            $table->char('status',2);
+            $table->char('type',2);
             $table->longText('description');
 
             $table->bigInteger('id_pavement')->unsigned();

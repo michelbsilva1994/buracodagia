@@ -25,6 +25,9 @@
                         <label for="status" class="text-secondary">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
+                            @foreach ($storeStatues as $storeStatus)
+                                <option value="{{$storeStatus->value}}" @if($store->value === $storeStatus->value) selected @endif>{{$storeStatus->description}}</option>
+                            @endforeach
                         </select>
                         @error('status')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
@@ -33,7 +36,7 @@
                         <select name="type" id="type" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                             @foreach ($storeType as $type)
-                                <option value="{{$type->description}}" @if($type->description === $type->description) selected @endif>{{$type->description}}</option>
+                                <option value="{{$type->value}}" @if($store->type === $type->value) selected @endif>{{$type->description}}</option>
                             @endforeach
                         </select>
                         @error('type')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror

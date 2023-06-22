@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Contract;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract\Contract;
+use App\Models\Domain\TypeContract;
 use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
 use Illuminate\Http\Request;
 
 class ContractController extends Controller
 {
-    public function __construct(Contract $contract, PhysicalPerson $physicalPerson, LegalPerson $legalPerson)
+    public function __construct(Contract $contract, PhysicalPerson $physicalPerson, LegalPerson $legalPerson, TypeContract $typeContract)
     {
         $this->contract = $contract;
         $this->physicalPerson = $physicalPerson;
         $this->legalPerson = $legalPerson;
+        $this->typeContract = $typeContract;
     }
     /**
      * Display a listing of the resource.
@@ -32,8 +34,9 @@ class ContractController extends Controller
     {
         $physicalPerson = $this->physicalPerson->all();
         $legalPerson = $this->legalPerson->all();
+        $typeContracts = $this->typeContract->where('status', 'A')->get();
         try {
-            return view('contract.create', compact(['physicalPerson', 'legalPerson']));
+            return view('contract.create', compact(['physicalPerson', 'legalPerson','typeContracts']));
         } catch (\Throwable $th) {
             return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Structure;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Structure\Store\StoreRequest;
 use App\Http\Requests\Structure\Store\StoreUpdateRequest;
+use App\Models\Domain\StoreStatus;
 use App\Models\Domain\StoreType;
 use App\Models\Structure\Pavement;
 use App\Models\Structure\Store;
@@ -12,11 +13,12 @@ use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
-    public function __construct(Store $store, Pavement $pavement, StoreType $storeType)
+    public function __construct(Store $store, Pavement $pavement, StoreType $storeType, StoreStatus $storeStatus)
     {
         $this->store = $store;
         $this->pavement = $pavement;
         $this->storeType = $storeType;
+        $this->storeStatus = $storeStatus;
     }
     /**
      * Display a listing of the resource.
@@ -33,9 +35,10 @@ class StoreController extends Controller
     public function create()
     {
         $pavementies = $this->pavement->where('status', 'A')->get();
-        $storeType =  $this->storeType->all();
+        $storeType =  $this->storeType->where('status', 'A')->get();
+        $storeStatues = $this->storeStatus->where('status', 'A')->get();
         try {
-            return view('structure.store.create', compact('pavementies', 'storeType'));
+            return view('structure.store.create', compact('pavementies', 'storeType','storeStatues'));
         } catch (\Throwable $th) {
             return redirect()->route('store.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
@@ -71,7 +74,8 @@ class StoreController extends Controller
             $pavementies = $this->pavement->where('status', 'A')->get();
             $store = $this->store->where('id',$id)->first();
             $storeType =  $this->storeType->all();
-            return view('structure.store.edit', compact('store', 'pavementies','storeType'));
+            $storeStatues = $this->storeStatus->where('status', 'A')->get();
+            return view('structure.store.edit', compact('store', 'pavementies','storeType','storeStatues'));
         } catch (\Throwable $th) {
             return view('structure.store.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
