@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('permission', PermissionController::class);
 
+    Route::get('user/{user}/roles', [UserController::class, 'roles'])->name('user.roles');
+    Route::put('user/{user}/roles/sync', [UserController::class, 'rolesSync'])->name('user.rolesSync');
     Route::resource('user', UserController::class);
 
     Route::resource('physicalPerson', PhysicalPersonController::class);

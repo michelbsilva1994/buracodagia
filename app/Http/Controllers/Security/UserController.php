@@ -10,13 +10,14 @@ use App\Http\Requests\Security\UserRequest;
 use App\Http\Requests\Security\UserUpdateRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
-
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function __construct(User $user)
+    public function __construct(User $user, Role $role)
     {
         $this->user = $user;
+        $this->role = $role;
     }
 
     /**
@@ -106,4 +107,36 @@ class UserController extends Controller
             return redirect()->route('user.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
+
+    public function roles($user){
+        $user = $this->user->where('id', $user)->first();
+        $roles = $this->role->all();
+
+        foreach($roles as $role){
+            if ($user->hasRole($role->name)) {
+                $role->can = true;
+            }else{
+                $role->can = false;
+            }
+        }
+        return view('security.users.role', compact('roles','user'));
+    }
+
+    public function rolesSync(Request $request, $user){
+        $roleRequest = $request->except('_token', '_method');
+
+        foreach ($roleRequest as $key => $value) {
+            $roles[] = Role::where('id',$key)->first();
+        }
+
+        $user = $this->user->where('id', $user)->first();
+            if (!empty($roles)) {
+                $user->syncRoles($roles);
+            }else{
+                $user->syncRoles(null);
+            }
+
+        return redirect()->route('user.roles',['user' => $user->id])->with('status','Perfis sincronizados com sucesso!');
+    }
+
 }

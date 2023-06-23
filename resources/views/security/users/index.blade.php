@@ -38,7 +38,7 @@
                                     @method('delete')
                                     <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
                                 </form>
-                                <a href="" class="btn btn-sm btn-outline-info">Perfis</a>
+                                <a href="{{route('user.roles', ['user' => $user->id])}}" class="btn btn-sm btn-outline-info">Perfis</a>
                             </td>
                     </tr>
                     @endforeach
