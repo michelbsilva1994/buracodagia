@@ -39,6 +39,7 @@
                             <td>{{$contract->cpf ?? $contract->cnpj}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                <a class="mr-3 btn btn-sm btn-outline-secondary" href="{{route('contract.show', ['contract' => $contract->id])}}">Detalhe</a>
                                 <form action="" method="post">
                                     @csrf
                                     @method('delete')

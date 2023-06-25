@@ -98,7 +98,8 @@ class ContractController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $contract = $this->contract->where('id',$id)->first();
+        return view('contract.show', compact('contract'));
     }
 
     /**
