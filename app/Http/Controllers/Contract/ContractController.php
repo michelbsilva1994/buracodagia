@@ -7,16 +7,19 @@ use App\Models\Contract\Contract;
 use App\Models\Domain\TypeContract;
 use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
+use App\Models\Structure\Store;
 use Illuminate\Http\Request;
 
 class ContractController extends Controller
 {
-    public function __construct(Contract $contract, PhysicalPerson $physicalPerson, LegalPerson $legalPerson, TypeContract $typeContract)
+    public function __construct(Contract $contract, PhysicalPerson $physicalPerson,
+                                LegalPerson $legalPerson, TypeContract $typeContract, Store $store)
     {
         $this->contract = $contract;
         $this->physicalPerson = $physicalPerson;
         $this->legalPerson = $legalPerson;
         $this->typeContract = $typeContract;
+        $this->store = $store;
     }
     /**
      * Display a listing of the resource.
@@ -99,7 +102,8 @@ class ContractController extends Controller
     public function show(string $id)
     {
         $contract = $this->contract->where('id',$id)->first();
-        return view('contract.show', compact('contract'));
+        $stores = $this->store->all();
+        return view('contract.show', compact(['contract', 'stores']));
     }
 
     /**
