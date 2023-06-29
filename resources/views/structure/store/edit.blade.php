@@ -26,7 +26,7 @@
                         <select name="status" id="status" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                             @foreach ($storeStatues as $storeStatus)
-                                <option value="{{$storeStatus->value}}" @if($store->value === $storeStatus->value) selected @endif>{{$storeStatus->description}}</option>
+                                <option value="{{$storeStatus->value}}" @if($store->status === $storeStatus->value) selected @endif>{{$storeStatus->description}}</option>
                             @endforeach
                         </select>
                         @error('status')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror

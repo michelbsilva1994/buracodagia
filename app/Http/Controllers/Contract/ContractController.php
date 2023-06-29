@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Contract;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract\Contract;
+use App\Models\Contract\ContractStore;
 use App\Models\Domain\TypeContract;
 use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
@@ -13,13 +14,15 @@ use Illuminate\Http\Request;
 class ContractController extends Controller
 {
     public function __construct(Contract $contract, PhysicalPerson $physicalPerson,
-                                LegalPerson $legalPerson, TypeContract $typeContract, Store $store)
+                                LegalPerson $legalPerson, TypeContract $typeContract, Store $store,
+                                ContractStore $contractStore)
     {
         $this->contract = $contract;
         $this->physicalPerson = $physicalPerson;
         $this->legalPerson = $legalPerson;
         $this->typeContract = $typeContract;
         $this->store = $store;
+        $this->contractStore = $contractStore;
     }
     /**
      * Display a listing of the resource.
@@ -102,8 +105,9 @@ class ContractController extends Controller
     public function show(string $id)
     {
         $contract = $this->contract->where('id',$id)->first();
-        $stores = $this->store->all();
-        return view('contract.show', compact(['contract', 'stores']));
+        $stores = $this->store->where('status','<>', 'L')->get();
+        $contractStore = $this->contractStore->all();
+        return view('contract.show', compact(['contract', 'stores', 'contractStore']));
     }
 
     /**
@@ -128,5 +132,21 @@ class ContractController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function contractStore(Request $request, $contract){
+        $contractStore = $this->contractStore;
+
+        $contractStore->id_store = $request->id_store;
+        $contractStore->id_contract = $contract;
+        $contractStore->store_price = $request->store_price;
+
+        $contractStore->save();
+
+        $store = $this->store->where('id',$request->id_store)->first();
+        $store->status = 'L';
+        $store->save();
+
+        return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
     }
 }

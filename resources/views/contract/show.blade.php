@@ -26,8 +26,36 @@
         <div>
             <hr>
             <h2 class="text-secondary text-center">Lojas</h2>
+            <div class="col-12 table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <td>Loja</td>
+                            <td>Valor</td>
+                            <td>Ações</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($contractStore as $store)
+                        <tr>
+                                <td>{{$store->id_store}}</td>
+                                <td>R$ {{$store->store_price}}</td>
+                                <td class="d-flex">
+                                    <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                    <a class="mr-3 btn btn-sm btn-outline-secondary" href="">Detalhe</a>
+                                    <form action="" method="post">
+                                        @csrf
+                                        @method('delete')
+                                        <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
+                                    </form>
+                                </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <div>
-                <form action="" method="post" class="mt-4 row" autocomplete="off">
+                <form action="{{route('contract.contractStore', ['contract' => $contract->id])}}" method="post" class="mt-4 row" autocomplete="off">
                     @csrf
                     <div class="col-6">
                         <label for="id_store" id="id_store" class="text-secondary">Loja</label>
@@ -41,7 +69,7 @@
                     </div>
                     <div class="col-6">
                         <label for="price_store" class="text-secondary">Valor</label>
-                        <input type="text" class="form-control @error('store_price') is-invalid @enderror" id="store_price"
+                        <input type="number" class="form-control @error('store_price') is-invalid @enderror" id="store_price"
                             placeholder="Insira o valor da loja" name="store_price" value="{{ old('store_price') }}">
                         @error('store_price')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
@@ -51,6 +79,5 @@
                 </form>
             </div>
         </div>
-
     </div>
 @endsection

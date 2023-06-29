@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pavement', PavementController::class);
     Route::resource('store', StoreController::class);
 
+    Route::post('contract/contractStore/{contract}', [ContractController::class, 'contractStore'])->name('contract.contractStore');
     Route::resource('contract', ContractController::class);
 
     /**Domain */
