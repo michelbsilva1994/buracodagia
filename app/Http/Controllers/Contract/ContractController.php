@@ -105,7 +105,7 @@ class ContractController extends Controller
     public function show(string $id)
     {
         $contract = $this->contract->where('id',$id)->first();
-        $stores = $this->store->where('status','<>', 'L')->get();
+        $stores = $this->store->where('status', 'A')->get();
         $contractStore = $this->contractStore->all();
         return view('contract.show', compact(['contract', 'stores', 'contractStore']));
     }
@@ -132,6 +132,15 @@ class ContractController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function signContract(string $contract){
+        $contract = $this->contract->where('id', $contract)->first();
+
+        $contract->dt_signature = date('Y/m/d');
+        $contract->save();
+
+        return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
     }
 
     public function contractStore(Request $request, $contract){
