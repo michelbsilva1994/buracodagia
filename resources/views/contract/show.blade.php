@@ -16,11 +16,13 @@
         @endif
         <div class="d-flex">
                 <a href="{{route('contract.index')}}" class="btn btn-danger mr-2">Voltar</a>
-                <form action="{{ route('contract.singContract', ['contract'=>$contract->id]) }}" method="post" autocomplete="off">
-                    @csrf
-                    @method('PUT')
-                    <input class="btn btn-success" type="submit" value="Assinar Contrato">
-                </form>
+                @if(empty($contract->dt_signature))
+                    <form action="{{ route('contract.singContract', ['contract'=>$contract->id]) }}" method="post" autocomplete="off">
+                        @csrf
+                        @method('PUT')
+                        <input class="btn btn-success" type="submit" value="Assinar Contrato">
+                    </form>
+                @endif
         </div>
         <div class="mt-5">
             <h3 class="text-secondary">Tipo de Pessoa: {{$contract->type_person}}</h3>
@@ -59,6 +61,7 @@
                     </tbody>
                 </table>
             </div>
+            @if(empty($contract->dt_signature))
             <div>
                 <form action="{{route('contract.contractStore', ['contract' => $contract->id])}}" method="post" class="mt-4 row" autocomplete="off">
                     @csrf
@@ -83,6 +86,7 @@
                     </div>
                 </form>
             </div>
+            @endif
         </div>
     </div>
 @endsection

@@ -135,27 +135,39 @@ class ContractController extends Controller
     }
 
     public function signContract(string $contract){
-        $contract = $this->contract->where('id', $contract)->first();
-
-        $contract->dt_signature = date('Y/m/d');
-        $contract->save();
-
-        return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
+        try {
+            $contract = $this->contract->where('id', $contract)->first();
+            if(empty($contract->dt_signature)){
+                $contract->dt_signature = date('Y/m/d');
+                $contract->save();
+                return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
+            }else{
+                return redirect()->route('contract.show', $contract)->with('error', 'Contrato já assinado!');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     public function contractStore(Request $request, $contract){
-        $contractStore = $this->contractStore;
+        try {
+            $contractStore = $this->contractStore;
+            if(empty($contract->dt_signature)){
+                $contractStore->id_store = $request->id_store;
+                $contractStore->id_contract = $contract;
+                $contractStore->store_price = $request->store_price;
+                $contractStore->save();
 
-        $contractStore->id_store = $request->id_store;
-        $contractStore->id_contract = $contract;
-        $contractStore->store_price = $request->store_price;
+                $store = $this->store->where('id',$request->id_store)->first();
+                $store->status = 'L';
+                $store->save();
 
-        $contractStore->save();
-
-        $store = $this->store->where('id',$request->id_store)->first();
-        $store->status = 'L';
-        $store->save();
-
-        return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
+                return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
+            }else{
+                return redirect()->route('contract.show', $contract)->with('error', 'Não foi possível adicionar a loja, pois o contrato já está assinado!');
+            }
+        } catch (\Throwable $th) {
+                return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }
