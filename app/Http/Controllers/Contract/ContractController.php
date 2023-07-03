@@ -116,7 +116,20 @@ class ContractController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $contract = $this->contract->where('id', $id)->first();
+            $physicalPerson = $this->physicalPerson->all();
+            $legalPerson = $this->legalPerson->all();
+            $typeContracts = $this->typeContract->where('status', 'A')->get();
+
+            if(empty($contract->dt_signature)){
+                return view('contract.edit', compact(['contract','physicalPerson','legalPerson','typeContracts']));
+            }else{
+                return redirect()->route('contract.index')->with('alert', 'Não foi possível alterar o contrato, pois o contrato já está assinado!');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -143,7 +156,7 @@ class ContractController extends Controller
                 $contract->save();
                 return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
             }else{
-                return redirect()->route('contract.show', $contract)->with('error', 'Contrato já assinado!');
+                return redirect()->route('contract.show', $contract)->with('alert', 'Contrato já assinado!');
             }
         } catch (\Throwable $th) {
             return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -165,7 +178,7 @@ class ContractController extends Controller
 
                 return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
             }else{
-                return redirect()->route('contract.show', $contract)->with('error', 'Não foi possível adicionar a loja, pois o contrato já está assinado!');
+                return redirect()->route('contract.show', $contract)->with('alert', 'Não foi possível adicionar a loja, pois o contrato já está assinado!');
             }
         } catch (\Throwable $th) {
                 return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);

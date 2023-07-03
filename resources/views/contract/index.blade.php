@@ -14,6 +14,11 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if (session('alert'))
+            <div class="alert alert-warning" role="alert">
+                {{ session('alert') }}
+            </div>
+        @endif
         <div>
             <a href="{{route('contract.create')}}" class="btn btn-success my-2"> + Novo Contrato</a>
         </div>
@@ -38,7 +43,7 @@
                             <td>{{$contract->name_contractor}}</td>
                             <td>{{$contract->cpf ?? $contract->cnpj}}</td>
                             <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('contract.edit', ['contract' => $contract->id])}}">Editar</a>
                                 <a class="mr-3 btn btn-sm btn-outline-secondary" href="{{route('contract.show', ['contract' => $contract->id])}}">Detalhe</a>
                                 <form action="" method="post">
                                     @csrf
