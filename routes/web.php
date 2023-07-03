@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pavement', PavementController::class);
     Route::resource('store', StoreController::class);
 
+    Route::delete('contract/{contractRemoveStore}/removeStore', [ContractController::class, 'contractRemoveStore'])->name('contract.removeStore');
     Route::put('contract/signContract/{contract}', [ContractController::class, 'signContract'])->name('contract.singContract');
     Route::post('contract/contractStore/{contract}', [ContractController::class, 'contractStore'])->name('contract.contractStore');
     Route::resource('contract', ContractController::class);

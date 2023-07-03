@@ -37,25 +37,30 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
+                            <td>#</td>
                             <td>Loja</td>
                             <td>Valor</td>
-                            <td>Ações</td>
+                            @if(empty($contract->dt_signature))
+                                <td>Ações</td>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($contractStore as $store)
                         <tr>
+                                <td>{{$store->id}}</td>
                                 <td>{{$store->id_store}}</td>
                                 <td>R$ {{$store->store_price}}</td>
-                                <td class="d-flex">
-                                    <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
-                                    <a class="mr-3 btn btn-sm btn-outline-secondary" href="">Detalhe</a>
-                                    <form action="" method="post">
-                                        @csrf
-                                        @method('delete')
-                                        <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
-                                    </form>
-                                </td>
+                                @if(empty($contract->dt_signature))
+                                    <td class="d-flex">
+                                        <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                        <form action="{{route('contract.removeStore',['contractRemoveStore'=>$store->id])}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
+                                        </form>
+                                    </td>
+                                @endif
                         </tr>
                         @endforeach
                     </tbody>

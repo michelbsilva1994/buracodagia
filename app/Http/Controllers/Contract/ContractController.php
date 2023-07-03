@@ -72,7 +72,8 @@ class ContractController extends Controller
                 $contract->id_legal_person = null;
 
                 $contract->save();
-                return redirect()->route('contract.index')->with('status','Contrato Cadastrado com sucesso!');
+
+                return redirect()->route('contract.show', $contract->id)->with('status','Contrato Cadastrado com sucesso!');
             }
 
             if($request->type_person === 'PJ'){
@@ -105,8 +106,8 @@ class ContractController extends Controller
     public function show(string $id)
     {
         $contract = $this->contract->where('id',$id)->first();
-        $stores = $this->store->where('status', 'A')->get();
-        $contractStore = $this->contractStore->all();
+        $stores = $this->store->where('status','<>', 'O')->get();
+        $contractStore = $this->contractStore->where('id_contract',$contract->id)->get();
         return view('contract.show', compact(['contract', 'stores', 'contractStore']));
     }
 
@@ -159,7 +160,7 @@ class ContractController extends Controller
                 $contractStore->save();
 
                 $store = $this->store->where('id',$request->id_store)->first();
-                $store->status = 'L';
+                $store->status = 'O';
                 $store->save();
 
                 return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
@@ -168,6 +169,26 @@ class ContractController extends Controller
             }
         } catch (\Throwable $th) {
                 return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
+    }
+
+    public function contractRemoveStore($contractRemoveStore){
+        try {
+            $contractStore = $this->contractStore->where('id', $contractRemoveStore)->first();
+            $contract = $this->contract->where('id', $contractStore->id_contract)->first();
+            if(empty($contract->dt_signature)){
+                $contractStore->delete();
+
+                $store = $this->store->where('id', $contractStore->id_store)->first();
+                $store->status = 'A';
+                $store->save();
+
+                return redirect()->route('contract.show', $contractStore->id_contract)->with('status','Loja removida do contrato!');
+            }else{
+                return redirect()->route('contract.show', $contract->id)->with('error', 'Não foi possível remover a loja, pois o contrato já está assinado!');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 }
