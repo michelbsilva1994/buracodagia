@@ -24,9 +24,6 @@
                         <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>
                         <select name="id_physical_person" id="id_physical_person" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
-                                    @foreach($physicalPerson as $person)
-                                        <option value="{{$person->id}}" @if($person->id === $contract->id_physical_person) selected @endif>{{$person->name}}</option>
-                                    @endforeach
                         </select>
                         @error('id_physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
@@ -52,6 +49,38 @@
         </div>
     </div>
     <script>
+        $(document).ready(function(){
+            let type_person_pj = $('#type_person_pj').prop('checked');
+            let type_person_pf = $('#type_person_pf').prop('checked');
+
+            if(type_person_pj == true){
+                $('#id_physical_person_label').remove();
+                $('#id_physical_person').remove();
+
+                $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Pessoa Jurídica</label>'+
+                                     '<select name="id_legal_person" id="id_legal_person" class="form-select">'+
+                                     '<option selected disabled>Selecione uma opção</option>'+
+                                     '@foreach($legalPerson as $person)'+
+                                     '<option value="{{$person->id}}" @if($person->id === $contract->id_legal_person) selected @endif>{{$person->fantasy_name}}</option>'+
+                                     '@endforeach'+
+                                     '</select>')
+            }
+            if(type_person_pf == true){
+                $('#id_physical_person_label').remove();
+                $('#id_physical_person').remove();
+                $('#id_legal_person_label').remove();
+                $('#id_legal_person').remove();
+
+                $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>'+
+                                     '<select name="id_physical_person" id="id_physical_person" class="form-select">'+
+                                     '<option selected disabled>Selecione uma opção</option>'+
+                                     '@foreach($physicalPerson as $person)'+
+                                        '<option value="{{$person->id}}" @if($person->id === $contract->id_physical_person) selected @endif>{{$person->name}}</option>'+
+                                     '@endforeach'+
+                                     '</select>')
+            }
+        });
+
         $("#type_person_pj").click(function(){
             $('#id_physical_person_label').remove();
             $('#id_physical_person').remove();
@@ -64,6 +93,7 @@
                                      '@endforeach'+
                                      '</select>');
         });
+
         $("#type_person_pf").click(function(){
             $('#id_physical_person_label').remove();
             $('#id_physical_person').remove();
