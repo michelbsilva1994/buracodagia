@@ -45,7 +45,7 @@
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('contract.edit', ['contract' => $contract->id])}}">Editar</a>
                                 <a class="mr-3 btn btn-sm btn-outline-secondary" href="{{route('contract.show', ['contract' => $contract->id])}}">Detalhe</a>
-                                <form action="" method="post">
+                                <form action="{{route('contract.destroy', ['contract' => $contract->id])}}" method="post">
                                     @csrf
                                     @method('delete')
                                     <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">

@@ -121,11 +121,16 @@ class ContractController extends Controller
             $physicalPerson = $this->physicalPerson->all();
             $legalPerson = $this->legalPerson->all();
             $typeContracts = $this->typeContract->where('status', 'A')->get();
+            $contractStore = $this->contractStore->where('id_contract', $contract->id)->count();
 
-            if(empty($contract->dt_signature)){
-                return view('contract.edit', compact(['contract','physicalPerson','legalPerson','typeContracts']));
+            if(empty($contract->dt_signature )){
+                if($contractStore === 0){
+                    return view('contract.edit', compact(['contract','physicalPerson','legalPerson','typeContracts']));
+                }else{
+                    return redirect()->route('contract.index')->with('alert', 'O contrato nº: '.$contract->id.' tem lojas vínculada, por favor remover!');
+                }
             }else{
-                return redirect()->route('contract.index')->with('alert', 'Não foi possível alterar o contrato, pois o contrato já está assinado!');
+                return redirect()->route('contract.index')->with('alert', 'Não foi possível alterar o contrato nº: '.$contract->id.' , pois o contrato já está assinado!');
             }
         } catch (\Throwable $th) {
             return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -137,7 +142,13 @@ class ContractController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $contract = $this->contract->findorfail($id);
+            $contract->update($request->all());
+            return redirect()->route('contract.show', $id)->with('status', 'O contrato nº: '.$contract->id.' foi alterado com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -145,7 +156,24 @@ class ContractController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $contract = $this->contract->where('id', $id)->first();
+            $contractStore = $this->contractStore->where('id_contract', $contract->id)->count();
+            if(empty($contract->dt_signature )){
+                if($contractStore === 0){
+                    $contract->delete();
+                    return redirect()->route('contract.index')->with('status', 'O contrato nº: '.$contract->id.' foi excluído com sucesso!');
+                }else{
+                    return redirect()->route('contract.index')->with('alert', 'O contrato nº: '.$contract->id.' tem lojas vínculada, por favor remover!');
+                }
+            }else{
+                return redirect()->route('contract.index')->with('alert', 'Não foi possível excluir o contrato nº: '.$contract->id.' , pois o contrato já está assinado!');
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
+
     }
 
     public function signContract(string $contract){

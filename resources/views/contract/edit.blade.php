@@ -7,8 +7,9 @@
                 <h2 class="text-secondary mt-2"> Cadastro Contrato</h2>
             </div>
             <div class="col-12">
-                <form class="row" action="" method="post" class="mt-4" autocomplete="off">
+                <form class="row" action="{{route('contract.update', ['contract' => $contract->id])}}" method="post" class="mt-4" autocomplete="off">
                     @csrf
+                    @method('PUT')
                     <div class="col-md-12">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="type_person" id="type_person_pf" value="PF" @if($contract->type_person === 'PF') checked @endif>
@@ -34,7 +35,7 @@
                         <select name="type_contract" id="type_contract" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                             @foreach ($typeContracts as $typeContract)
-                                <option value="{{$typeContract->value}}">{{$typeContract->description}}</option>
+                                <option value="{{$typeContract->value}}" @if($typeContract->value === $contract->type_contract) selected @endif>{{$typeContract->description}}</option>
                             @endforeach
                         </select>
                     </div>
