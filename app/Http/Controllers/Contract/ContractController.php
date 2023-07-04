@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Contract;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Contract\ContractRequest;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
 use App\Models\Domain\TypeContract;
@@ -51,13 +52,13 @@ class ContractController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ContractRequest $request)
     {
         try {
             $contract = $this->contract;
 
             if($request->type_person === 'PF'){
-                $physicalPerson = $this->physicalPerson->where('id', $request->id_physical_person)->first();
+                $physicalPerson = $this->physicalPerson->where('id', $request->id_person)->first();
 
                 $contract->type_person = $request->type_person;
                 $contract->type_contract = $request->type_contract;
@@ -77,7 +78,7 @@ class ContractController extends Controller
             }
 
             if($request->type_person === 'PJ'){
-                $legalPerson = $this->legalPerson->where('id', $request->id_legal_person)->first();
+                $legalPerson = $this->legalPerson->where('id', $request->id_person)->first();
 
                 $contract->type_person = $request->type_person;
                 $contract->type_contract = $request->type_contract;
@@ -140,13 +141,13 @@ class ContractController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ContractRequest $request, string $id)
     {
         try {
             $contract = $this->contract->findorfail($id);
 
             if($request->type_person === 'PF'){
-                $physicalPerson = $this->physicalPerson->where('id', $request->id_physical_person)->first();
+                $physicalPerson = $this->physicalPerson->where('id', $request->id_person)->first();
 
                 $contract->type_person = $request->type_person;
                 $contract->type_contract = $request->type_contract;
@@ -166,7 +167,7 @@ class ContractController extends Controller
             }
 
             if($request->type_person === 'PJ'){
-                $legalPerson = $this->legalPerson->where('id', $request->id_legal_person)->first();
+                $legalPerson = $this->legalPerson->where('id', $request->id_person)->first();
 
                 $contract->type_person = $request->type_person;
                 $contract->type_contract = $request->type_contract;
@@ -184,8 +185,6 @@ class ContractController extends Controller
 
                 return redirect()->route('contract.index')->with('status','Contrato nº: '.$contract->id.' alterado com sucesso!');
             }
-            //$contract->update($request->all());
-            //return redirect()->route('contract.show', $id)->with('status', 'O contrato nº: '.$contract->id.' foi alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }

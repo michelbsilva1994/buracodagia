@@ -12,22 +12,22 @@
                     <div class="col-md-12">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="type_person" id="type_person_pf" value="PF" checked>
-                            <label class="form-check-label" for="type_person">PF</label>
+                            <label class="form-check-label" for="type_person_pf">PF</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="type_person" id="type_person_pj" value="PJ">
-                            <label class="form-check-label" for="type_person">PJ</label>
+                            <label class="form-check-label" for="type_person_pj">PJ</label>
                         </div>
                     </div>
                     <div class="col-md-12" id="info_person">
-                        <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>
-                        <select name="id_physical_person" id="id_physical_person" class="form-select">
+                        <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Contratante</label>
+                        <select name="id_person" id="id_physical_person" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                                     @foreach($physicalPerson as $person)
                                         <option value="{{$person->id}}">{{$person->name}}</option>
                                     @endforeach
                         </select>
-                        @error('id_physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                        @error('id_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-12">
                         <label for="type_contract" class="text-secondary">Tipo de contrato</label>
@@ -37,10 +37,12 @@
                                 <option value="{{$typeContract->value}}">{{$typeContract->description}}</option>
                             @endforeach
                         </select>
+                        @error('type_contract')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-12">
                         <label for="dt_contraction" class="text-secondary">Data inicial do contrato</label>
                         <input type="date" class="form-control" name="dt_contraction" id="dt_contraction">
+                        @error('dt_contraction')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
@@ -55,8 +57,8 @@
             $('#id_physical_person_label').remove();
             $('#id_physical_person').remove();
 
-            $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Pessoa Jurídica</label>'+
-                                     '<select name="id_legal_person" id="id_legal_person" class="form-select">'+
+            $('#info_person').append('<label for="id_legal_person" id="id_legal_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_legal_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($legalPerson as $person)'+
                                      '<option value="{{$person->id}}">{{$person->fantasy_name}}</option>'+
@@ -69,8 +71,8 @@
             $('#id_legal_person_label').remove();
             $('#id_legal_person').remove();
 
-            $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>'+
-                                     '<select name="id_physical_person" id="id_physical_person" class="form-select">'+
+            $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_physical_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($physicalPerson as $person)'+
                                         '<option value="{{$person->id}}">{{$person->name}}</option>'+

@@ -13,19 +13,21 @@
                     <div class="col-md-12">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="type_person" id="type_person_pf" value="PF" @if($contract->type_person === 'PF') checked @endif>
-                            <label class="form-check-label" for="type_person">PF</label>
+                            <label class="form-check-label" for="type_person_pf">PF</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="type_person" id="type_person_pj" value="PJ" @if($contract->type_person === 'PJ') checked @endif>
-                            <label class="form-check-label" for="type_person">PJ</label>
+                            <label class="form-check-label" for="type_person_pj">PJ</label>
                         </div>
                     </div>
-                    <div class="col-md-12" id="info_person">
-                        <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>
-                        <select name="id_physical_person" id="id_physical_person" class="form-select">
-                            <option selected disabled>Selecione uma opção</option>
-                        </select>
-                        @error('id_physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                    <div class="col-md-12">
+                        <div id="info_person">
+                            <label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Contratante</label>
+                            <select name="id_person" id="id_physical_person" class="form-select">
+                                <option selected disabled>Selecione uma opção</option>
+                            </select>
+                        </div>
+                        @error('id_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-12">
                         <label for="type_contract" class="text-secondary">Tipo de contrato</label>
@@ -35,10 +37,12 @@
                                 <option value="{{$typeContract->value}}" @if($typeContract->value === $contract->type_contract) selected @endif>{{$typeContract->description}}</option>
                             @endforeach
                         </select>
+                        @error('type_contract')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-12">
                         <label for="dt_contraction" class="text-secondary">Data inicial do contrato</label>
                         <input type="date" class="form-control" name="dt_contraction" id="dt_contraction" value="{{$contract->dt_contraction}}">
+                        @error('dt_contraction')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
@@ -49,7 +53,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function(){
+        $('#info_person').ready(function(){
             let type_person_pj = $('#type_person_pj').prop('checked');
             let type_person_pf = $('#type_person_pf').prop('checked');
 
@@ -57,8 +61,8 @@
                 $('#id_physical_person_label').remove();
                 $('#id_physical_person').remove();
 
-                $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Pessoa Jurídica</label>'+
-                                     '<select name="id_legal_person" id="id_legal_person" class="form-select">'+
+                $('#info_person').append('<label for="id_legal_person" id="id_legal_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_legal_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($legalPerson as $person)'+
                                      '<option value="{{$person->id}}" @if($person->id === $contract->id_legal_person) selected @endif>{{$person->fantasy_name}}</option>'+
@@ -71,8 +75,8 @@
                 $('#id_legal_person_label').remove();
                 $('#id_legal_person').remove();
 
-                $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>'+
-                                     '<select name="id_physical_person" id="id_physical_person" class="form-select">'+
+                $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_physical_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($physicalPerson as $person)'+
                                         '<option value="{{$person->id}}" @if($person->id === $contract->id_physical_person) selected @endif>{{$person->name}}</option>'+
@@ -85,8 +89,8 @@
             $('#id_physical_person_label').remove();
             $('#id_physical_person').remove();
 
-            $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Pessoa Jurídica</label>'+
-                                     '<select name="id_legal_person" id="id_legal_person" class="form-select">'+
+            $('#info_person').append('<label for="id_physical_person" id="id_legal_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_legal_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($legalPerson as $person)'+
                                      '<option value="{{$person->id}}" @if($person->id === $contract->id_legal_person) selected @endif>{{$person->fantasy_name}}</option>'+
@@ -100,8 +104,8 @@
             $('#id_legal_person_label').remove();
             $('#id_legal_person').remove();
 
-            $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Pessoa Física</label>'+
-                                     '<select name="id_physical_person" id="id_physical_person" class="form-select">'+
+            $('#info_person').append('<label for="id_physical_person" id="id_physical_person_label" class="text-secondary">Contratante</label>'+
+                                     '<select name="id_person" id="id_physical_person" class="form-select">'+
                                      '<option selected disabled>Selecione uma opção</option>'+
                                      '@foreach($physicalPerson as $person)'+
                                         '<option value="{{$person->id}}" @if($person->id === $contract->id_physical_person) selected @endif>{{$person->name}}</option>'+
