@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Contract;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contract\ContractRequest;
+use App\Http\Requests\Contract\ContractStoreRequest;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
 use App\Models\Domain\TypeContract;
@@ -94,10 +95,10 @@ class ContractController extends Controller
 
                 $contract->save();
 
-                return redirect()->route('contract.index')->with('status','Contrato Cadastrado com sucesso!');
+                return redirect()->route('contract.show', $contract->id)->with('status','Contrato Cadastrado com sucesso!');
             }
         } catch (\Throwable $th) {
-                return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+                return redirect()->route('contract.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
@@ -183,10 +184,10 @@ class ContractController extends Controller
 
                 $contract->save();
 
-                return redirect()->route('contract.index')->with('status','Contrato nº: '.$contract->id.' alterado com sucesso!');
+                return redirect()->route('contract.show', $contract->id)->with('status','Contrato nº: '.$contract->id.' alterado com sucesso!');
             }
         } catch (\Throwable $th) {
-            return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('contract.edit', $contract->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
@@ -230,7 +231,7 @@ class ContractController extends Controller
         }
     }
 
-    public function contractStore(Request $request, $contract){
+    public function contractStore(ContractStoreRequest $request, $contract){
         try {
             $contractStore = $this->contractStore;
             if(empty($contract->dt_signature)){
@@ -270,5 +271,9 @@ class ContractController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
+    }
+
+    public function renewContract($renewContract){
+
     }
 }
