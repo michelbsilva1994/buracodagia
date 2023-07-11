@@ -6,6 +6,11 @@
             <div class="col-8">
                 <h2 class="text-secondary mt-2">Editar Pavimento</h2>
             </div>
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div class="col-8">
                 <form action="{{ route('pavement.update', ['pavement' => $pavement->id]) }}" method="post" class="mt-4" autocomplete="off">
                     @csrf

@@ -38,7 +38,7 @@ class PavementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PavementeRequest $request)
     {
         try {
             $this->pavement->create($request->all());
@@ -87,7 +87,8 @@ class PavementController extends Controller
         try {
             $pavement = $this->pavement->where('id',$id)->first();
             $pavement->delete();
-            return redirect()->route('pavement.index')->with('status', 'Pavimento excluído com sucesso!');
+            return response()->json(['status'=> 'Pavimento excluído com sucesso!']);
+            //return redirect()->route('pavement.index')->with('status', 'Pavimento excluído com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('pavement.edit', $pavement->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
