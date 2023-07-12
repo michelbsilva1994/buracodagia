@@ -23,7 +23,8 @@ class Contract extends Model
         'dt_cancellation',
         'dt_signature',
         'id_physical_person',
-        'id_legal_person'
+        'id_legal_person',
+        'ds_cancellation_reason'
     ];
 
     public function physicalPerson(){

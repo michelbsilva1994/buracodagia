@@ -29,6 +29,8 @@
             <h3 class="text-secondary">Tipo de Contrato: {{$contract->type_contract}}</h3>
             <h3 class="text-secondary">Contratante: {{$contract->name_contractor}}</h3>
             <h3 class="text-secondary">CPF/CNPJ: {{$contract->cpf ?? $contract->cnpj}}</h3>
+            <h3 class="text-secondary">Data do Contrato: {{$contract->dt_contraction}}</h3>
+            <h3 class="text-secondary">Data do Renovação: {{$contract->dt_renovation}}</h3>
         </div>
         <div>
             <hr>

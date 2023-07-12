@@ -66,7 +66,7 @@ class ContractController extends Controller
                 $contract->cpf = $physicalPerson->cpf;
                 $contract->name_contractor = $physicalPerson->name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = null;
+                $contract->dt_renovation = $request->dt_renovation;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -86,7 +86,7 @@ class ContractController extends Controller
                 $contract->cnpj = $legalPerson->cnpj;
                 $contract->name_contractor = $legalPerson->fantasy_name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = null;
+                $contract->dt_renovation = $request->dt_renovation;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -155,7 +155,7 @@ class ContractController extends Controller
                 $contract->cpf = $physicalPerson->cpf;
                 $contract->name_contractor = $physicalPerson->name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = null;
+                $contract->dt_renovation = $request->dt_renovation;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -175,7 +175,7 @@ class ContractController extends Controller
                 $contract->cnpj = $legalPerson->cnpj;
                 $contract->name_contractor = $legalPerson->fantasy_name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = null;
+                $contract->dt_renovation = $request->dt_renovation;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -261,7 +261,7 @@ class ContractController extends Controller
                 $contractStore->delete();
 
                 $store = $this->store->where('id', $contractStore->id_store)->first();
-                $store->status = 'A';
+                $store->status = 'L';
                 $store->save();
 
                 return redirect()->route('contract.show', $contractStore->id_contract)->with('status','Loja removida do contrato!');

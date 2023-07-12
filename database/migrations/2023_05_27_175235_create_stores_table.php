@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->char('status',2);
             $table->char('type',2);
-            $table->longText('description');
+            $table->longText('description')->nullable();
 
             $table->bigInteger('id_pavement')->unsigned();
             $table->foreign('id_pavement')->references('id')->on('pavements');

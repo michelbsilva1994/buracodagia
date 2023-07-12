@@ -44,6 +44,11 @@
                         <input type="date" class="form-control" name="dt_contraction" id="dt_contraction" value="{{$contract->dt_contraction}}">
                         @error('dt_contraction')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
+                    <div class="col-md-12">
+                        <label for="dt_renovation" class="text-secondary">Data renovação do contrato</label>
+                        <input type="date" class="form-control" name="dt_renovation" id="dt_renovation" value="{{$contract->dt_renovation}}">
+                        @error('dt_renovation')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                    </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-block btn-success">Salvar</button>
                         <a href="{{route('contract.index')}}" class="btn btn-danger">Cancelar</a>
