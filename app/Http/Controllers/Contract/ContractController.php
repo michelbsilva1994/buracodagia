@@ -264,12 +264,15 @@ class ContractController extends Controller
                 $store->status = 'L';
                 $store->save();
 
-                return redirect()->route('contract.show', $contractStore->id_contract)->with('status','Loja removida do contrato!');
+                return response()->json(['status' => 'Loja removida do contrato!']);
+                //return redirect()->route('contract.show', $contractStore->id_contract)->with('status','Loja removida do contrato!');
             }else{
-                return redirect()->route('contract.show', $contract->id)->with('error', 'Não foi possível remover a loja, pois o contrato já está assinado!');
+                return response()->json(['status' => 'Não foi possível remover a loja, pois o contrato já está assinado!']);
+                //return redirect()->route('contract.show', $contract->id)->with('error', 'Não foi possível remover a loja, pois o contrato já está assinado!');
             }
         } catch (\Throwable $th) {
-            return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
+            //return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 

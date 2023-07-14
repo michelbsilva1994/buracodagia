@@ -35,11 +35,6 @@
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('pavement.edit', ['pavement'=>$pavement->id])}}">Editar</a>
                                 <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-pavement="{{$pavement->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
-                                <form action="{{route('pavement.destroy', ['pavement'=>$pavement->id])}}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
-                                </form>
                             </td>
                     </tr>
                     @endforeach
@@ -64,7 +59,7 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
       <script>
         $(document).delegate('#btn-delete', 'click', function(){
             var id_pavement = $(this).attr('data-id-pavement');

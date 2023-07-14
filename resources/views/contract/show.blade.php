@@ -23,6 +23,9 @@
                         <input class="btn btn-success" type="submit" value="Assinar Contrato">
                     </form>
                 @endif
+                @if(!empty($contract->dt_signature) && strtotime($contract->dt_renovation) < strtotime(date('Y/m/d')))
+                    <a class="btn btn-primary" href="">Renovar</a>
+                @endif
         </div>
         <div class="mt-5">
             <h3 class="text-secondary">Tipo de Pessoa: {{$contract->type_person}}</h3>
@@ -35,6 +38,7 @@
         <div>
             <hr>
             <h2 class="text-secondary text-center">Lojas</h2>
+            <div id="message-store-delete"></div>
             <div class="col-12 table-responsive">
                 <table class="table align-middle">
                     <thead>
@@ -49,17 +53,18 @@
                     </thead>
                     <tbody>
                         @foreach ($contractStore as $store)
-                        <tr>
+                        <tr id="store-contract-{{$store->id}}">
                                 <td>{{$store->id}}</td>
                                 <td>{{$store->id_store}}</td>
                                 <td>R$ {{$store->store_price}}</td>
                                 @if(empty($contract->dt_signature))
                                     <td class="d-flex">
                                         <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
+                                        <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-store-delete" data-id-store-contract="{{$store->id}}" data-bs-toggle="modal" data-bs-target="#modal-store-delete">Excluir</a>
                                         <form action="{{route('contract.removeStore',['contractRemoveStore'=>$store->id])}}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
+                                            <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover" >
                                         </form>
                                     </td>
                                 @endif
@@ -73,7 +78,7 @@
                 <form action="{{route('contract.contractStore', ['contract' => $contract->id])}}" method="post" class="mt-4 row" autocomplete="off">
                     @csrf
                     <div class="col-6">
-                        <label for="id_store" id="id_store" class="text-secondary">Loja</label>
+                        <label for="id_store" class="text-secondary">Loja</label>
                         <select name="id_store" id="id_store" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                             @foreach ($stores as $store)
@@ -83,7 +88,7 @@
                         @error('id_store')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-6">
-                        <label for="price_store" class="text-secondary">Valor</label>
+                        <label for="store_price" class="text-secondary">Valor</label>
                         <input type="number" class="form-control @error('store_price') is-invalid @enderror" id="store_price"
                             placeholder="Insira o valor da loja" name="store_price" value="{{ old('store_price') }}">
                         @error('store_price')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
@@ -96,4 +101,56 @@
             @endif
         </div>
     </div>
+
+    <div class="modal fade" id="modal-store-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir loja</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja excluir a loja do contrato?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="id_store_contract" id="id_store_contract">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btn-store-destroy">Excluir</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).delegate('#btn-store-delete', 'click', function(){
+            var id_store_contract = $(this).attr('data-id-store-contract');
+            $('#id_store_contract').val(id_store_contract);
+        });
+
+        $(document).delegate('#btn-store-destroy', 'click', function(){
+            var id_store_contract = $('#id_store_contract').val();
+
+            $.ajax({
+                url: id_store_contract+"/removeStore",
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    $('#message-store-delete').html(response.status);
+                    $('#modal-store-delete').modal('hide');
+                    $('#message-store-delete').addClass('alert alert-success').show();
+                    $('#store-contract-'+id_store_contract).remove();
+                    //$('#message-store-delete').fadeOut(2000);
+                    setTimeout(() => {
+                        $('#message-store-delete').hide();
+                        $('#message-store-delete').fadeOut(2000);
+                    }, 2000);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            })
+        });
+    </script>
 @endsection
