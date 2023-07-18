@@ -79,10 +79,9 @@
                     $('#modal-delete').modal('hide');
                     $('#message-delete').addClass('alert alert-success').show();
                     $('#pavement-'+id_pavement).remove();
-                    $('#message-delete').fadeOut(2000);
+                    $('#message-delete').fadeOut(3000);
                     setTimeout(function() {
                         $('#message-delete').hide();
-                        $('#message-delete').fadeOut(2000);
                     }, 2000);
                 },
                 error: function(data){

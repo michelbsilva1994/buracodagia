@@ -14,6 +14,7 @@
                 {{ session('error') }}
             </div>
         @endif
+        <div id="message-delete"></div>
         <div>
             <a href="{{route('store.create')}}" class="btn btn-success my-2"> + Criar Loja</a>
         </div>
@@ -29,17 +30,13 @@
                 </thead>
                 <tbody>
                     @foreach ($stores as $store)
-                    <tr>
+                    <tr id="store-{{$store->id}}">
                             <td>{{$store->id}}</td>
                             <td>{{$store->name}}</td>
                             <td>{{$store->pavement->name}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('store.edit', ['store'=>$store->id])}}">Editar</a>
-                                <form action="{{route('store.destroy', ['store'=>$store->id])}}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
-                                </form>
+                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-store="{{$store->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
                             </td>
                     </tr>
                     @endforeach
@@ -47,4 +44,53 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja excluir a loja?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="id_store" id="id_store">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btn-destroy">Excluir</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <script>
+        $(document).delegate('#btn-delete', 'click', function(){
+            var id_store = $(this).attr('data-id-store');
+            $('#id_store').val(id_store);
+        });
+
+        $(document).delegate('#btn-destroy','click', function(){
+            var id_store = $('#id_store').val();
+
+            $.ajax({
+                url: '/store/'+id_store,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    $('#message-delete').html(response.status);
+                    $('#modal-delete').modal('hide');
+                    $('#message-delete').addClass('alert alert-success').show();
+                    $('#store-'+id_store).remove();
+                    $('#message-delete').fadeOut(3000);
+                    setInterval(() => {
+                        $('#message-delete').hide();
+                    }, 2000);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            });
+        });
+    </script>
 @endsection

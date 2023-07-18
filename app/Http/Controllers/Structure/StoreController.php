@@ -103,9 +103,10 @@ class StoreController extends Controller
         try {
             $store = $this->store->where('id',$id)->first();
             $store->delete();
-            return redirect()->route('store.index')->with('status', 'Loja excluída com sucesso!');
+            return response()->json(['status' => 'Loja excluída com sucesso!'] );
+            //return redirect()->route('store.index')->with('status', 'Loja excluída com sucesso!');
         } catch (\Throwable $th) {
-            return redirect()->route('store.update', $store->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }

@@ -141,10 +141,9 @@
                     $('#modal-store-delete').modal('hide');
                     $('#message-store-delete').addClass('alert alert-success').show();
                     $('#store-contract-'+id_store_contract).remove();
-                    //$('#message-store-delete').fadeOut(2000);
+                    $('#message-store-delete').fadeOut(3000);
                     setTimeout(() => {
                         $('#message-store-delete').hide();
-                        $('#message-store-delete').fadeOut(2000);
                     }, 2000);
                 },
                 error: function(data){
