@@ -88,9 +88,8 @@ class PavementController extends Controller
             $pavement = $this->pavement->where('id',$id)->first();
             $pavement->delete();
             return response()->json(['status'=> 'Pavimento excluído com sucesso!']);
-            //return redirect()->route('pavement.index')->with('status', 'Pavimento excluído com sucesso!');
         } catch (\Throwable $th) {
-            return redirect()->route('pavement.edit', $pavement->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }

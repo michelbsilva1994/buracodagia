@@ -87,14 +87,14 @@ class TypeContractController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();
             $typeContract->delete();
-            return redirect()->route('typeContract.index')->with('status','Tipo de contrato excluído com sucesso!');
+            return response()->json(['status'=> 'Tipo de contrato excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('typeContract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }
