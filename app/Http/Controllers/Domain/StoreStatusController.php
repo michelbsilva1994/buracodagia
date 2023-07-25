@@ -86,14 +86,14 @@ class StoreStatusController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             $status = $this->storeStatus->where('id',$id)->first();
             $status->delete();
-            return redirect()->route('storeStatus.index')->with('status','Status excluído com sucesso!');
+            return response()->json(['status'=> 'Tipo de status da loja excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('storeStatus.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }

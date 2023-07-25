@@ -202,16 +202,20 @@ class ContractController extends Controller
             if(empty($contract->dt_signature )){
                 if($contractStore === 0){
                     $contract->delete();
-                    return redirect()->route('contract.index')->with('status', 'O contrato nº: '.$contract->id.' foi excluído com sucesso!');
+                    return response()->json(['status' => 'O contrato foi excluído com sucesso!']);
+                    //return redirect()->route('contract.index')->with('status', 'O contrato nº: '.$contract->id.' foi excluído com sucesso!');
                 }else{
-                    return redirect()->route('contract.index')->with('alert', 'O contrato nº: '.$contract->id.' tem lojas vínculada, por favor remover!');
+                    return response()->json(['status' => 'O contrato tem lojas vínculada, por favor remover!']);
+                    //return redirect()->route('contract.index')->with('alert', 'O contrato nº: '.$contract->id.' tem lojas vínculada, por favor remover!');
                 }
             }else{
-                return redirect()->route('contract.index')->with('alert', 'Não foi possível excluir o contrato nº: '.$contract->id.' , pois o contrato já está assinado!');
+                return response()->json(['status' => 'Não foi possível excluir o contrato, pois o contrato já está assinado!']);
+                //return redirect()->route('contract.index')->with('alert', 'Não foi possível excluir o contrato nº: '.$contract->id.' , pois o contrato já está assinado!');
             }
 
         } catch (\Throwable $th) {
-            return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
+            //return redirect()->route('contract.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
 
     }

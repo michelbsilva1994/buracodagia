@@ -91,9 +91,9 @@ class StoreTypeController extends Controller
         try {
             $storeType = $this->storeType->where('id', $id)->first();
             $storeType->delete();
-            return redirect()->route('storeType.index')->with('status','Tipo de loja excluído com sucesso!');
+            return response()->json(['status'=> 'Tipo da loja excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('storeType.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }
