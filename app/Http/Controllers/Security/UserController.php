@@ -102,9 +102,9 @@ class UserController extends Controller
         try {
             $user = $this->user->findorfail($id);
             $user->delete();
-            return redirect()->route('user.index')->with('status','Usuário excluído com sucesso!');
+            return response()->json(['status' => 'Usuário excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('user.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 

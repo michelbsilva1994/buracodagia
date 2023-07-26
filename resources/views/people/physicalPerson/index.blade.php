@@ -14,6 +14,7 @@
                 {{ session('error') }}
             </div>
         @endif
+        <div id="message-delete"></div>
         <div>
             <a href="{{route('physicalPerson.create')}}" class="btn btn-success my-2"> + Cadastrar Pessoal Física</a>
         </div>
@@ -28,16 +29,12 @@
                 </thead>
                 <tbody>
                     @foreach ($physicalPeople as $person)
-                    <tr>
+                    <tr id="person-{{$person->id}}">
                             <td>{{$person->id}}</td>
                             <td>{{$person->name}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('physicalPerson.edit', ['physicalPerson'=>$person->id])}}">Editar</a>
-                                <form action="{{route('physicalPerson.destroy', ['physicalPerson'=>$person->id])}}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover">
-                                </form>
+                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-person="{{$person->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
                             </td>
                     </tr>
                     @endforeach
@@ -45,4 +42,52 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja excluir o registro?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="id_person" id="id_person">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btn-destroy">Excluir</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <script>
+        $(document).delegate('#btn-delete', 'click', function(){
+            var id_person = $(this).attr('data-id-person');
+            $('#id_person').val(id_person);
+        });
+        $(document).delegate('#btn-destroy','click', function(){
+            var id_person = $('#id_person').val();
+
+            $.ajax({
+                url: '/physicalPerson/'+id_person,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    $('#message-delete').html(response.status);
+                    $('#modal-delete').modal('hide');
+                    $('#message-delete').addClass('alert alert-success').show();
+                    $('#person-'+id_person).remove();
+                    $('#message-delete').fadeOut(3000);
+                    setInterval(() => {
+                        $('#message-delete').hide();
+                    }, 2000);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            })
+        });
+    </script>
 @endsection

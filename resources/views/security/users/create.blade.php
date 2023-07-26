@@ -24,7 +24,7 @@
                     <div>
                         <label for="password" class="text-secondary">Senha</label>
                         <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                            placeholder="Insira o Nome do Perfil" name="password" value="{{ old('password') }}">
+                            placeholder="Insira uma senha" name="password" value="{{ old('password') }}">
                         @error('password')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-2">

@@ -91,9 +91,9 @@ class LegalPersonController extends Controller
         try {
             $legalPerson = $this->legalPerson->findorfail($id);
             $legalPerson->delete();
-            return redirect()->route('legalPerson.index')->with('status','Cadastro excluído com sucesso!');
+            return response()->json(['status' => 'Cadastro excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('legalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }

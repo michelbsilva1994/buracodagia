@@ -93,9 +93,9 @@ class PhysicalPersonController extends Controller
         try {
             $physicalPerson = $this->physicalPerson->findorfail($id);
             $physicalPerson->delete();
-            return redirect()->route('physicalPerson.index')->with('status','Cadastro deletado com sucesso!');
+            return response()->json(['status' => 'Cadastro deletado com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }
