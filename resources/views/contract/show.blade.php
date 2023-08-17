@@ -59,13 +59,7 @@
                                 <td>R$ {{$store->store_price}}</td>
                                 @if(empty($contract->dt_signature))
                                     <td class="d-flex">
-                                        <a class="mr-3 btn btn-sm btn-outline-success" href="">Editar</a>
                                         <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-store-delete" data-id-store-contract="{{$store->id}}" data-bs-toggle="modal" data-bs-target="#modal-store-delete">Excluir</a>
-                                        <form action="{{route('contract.removeStore',['contractRemoveStore'=>$store->id])}}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            <input class="mr-3 btn btn-sm btn-outline-danger" type="submit" value="Remover" >
-                                        </form>
                                     </td>
                                 @endif
                         </tr>
