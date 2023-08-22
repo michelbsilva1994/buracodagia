@@ -12,6 +12,9 @@ use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\UserController;
 use App\Http\Controllers\People\PhysicalPersonController;
 use App\Http\Controllers\People\LegalPersonController;
+use App\Http\Controllers\Services\HomeServiceDomainController;
+use App\Http\Controllers\Services\HomeServicesController;
+use App\Http\Controllers\Services\HomeServiceSecurityController;
 use App\Http\Controllers\Structure\PavementController;
 use App\Http\Controllers\Structure\StoreController;
 use App\Models\Contract\MonthlyPayment;
@@ -73,6 +76,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('storeType', StoreTypeController::class);
         Route::resource('storeStatus', StoreStatusController::class);
     });
+
+    /**Homes Services */
+    Route::get('security/services/', [HomeServicesController::class, 'securityService'])->name('services.securityService');
+    Route::get('domain/services/', [HomeServicesController::class, 'domainService'])->name('services.domainService');
+
 
 });
 
