@@ -14,4 +14,12 @@ class HomeServicesController extends Controller
     public function domainService(){
         return view('domain.homeDomain');
     }
+
+    public function peopleService(){
+        return view('people.homePeople');
+    }
+
+    public function structureService(){
+        return view('people.homePeople');
+    }
 }

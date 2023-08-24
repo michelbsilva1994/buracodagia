@@ -23,9 +23,6 @@
                         <input class="btn btn-success" type="submit" value="Assinar Contrato">
                     </form>
                 @endif
-                @if(!empty($contract->dt_signature) && strtotime($contract->dt_renovation) < strtotime(date('Y/m/d')))
-                    <a class="btn btn-primary" href="">Renovar</a>
-                @endif
         </div>
         <div class="mt-5">
             <h3 class="text-secondary">Tipo de Pessoa: {{$contract->type_person}}</h3>

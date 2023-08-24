@@ -26,17 +26,21 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{{route('profile.edit')}}">{{ __('Perfil') }}</a></li>
-                      <li><a class="dropdown-item" href="{{route('user.index')}}">Gestão de Usuários</a></li>
-                      <li><a class="dropdown-item" href="{{route('services.securityService')}}">Gestão de Segurança</a></li>
-                      <li><a class="dropdown-item" href="{{route('services.domainService')}}">Domínios</a></li>
-                      <li>
-                        <form action="{{route('logout')}}" method="POST">
-                            @csrf
-                            <button class="dropdown-item">
-                                {{ __('Sair') }}
-                            </button>
-                        </form>
-                      </li>
+                        <li><a class="dropdown-item" href="{{route('services.peopleService')}}">Cadastro de Pessoas</a></li>
+                        <li><a class="dropdown-item" href="{{route('contract.index')}}">Contratos</a></li>
+                        <li><a class="dropdown-item" href="{{route('monthly.index')}}">Geração de Mensalidades</a></li>
+                        <li><a class="dropdown-item" href="{{route('user.index')}}">Gestão de Usuários</a></li>
+                        <li><a class="dropdown-item" href="{{route('services.securityService')}}">Gestão de Segurança</a></li>
+                        <li><a class="dropdown-item" href="{{route('services.structureService')}}">Estrutura</a></li>
+                        <li><a class="dropdown-item" href="{{route('services.domainService')}}">Domínios</a></li>
+                        <li>
+                            <form action="{{route('logout')}}" method="POST">
+                                @csrf
+                                <button class="dropdown-item">
+                                    {{ __('Sair') }}
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

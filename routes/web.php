@@ -80,6 +80,8 @@ Route::middleware('auth')->group(function () {
     /**Homes Services */
     Route::get('security/services/', [HomeServicesController::class, 'securityService'])->name('services.securityService');
     Route::get('domain/services/', [HomeServicesController::class, 'domainService'])->name('services.domainService');
+    Route::get('people/services/', [HomeServicesController::class, 'peopleService'])->name('services.peopleService');
+    Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
 
 
 });

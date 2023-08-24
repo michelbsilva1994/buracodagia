@@ -66,7 +66,7 @@ class ContractController extends Controller
                 $contract->cpf = $physicalPerson->cpf;
                 $contract->name_contractor = $physicalPerson->name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = $request->dt_renovation;
+                $contract->dt_renovation = null;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -86,7 +86,7 @@ class ContractController extends Controller
                 $contract->cnpj = $legalPerson->cnpj;
                 $contract->name_contractor = $legalPerson->fantasy_name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = $request->dt_renovation;
+                $contract->dt_renovation = null;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -155,7 +155,7 @@ class ContractController extends Controller
                 $contract->cpf = $physicalPerson->cpf;
                 $contract->name_contractor = $physicalPerson->name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = $request->dt_renovation;
+                $contract->dt_renovation = null;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
@@ -175,7 +175,7 @@ class ContractController extends Controller
                 $contract->cnpj = $legalPerson->cnpj;
                 $contract->name_contractor = $legalPerson->fantasy_name;
                 $contract->dt_contraction = $request->dt_contraction;
-                $contract->dt_renovation = $request->dt_renovation;
+                $contract->dt_renovation = null;
                 $contract->dt_finalization = null;
                 $contract->dt_cancellation = null;
                 $contract->dt_signature = null;
