@@ -16,6 +16,18 @@
         @endif
         <div id="message-delete"></div>
         <div>
+            <form action="{{route('physical.filter')}}" class="row" method="post">
+                @csrf
+                <div class="col-md-4">
+                    <label for="name">Nome</label>
+                    <input type="text" name="name" id="name" class="form-control">
+                </div>
+                <div class="col-2 mt-4">
+                    <button type="submit" class="btn btn-block btn-success">Filtrar</button>
+                </div>
+            </form>
+        </div>
+        <div>
             <a href="{{route('physicalPerson.create')}}" class="btn btn-success my-2"> + Cadastrar Pessoal Física</a>
         </div>
         <div class="col-12 table-responsive">

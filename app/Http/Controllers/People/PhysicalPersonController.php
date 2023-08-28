@@ -24,6 +24,18 @@ class PhysicalPersonController extends Controller
         return view('people.physicalPerson.index', compact('physicalPeople'));
     }
 
+    public function filter(Request $request){
+        $name = $request->name;
+
+        if(!empty($name)){
+            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->get();
+            return view('people.physicalPerson.index', compact('physicalPeople'));
+        }else{
+            $physicalPeople = $this->physicalPerson->all();
+            return view('people.physicalPerson.index', compact('physicalPeople'));
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */
