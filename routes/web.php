@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('physicalPerson', PhysicalPersonController::class);
     /**rota filtrar pessoal fisica */
     Route::post('physicalPerson/filter', [PhysicalPersonController::class, 'filter'])->name('physical.filter');
+    Route::get('contractPerson/{id_person}', [PhysicalPersonController::class, 'contractPerson'])->name('physical.contractPerson');
 
     Route::resource('legalPerson', LegalPersonController::class);
     Route::resource('pavement', PavementController::class);

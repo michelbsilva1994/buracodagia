@@ -16,21 +16,25 @@
         @endif
         <div id="message-delete"></div>
         <div>
+            <a href="{{route('physicalPerson.create')}}" class="btn btn-success my-2"> + Cadastrar Pessoal Física</a>
+        </div>
+        <div class="mt-4">
             <form action="{{route('physical.filter')}}" class="row" method="post">
                 @csrf
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <label for="name">Nome</label>
                     <input type="text" name="name" id="name" class="form-control">
+                </div>
+                <div class="col-md-5">
+                    <label for="cpf">CPF</label>
+                    <input type="text" name="cpf" id="cpf" class="form-control">
                 </div>
                 <div class="col-2 mt-4">
                     <button type="submit" class="btn btn-block btn-success">Filtrar</button>
                 </div>
             </form>
         </div>
-        <div>
-            <a href="{{route('physicalPerson.create')}}" class="btn btn-success my-2"> + Cadastrar Pessoal Física</a>
-        </div>
-        <div class="col-12 table-responsive">
+        <div class="col-12 table-responsive mt-4">
             <table class="table align-middle">
                 <thead>
                     <tr>
@@ -46,6 +50,7 @@
                             <td>{{$person->name}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('physicalPerson.edit', ['physicalPerson'=>$person->id])}}">Editar</a>
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('physical.contractPerson', ['id_person'=>$person->id])}}">Contrato</a>
                                 <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-person="{{$person->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
                             </td>
                     </tr>
