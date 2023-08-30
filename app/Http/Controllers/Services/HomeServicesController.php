@@ -20,6 +20,6 @@ class HomeServicesController extends Controller
     }
 
     public function structureService(){
-        return view('people.homePeople');
+        return view('structure.homeStructure');
     }
 }

@@ -25,8 +25,7 @@ class ContractRequest extends FormRequest
             'type_person' => ['required'],
             'id_person' => ['required'],
             'type_contract' => ['required'],
-            'dt_contraction' => ['required'],
-            'dt_renovation' => ['required']
+            'dt_contraction' => ['required']
         ];
     }
 
@@ -35,8 +34,7 @@ class ContractRequest extends FormRequest
             'type_person.required' => 'Escolha um tipo de pessoa!',
             'id_person.required' => 'O campo Contratante é obrigatório!',
             'type_contract.required' => 'O campo tipo de contrato é obrigatório!',
-            'dt_contraction' => 'O campo data inicial do contrato é obrigatório!',
-            'dt_renovation' => 'O campo data renovação do contrato é obrigatório!'
+            'dt_contraction' => 'O campo data inicial do contrato é obrigatório!'
         ];
     }
 }
