@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('contract', ContractController::class);
 
     /**Generate Tuition */
+    Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'MonthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
+    Route::get('tuition/', [MonthlyPaymentController::class, 'tuition'])->name('monthly.tuition');
     Route::resource('monthly', MonthlyPaymentController::class);
 
 

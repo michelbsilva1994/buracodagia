@@ -25,6 +25,12 @@ class MonthlyPaymentController extends Controller
         return view('monthlyPayment.index');
     }
 
+    public function tuition(){
+        $tuition = $this->monthlyPayment->all();
+
+        return view('monthlyPayment.tuition', compact('tuition'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -95,5 +101,11 @@ class MonthlyPaymentController extends Controller
     public function destroy(MonthlyPayment $monthlyPayment)
     {
         //
+    }
+
+    public function MonthlyPaymentContract($id_contract){
+        $monthlyPayment = $this->monthlyPayment->where('id_contract', '=', $id_contract)->get();
+
+        return view('monthlyPayment.monthlyPaymentContract', compact('monthlyPayment'));
     }
 }

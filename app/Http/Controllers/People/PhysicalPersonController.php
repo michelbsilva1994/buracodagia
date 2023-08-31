@@ -122,7 +122,8 @@ class PhysicalPersonController extends Controller
 
     public function contractPerson($id_person){
         $contracts = $this->contract->where('id_physical_person', '=' , $id_person)->get();
+        $physicalPerson = $this->physicalPerson->where('id', '=' , $id_person)->first();
 
-        return view('contract.contractPerson', compact('contracts'));
+        return view('contract.contractPerson', compact(['contracts', 'physicalPerson']));
     }
 }
