@@ -4,6 +4,7 @@ namespace App\Models\Contract;
 
 use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
+use App\Models\Contract\MonthlyPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

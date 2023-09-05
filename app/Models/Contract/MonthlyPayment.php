@@ -18,6 +18,6 @@ class MonthlyPayment extends Model
     ];
 
     public function contract(){
-        return $this->hasMany(Contract::class, 'id_contract', 'id_contract');
+        return $this->belongsTo(Contract::class, 'id_contract', 'id');
     }
 }

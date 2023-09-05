@@ -26,9 +26,43 @@ class MonthlyPaymentController extends Controller
     }
 
     public function tuition(){
-        $tuition = $this->monthlyPayment->all();
-
+        $tuition = $this->contract
+                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                        ->get();
         return view('monthlyPayment.tuition', compact('tuition'));
+    }
+
+    public function filter(Request $request){
+
+        $contractor = $request->contractor;
+        $due_date = $request->due_date;
+
+        if($contractor && $due_date) {
+            $tuition = $this->contract
+                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                        ->where('name_contractor', 'like', "%$contractor%")
+                        ->where('due_date', $due_date)
+                        ->get();
+            return view('monthlyPayment.tuition', compact('tuition'));
+        }elseif($contractor){
+            $tuition = $this->contract
+                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                        ->where('name_contractor', 'like', "%$contractor%")
+                        ->get();
+            return view('monthlyPayment.tuition', compact('tuition'));
+        }elseif($due_date){
+            $tuition = $this->contract
+                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                        ->where('due_date', $due_date)
+                        ->get();
+            return view('monthlyPayment.tuition', compact('tuition'));
+        }else{
+            $tuition = $this->contract
+                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                        ->get();
+            return view('monthlyPayment.tuition', compact('tuition'));
+        }
+
     }
 
     /**
