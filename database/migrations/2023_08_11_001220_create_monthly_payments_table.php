@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('due_date');
             $table->date('dt_payday')->nullable();
             $table->float('total_payable');
+            $table->string('type_payment')->nullable();
 
             $table->bigInteger('id_contract')->unsigned();
             $table->foreign('id_contract')->references('id')->on('contracts');

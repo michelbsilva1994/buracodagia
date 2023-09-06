@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('dt_cancellation')->nullable();
             $table->date('dt_signature')->nullable();
             $table->string('ds_cancellation_reason')->nullable();
+            $table->float('total_price')->nullable();
 
             $table->bigInteger('id_physical_person')->unsigned()->nullable();
             $table->foreign('id_physical_person')->references('id')->on('physical_people');

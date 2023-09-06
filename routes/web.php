@@ -4,6 +4,7 @@ use App\Http\Controllers\Contract\ContractController;
 use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
 use App\Http\Controllers\Domain\TypeContractController;
+use App\Http\Controllers\Domain\TypePayment;
 use App\Http\Controllers\MonthlyPaymentController;
 use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController;
 use App\Http\Controllers\ProfileController;
@@ -82,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('typeContract', TypeContractController::class);
         Route::resource('storeType', StoreTypeController::class);
         Route::resource('storeStatus', StoreStatusController::class);
+        Route::resource('typePayment', TypePayment::class);
     });
 
     /**Homes Services */
