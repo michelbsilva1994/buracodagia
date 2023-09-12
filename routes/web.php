@@ -3,6 +3,7 @@
 use App\Http\Controllers\Contract\ContractController;
 use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
+use App\Http\Controllers\Domain\TypeChargeController;
 use App\Http\Controllers\Domain\TypeContractController;
 use App\Http\Controllers\Domain\TypePayment;
 use App\Http\Controllers\MonthlyPaymentController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Services\HomeServiceSecurityController;
 use App\Http\Controllers\Structure\PavementController;
 use App\Http\Controllers\Structure\StoreController;
 use App\Models\Contract\MonthlyPayment;
+use App\Models\Domain\TypeCharge;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
@@ -72,7 +74,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('contract', ContractController::class);
 
     /**Generate Tuition */
-    Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'MonthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
+    Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'monthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
+    Route::get('lowerMonthlyFee/{monthlyPayment}',[MonthlyPaymentController::class, 'lowerMonthlyFee'])->name('monthly.lowerMonthlyFee');
+    Route::get('lowerMonthlyFeeContract/{monthlyPayment}',[MonthlyPaymentController::class, 'lowerMonthlyFeeContract'])->name('monthly.lowerMonthlyFeeContract');
+    Route::get('cancelTuition/{monthlyPayment}',[MonthlyPaymentController::class, 'cancelTuition'])->name('monthly.cancelTuition');
+    Route::get('cancelTuition/{monthlyPayment}',[MonthlyPaymentController::class, 'cancelTuitionContract'])->name('monthly.cancelTuitionContract');
     Route::get('tuition/', [MonthlyPaymentController::class, 'tuition'])->name('monthly.tuition');
     Route::post('tuition/filter',[MonthlyPaymentController::class, 'filter'])->name('monthly.filter');
     Route::resource('monthly', MonthlyPaymentController::class);
@@ -84,6 +90,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('storeType', StoreTypeController::class);
         Route::resource('storeStatus', StoreStatusController::class);
         Route::resource('typePayment', TypePayment::class);
+        Route::resource('typeCharge', TypeChargeController::class);
     });
 
     /**Homes Services */

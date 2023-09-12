@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Contratos</h1>
+            <h1 class="text-secondary mt-2">Tipos de Cobrança</h1>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -14,41 +14,29 @@
                 {{ session('error') }}
             </div>
         @endif
-        @if (session('alert'))
-            <div class="alert alert-warning" role="alert">
-                {{ session('alert') }}
-            </div>
-        @endif
         <div id="message-delete"></div>
         <div>
-            <a href="{{route('contract.create')}}" class="btn btn-success my-2"> + Novo Contrato</a>
+            <a href="{{route('typeCharge.create')}}" class="btn btn-success my-2"> + Novo</a>
         </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Tipo de Pessoa</td>
-                        <td>Tipo de Contrato</td>
-                        <td>Contrante</td>
-                        <td>CPF/CNPJ</td>
-                        <td>Valor do Contrato</td>
+                        <td>Valor</td>
+                        <td>Descrição</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($contracts as $contract)
-                    <tr id="contract-{{$contract->id}}">
-                            <td>{{$contract->id}}</td>
-                            <td>{{$contract->type_person}}</td>
-                            <td>{{$contract->type_contract}}</td>
-                            <td>{{$contract->name_contractor}}</td>
-                            <td>{{$contract->cpf ?? $contract->cnpj}}</td>
-                            <td>R$ {{$contract->total_price}}</td>
+                    @foreach ($typeCharge as $type)
+                    <tr id="type-charge-{{$type->id}}">
+                            <td>{{$type->id}}</td>
+                            <td>{{$type->value}}</td>
+                            <td>{{$type->description}}</td>
                             <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('contract.edit', ['contract' => $contract->id])}}">Editar</a>
-                                <a class="mr-3 btn btn-sm btn-outline-secondary" href="{{route('contract.show', ['contract' => $contract->id])}}">Detalhe</a>
-                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
+                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('typeCharge.edit', ['typeCharge'=>$type->id])}}">Editar</a>
+                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-type-charge="{{$type->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
                             </td>
                     </tr>
                     @endforeach
@@ -60,14 +48,14 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir Registro</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Tem certeza que deseja excluir o status da loja?
+              Tem certeza que deseja excluir o tipo de cobrança?
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="id_contract" id="id_contract">
+                <input type="hidden" name="id_type_charge" id="id_type_charge">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-danger" id="btn-destroy">Excluir</button>
             </div>
@@ -76,14 +64,14 @@
     </div>
     <script>
         $(document).delegate('#btn-delete','click', function(){
-            var id_contract = $(this).attr('data-id-contract');
-            $('#id_contract').val(id_contract);
+            var id_type_charge = $(this).attr('data-id-type-charge');
+            $('#id_type_charge').val(id_type_charge);
         });
         $(document).delegate('#btn-destroy', 'click', function(){
-            var id_contract = $('#id_contract').val();
+            var id_type_charge = $('#id_type_charge').val();
 
             $.ajax({
-                url: "/contract/"+id_contract,
+                url: "/domain/typeCharge/"+id_type_charge,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -92,7 +80,7 @@
                     $('#message-delete').html(response.status);
                     $('#modal-delete').modal('hide');
                     $('#message-delete').addClass('alert alert-success').show();
-                    $('#contract-'+id_contract).remove();
+                    $('#type-charge-'+id_type_charge).remove();
                     $('#message-delete').fadeOut(3000);
                     setTimeout(function() {
                         $('#message-delete').hide();

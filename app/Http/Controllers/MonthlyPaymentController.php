@@ -137,9 +137,42 @@ class MonthlyPaymentController extends Controller
         //
     }
 
-    public function MonthlyPaymentContract($id_contract){
+    public function monthlyPaymentContract($id_contract){
+        $physicalPerson = $this->contract->where('id', $id_contract)->first();
         $monthlyPayment = $this->monthlyPayment->where('id_contract', '=', $id_contract)->get();
 
-        return view('monthlyPayment.monthlyPaymentContract', compact('monthlyPayment'));
+        return view('monthlyPayment.monthlyPaymentContract', compact(['monthlyPayment', 'physicalPerson']));
+    }
+
+    public function lowerMonthlyFee($MonthlyPayment){
+        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
+        $monthlyPayment->dt_payday = date('Y/m/d');
+        $monthlyPayment->save();
+
+        return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$MonthlyPayment.' realizada com sucesso!');
+    }
+
+    public function cancelTuition($MonthlyPayment){
+        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
+        $monthlyPayment->dt_cancellation = date('Y/m/d');
+        $monthlyPayment->save();
+
+        return redirect()->route('monthly.tuition')->with('status','Mensalidade: '.$MonthlyPayment.' cancelada realizada com sucesso!');
+    }
+
+    public function lowerMonthlyFeeContract($MonthlyPayment){
+        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
+        $monthlyPayment->dt_payday = date('Y/m/d');
+        $monthlyPayment->save();
+
+        return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Baixa da mensalidade: '.$MonthlyPayment.' realizada com sucesso!');
+    }
+
+    public function cancelTuitionContract($MonthlyPayment){
+        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
+        $monthlyPayment->dt_cancellation = date('Y/m/d');
+        $monthlyPayment->save();
+
+        return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Mensalidade: '.$MonthlyPayment.' cancelada realizada com sucesso!');
     }
 }

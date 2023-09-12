@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Domain\TypePayment;
+namespace App\Http\Requests\Domain\typeCharge;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TypePaymentUpdateRequest extends FormRequest
+class TypeChargeUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,8 @@ class TypePaymentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value' => ['required', 'max:2', Rule::unique('type_contracts')->ignore($this->route()->typePayment)],
-            'description' => ['required', 'max:255', Rule::unique('type_contracts')->ignore($this->route()->typePayment)]
+            'value' => ['required', 'max:2', Rule::unique('type_charges')->ignore($this->route()->typeCharge)],
+            'description' => ['required', 'max:255', Rule::unique('type_charges')->ignore($this->route()->typeCharge)]
         ];
     }
 

@@ -30,7 +30,7 @@
             <h3 class="text-secondary">Contratante: {{$contract->name_contractor}}</h3>
             <h3 class="text-secondary">CPF/CNPJ: {{$contract->cpf ?? $contract->cnpj}}</h3>
             <h3 class="text-secondary">Data do Contrato: {{$contract->dt_contraction}}</h3>
-            <h3 class="text-secondary">Data do Renovação: {{$contract->dt_renovation}}</h3>
+            <h3 class="text-secondary">Valor do Contrato: {{$contract->total_price}}</h3>
         </div>
         <div>
             <hr>
@@ -73,7 +73,7 @@
                         <select name="id_store" id="id_store" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
                             @foreach ($stores as $store)
-                                <option value="{{$store->id}}">{{$store->name}}</option>
+                                <option value="{{$store->id}}">{{$store->name}} - {{$store->pavement->name}}</option>
                             @endforeach
                         </select>
                         @error('id_store')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror

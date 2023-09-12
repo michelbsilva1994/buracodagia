@@ -223,8 +223,11 @@ class ContractController extends Controller
     public function signContract(string $contract){
         try {
             $contract = $this->contract->where('id', $contract)->first();
+            $total_price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
+
             if(empty($contract->dt_signature)){
                 $contract->dt_signature = date('Y/m/d');
+                $contract->total_price = $total_price_store;
                 $contract->save();
                 return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
             }else{
@@ -238,6 +241,7 @@ class ContractController extends Controller
     public function contractStore(ContractStoreRequest $request, $contract){
         try {
             $contractStore = $this->contractStore;
+
             if(empty($contract->dt_signature)){
                 $contractStore->id_store = $request->id_store;
                 $contractStore->id_contract = $contract;
@@ -247,6 +251,12 @@ class ContractController extends Controller
                 $store = $this->store->where('id',$request->id_store)->first();
                 $store->status = 'O';
                 $store->save();
+
+                $total_price_store = $this->contractStore->where('id_contract', $contract)->sum('store_price');
+
+                $contract = $this->contract->where('id',$contract)->first();
+                $contract->total_price = $total_price_store;
+                $contract->save();
 
                 return redirect()->route('contract.show', $contract)->with('status', 'Loja adicionada com sucesso!');
             }else{
@@ -261,12 +271,17 @@ class ContractController extends Controller
         try {
             $contractStore = $this->contractStore->where('id', $contractRemoveStore)->first();
             $contract = $this->contract->where('id', $contractStore->id_contract)->first();
+
             if(empty($contract->dt_signature)){
                 $contractStore->delete();
 
                 $store = $this->store->where('id', $contractStore->id_store)->first();
                 $store->status = 'L';
                 $store->save();
+
+                $total_price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
+                $contract->total_price = $total_price_store;
+                $contract->save();
 
                 return response()->json(['status' => 'Loja removida do contrato!']);
                 //return redirect()->route('contract.show', $contractStore->id_contract)->with('status','Loja removida do contrato!');
@@ -278,9 +293,5 @@ class ContractController extends Controller
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
             //return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
-    }
-
-    public function renewContract($renewContract){
-
     }
 }

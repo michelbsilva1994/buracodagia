@@ -2,8 +2,18 @@
 @section('content')
     <div class="container">
         @if (session('status'))
-            <div class="alert alert-success mt-2" role="alert">
+            <div class="alert alert-success" role="alert">
                 {{ session('status') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (session('alert'))
+            <div class="alert alert-warning" role="alert">
+                {{ session('alert') }}
             </div>
         @endif
         <form action="{{route('monthly.store')}}" method="post" class="mt-5">
@@ -17,7 +27,6 @@
                     <button type="submit" class="btn btn-success ">Gerar Mensalidades</button>
                 </div>
             </div>
-
         </form>
     </div>
 @endsection

@@ -13,6 +13,9 @@ class MonthlyPayment extends Model
         'due_date',
         'dt_payday',
         'dt_cancellation',
+        'fine_value',
+        'interest_amount',
+        'discount_value',
         'total_payable',
         'id_contract'
     ];

@@ -22,7 +22,7 @@ class TypePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value'=>['required','max:1','unique:type_contracts'],
+            'value'=>['required','max:2','unique:type_contracts'],
             'description' => ['required', 'max:255', 'unique:type_contracts']
         ];
     }
@@ -31,7 +31,7 @@ class TypePaymentRequest extends FormRequest
     {
         return [
             'value.required' => 'O campo valor é obrigatório!',
-            'value.max' => 'O campo valor deve ter no máximo 1 caracteres!',
+            'value.max' => 'O campo valor deve ter no máximo 2 caracteres!',
             'value.unique' => 'Valor já cadastrado, por favor verificar!',
             'description.required' => 'O campo descrição é obrigatório!',
             'description.max' => 'O campo descrição deve ter no máximo 255 caracteres!',

@@ -1,7 +1,10 @@
 @extends('layout.app')
 @section('content')
     <div class="container mt-4">
-        <div class="d-flex ">
+        <div class="d-flex my-3">
+            <a href="{{route('physicalPerson.index')}}" class="btn btn-danger mr-2">Voltar</a>
+        </div>
+        <div class="d-flex text-secondary my-3">
             <h3>Contratos:</h3><h3 class="ml-3">{{$physicalPerson->name}}</h3>
         </div>
         <div class="col-12 table-responsive">

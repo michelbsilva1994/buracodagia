@@ -4,6 +4,21 @@
         <div class="d-flex ">
             <h3>Mensalidades</h3>
         </div>
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (session('alert'))
+            <div class="alert alert-warning" role="alert">
+                {{ session('alert') }}
+            </div>
+        @endif
         <div class="mt-4">
             <form action="{{route('monthly.filter')}}" class="row" method="post">
                 @csrf
@@ -28,6 +43,7 @@
                         <td>Contrante</td>
                         <td>Data de vencimento</td>
                         <td>Valor a pagar</td>
+                        <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +53,14 @@
                         <td>{{$monthlyPayment->name_contractor}}</td>
                         <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
                         <td>R$ {{$monthlyPayment->total_payable}}</td>
+                        <td>
+                            @if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation))
+                                <a class="mr-3 btn btn-sm btn-success" href="{{route('monthly.lowerMonthlyFee', ['monthlyPayment' => $monthlyPayment->id])}}">Baixar</a>
+                                <a class="mr-3 btn btn-sm btn-danger" href="{{route('monthly.cancelTuition', ['monthlyPayment' => $monthlyPayment->id])}}">Cancelar</a>
+                            @else
+                                <h6>-</h6>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
