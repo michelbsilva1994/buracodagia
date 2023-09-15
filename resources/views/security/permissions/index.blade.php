@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Permissão</h1>
+            <h1 class="my-4 text-secondary text-center">Permissão</h1>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -14,8 +14,8 @@
                 {{ session('error') }}
             </div>
         @endif
-        <div>
-            <a href="{{route('permission.create')}}" class="btn btn-success my-2"> + Criar Permissão</a>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
+            <a href="{{route('permission.create')}}" class="btn btn-lg btn-success"> + Criar Permissão</a>
         </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">

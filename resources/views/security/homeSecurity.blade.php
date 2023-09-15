@@ -2,11 +2,11 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Segurança</h1>
+            <h1 class="my-4 text-secondary text-center">Segurança</h1>
         </div>
-        <div class="d-grid gap-2 col-6 mx-auto mt-5">
-            <a class="btn btn-primary" type="button" href="{{route('role.index')}}">Perfis</a>
-            <a class="btn btn-primary" type="button" href="{{route('permission.index')}}">Permissões</a>
+        <div class="d-grid gap-2 col-sm-12 col-md-8 my-4 mx-auto">
+            <a class="btn btn-lg btn-success" type="button" href="{{route('role.index')}}">Perfis</a>
+            <a class="btn btn-lg btn-success" type="button" href="{{route('permission.index')}}">Permissões</a>
           </div>
     </div>
 @endsection
