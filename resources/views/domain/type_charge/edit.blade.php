@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="mt-2">
             <div class="col-12">
-                <h2 class="my-4 text-secondary text-center">Tipo de Cobrança</h2>
+                <h2 class="my-4 text-secondary text-center">{{$type->description}}</h2>
             </div>
             @if (session('error'))
                 <div class="alert alert-danger" role="alert">
