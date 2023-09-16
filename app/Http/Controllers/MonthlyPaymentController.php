@@ -93,9 +93,9 @@ class MonthlyPaymentController extends Controller
             $monthlyPayment->fine_value = 0;
             $monthlyPayment->interest_amount = 0;
             $monthlyPayment->discount_value = 0;
+            $monthlyPayment->total_payable = $price_store;
             $monthlyPayment->id_type_payment = null;
             $monthlyPayment->type_payment = null;
-            $monthlyPayment->total_payable = $price_store;
             $monthlyPayment->id_contract = $contract->id;
 
             $monthlyPayment->create([
@@ -103,16 +103,16 @@ class MonthlyPaymentController extends Controller
                 'dt_payday' => $monthlyPayment->dt_payday,
                 'dt_cancellation' => $monthlyPayment->dt_cancellation,
                 'fine_value' => $monthlyPayment->fine_value,
-                'interest_amount' => $monthlyPayment->interest_amoun,
+                'interest_amount' => $monthlyPayment->interest_amount,
                 'discount_value' => $monthlyPayment->discount_value,
+                'total_payable' => $monthlyPayment->total_payable,
                 'id_type_payment' =>$monthlyPayment->id_type_payment,
                 'type_payment' => $monthlyPayment->type_payment,
-                'total_payable' => $monthlyPayment->total_payable,
                 'id_contract' => $monthlyPayment->id_contract
             ]);
         }
 
-        return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento '.$monthlyPayment->due_date.' foram geradas com sucesso!');
+        return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento '.date('d/m/Y', strtotime($monthlyPayment->due_date)).' foram geradas com sucesso!');
     }
 
     /**

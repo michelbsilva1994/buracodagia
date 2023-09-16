@@ -17,6 +17,8 @@ class MonthlyPayment extends Model
         'interest_amount',
         'discount_value',
         'total_payable',
+        'id_type_payment',
+        'type_payment',
         'id_contract'
     ];
 

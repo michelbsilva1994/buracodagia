@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('interest_amount')->nullable();
             $table->float('discount_value')->nullable();
             $table->float('total_payable');
-            $table->bigInteger('id_type_payment');
+            $table->bigInteger('id_type_payment')->nullable();
             $table->string('type_payment')->nullable();
 
             $table->bigInteger('id_contract')->unsigned();
