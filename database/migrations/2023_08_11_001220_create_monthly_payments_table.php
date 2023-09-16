@@ -16,9 +16,9 @@ return new class extends Migration
             $table->date('dt_cancellation')->nullable();
             $table->date('due_date');
             $table->date('dt_payday')->nullable();
-            $table->float('fine_value');
-            $table->float('interest_amount');
-            $table->float('discount_value');
+            $table->float('fine_value')->nullable();
+            $table->float('interest_amount')->nullable();
+            $table->float('discount_value')->nullable();
             $table->float('total_payable');
             $table->bigInteger('id_type_payment');
             $table->string('type_payment')->nullable();

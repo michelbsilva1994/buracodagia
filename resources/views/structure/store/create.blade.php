@@ -14,13 +14,13 @@
             <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
                 <form action="{{ route('store.store') }}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                     @csrf
-                    <div class="col-sm-12 col-md-10">
+                    <div class="col-sm-12 col-md-12">
                         <label for="name" class="text-secondary">Loja</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                             placeholder="Insira o nome da Loja" name="name" value="{{ old('name') }}">
                         @error('name')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
-                    <div class="col-sm-12 col-md-10">
+                    <div class="col-sm-12 col-md-12">
                         <label for="status" class="text-secondary">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option selected disabled>Selecione uma opção</option>

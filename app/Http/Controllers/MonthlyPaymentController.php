@@ -90,6 +90,11 @@ class MonthlyPaymentController extends Controller
             $monthlyPayment->due_date = $request->due_date;
             $monthlyPayment->dt_payday = null;
             $monthlyPayment->dt_cancellation = null;
+            $monthlyPayment->fine_value = 0;
+            $monthlyPayment->interest_amount = 0;
+            $monthlyPayment->discount_value = 0;
+            $monthlyPayment->id_type_payment = null;
+            $monthlyPayment->type_payment = null;
             $monthlyPayment->total_payable = $price_store;
             $monthlyPayment->id_contract = $contract->id;
 
@@ -97,6 +102,11 @@ class MonthlyPaymentController extends Controller
                 'due_date' => $monthlyPayment->due_date,
                 'dt_payday' => $monthlyPayment->dt_payday,
                 'dt_cancellation' => $monthlyPayment->dt_cancellation,
+                'fine_value' => $monthlyPayment->fine_value,
+                'interest_amount' => $monthlyPayment->interest_amoun,
+                'discount_value' => $monthlyPayment->discount_value,
+                'id_type_payment' =>$monthlyPayment->id_type_payment,
+                'type_payment' => $monthlyPayment->type_payment,
                 'total_payable' => $monthlyPayment->total_payable,
                 'id_contract' => $monthlyPayment->id_contract
             ]);
