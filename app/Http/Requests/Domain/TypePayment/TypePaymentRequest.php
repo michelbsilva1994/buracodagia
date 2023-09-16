@@ -22,8 +22,8 @@ class TypePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value'=>['required','max:2','unique:type_contracts'],
-            'description' => ['required', 'max:255', 'unique:type_contracts']
+            'value'=>['required','max:2','unique:type_payments'],
+            'description' => ['required', 'max:255', 'unique:type_payments']
         ];
     }
 

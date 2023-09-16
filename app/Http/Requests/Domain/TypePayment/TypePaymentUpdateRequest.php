@@ -23,8 +23,8 @@ class TypePaymentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value' => ['required', 'max:2', Rule::unique('type_contracts')->ignore($this->route()->typePayment)],
-            'description' => ['required', 'max:255', Rule::unique('type_contracts')->ignore($this->route()->typePayment)]
+            'value' => ['required', 'max:2', Rule::unique('type_payments')->ignore($this->route()->typePayment)],
+            'description' => ['required', 'max:255', Rule::unique('type_payments')->ignore($this->route()->typePayment)]
         ];
     }
 

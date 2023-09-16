@@ -1,8 +1,8 @@
 @extends('layout.app')
 @section('content')
-    <div class="container mt-4">
-        <div class="d-flex ">
-            <h3>Mensalidades</h3>
+    <div class="container">
+        <div class="col-12">
+            <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -19,18 +19,18 @@
                 {{ session('alert') }}
             </div>
         @endif
-        <div class="mt-4">
-            <form action="{{route('monthly.filter')}}" class="row" method="post">
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form action="{{route('monthly.filter')}}" class="col-12 row" method="post">
                 @csrf
-                <div class="col-md-5">
+                <div class="col-sm-12 col-md-6">
                     <label for="contractor">Contrante</label>
                     <input type="text" name="contractor" id="contractor" class="form-control">
                 </div>
-                <div class="col-md-5">
+                <div class="col-sm-12 col-md-6">
                     <label for="due_date">Data Vencimento</label>
                     <input type="date" name="due_date" id="due_date" class="form-control">
                 </div>
-                <div class="col-2 mt-4">
+                <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-2">
                     <button type="submit" class="btn btn-block btn-success">Filtrar</button>
                 </div>
             </form>
@@ -55,10 +55,14 @@
                         <td>R$ {{$monthlyPayment->total_payable}}</td>
                         <td>
                             @if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation))
-                                <a class="mr-3 btn btn-sm btn-success" href="{{route('monthly.lowerMonthlyFee', ['monthlyPayment' => $monthlyPayment->id])}}">Baixar</a>
-                                <a class="mr-3 btn btn-sm btn-danger" href="{{route('monthly.cancelTuition', ['monthlyPayment' => $monthlyPayment->id])}}">Cancelar</a>
+                                <div class="d-flex">
+                                    <a class="mr-3 btn btn-sm btn-success" href="{{route('monthly.lowerMonthlyFee', ['monthlyPayment' => $monthlyPayment->id])}}">Baixar</a>
+                                    <a class="mr-3 btn btn-sm btn-danger" href="{{route('monthly.cancelTuition', ['monthlyPayment' => $monthlyPayment->id])}}">Cancelar</a>
+                                </div>
                             @else
-                                <h6>-</h6>
+                                <div>
+                                    <h6>-</h6>
+                                </div>
                             @endif
                         </td>
                     </tr>
