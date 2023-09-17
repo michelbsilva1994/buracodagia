@@ -20,18 +20,20 @@
             </div>
         @endif
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('monthly.filter')}}" class="col-12 row" method="post">
+            <form action="{{route('monthly.filter')}}" class="col-12" method="post">
                 @csrf
-                <div class="col-sm-12 col-md-6">
-                    <label for="contractor">Contrante</label>
-                    <input type="text" name="contractor" id="contractor" class="form-control">
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <label for="due_date">Data Vencimento</label>
-                    <input type="date" name="due_date" id="due_date" class="form-control">
-                </div>
-                <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-2">
-                    <button type="submit" class="btn btn-block btn-success">Filtrar</button>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="contractor">Contrante</label>
+                        <input type="text" name="contractor" id="contractor" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="due_date">Data Vencimento</label>
+                        <input type="date" name="due_date" id="due_date" class="form-control">
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
+                    </div>
                 </div>
             </form>
         </div>

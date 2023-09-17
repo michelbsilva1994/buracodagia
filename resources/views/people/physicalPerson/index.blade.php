@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h1 class="text-secondary mt-2">Cadastro Pessoa Física</h1>
+            <h3 class="my-4 text-secondary text-center">Cadastro Pessoa Física</h3>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -15,22 +15,24 @@
             </div>
         @endif
         <div id="message-delete"></div>
-        <div>
-            <a href="{{route('physicalPerson.create')}}" class="btn btn-success my-2"> + Cadastrar Pessoal Física</a>
+        <div class="d-grid gap-2 d-lg-flex justify-content-lg-start my-3">
+            <a href="{{route('physicalPerson.create')}}" class="btn btn-lg btn-success"> + Cadastrar Pessoal Física</a>
         </div>
-        <div class="mt-4">
-            <form action="{{route('physical.filter')}}" class="row" method="post">
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form action="{{route('physical.filter')}}" method="post" class="col-sm-12 col-md-12 col-lg-12">
                 @csrf
-                <div class="col-md-5">
-                    <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control">
-                </div>
-                <div class="col-md-5">
-                    <label for="cpf">CPF</label>
-                    <input type="text" name="cpf" id="cpf" class="form-control">
-                </div>
-                <div class="col-2 mt-4">
-                    <button type="submit" class="btn btn-block btn-success">Filtrar</button>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="name">Nome</label>
+                        <input type="text" name="name" id="name" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control">
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -63,7 +65,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
