@@ -1,11 +1,11 @@
 @extends('layout.app')
 @section('content')
-    <div class="container mt-4">
-        <div class="d-flex my-3">
-            <a href="{{route('physical.contractPerson', ['id_person' => $physicalPerson->id])}}" class="btn btn-danger mr-2">Voltar</a>
-        </div>
-        <div class="d-flex text-secondary mt-2">
+    <div class="container">
+        <div class="my-4 text-secondary text-center">
             <h3>Mensalidades</h3>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start my-3">
+            <a href="{{route('physical.contractPerson', ['id_person' => $physicalPerson->id])}}" class="btn btn-lg btn-danger mr-2">Voltar</a>
         </div>
         @if (session('status'))
             <div class="alert alert-success" role="alert">
