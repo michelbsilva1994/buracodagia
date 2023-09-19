@@ -14,6 +14,11 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if (session('alert'))
+            <div class="alert alert-warning" role="alert">
+                {{ session('alert') }}
+            </div>
+        @endif
         <div id="message-delete"></div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('store.create')}}" class="btn btn-success btn-lg"> + Criar Loja</a>
@@ -78,14 +83,27 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    $('#message-delete').html(response.status);
-                    $('#modal-delete').modal('hide');
-                    $('#message-delete').addClass('alert alert-success').show();
-                    $('#store-'+id_store).remove();
-                    $('#message-delete').fadeOut(3000);
-                    setInterval(() => {
+                    if(response.linked){
+                        $('#message-delete').html(response.linked);
+                        $('#message-delete').removeClass('alert alert-success');
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-warning').show();
+                        $('#message-delete').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message-delete').hide();
+                        }, 5000);
+                    }
+                    if(response.status){
+                        $('#message-delete').html(response.status);
+                        $('#message-delete').removeClass('alert alert-warning');
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-success').show();
+                        $('#store-'+id_store).remove();
+                        $('#message-delete').fadeOut(3000);
+                        setInterval(() => {
                         $('#message-delete').hide();
                     }, 2000);
+                    }
                 },
                 error: function(data){
                     console.log(data);

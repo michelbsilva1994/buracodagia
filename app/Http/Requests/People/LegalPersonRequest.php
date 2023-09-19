@@ -29,7 +29,8 @@ class LegalPersonRequest extends FormRequest
             'cnpj' => ['required', 'max:14','unique:legal_people'],
             'public_place' => ['required'],
             'city' => ['required'],
-            'state' => ['required']
+            'state' => ['required'],
+            'nr_public_place' => ['required']
         ];
     }
 
@@ -49,7 +50,8 @@ class LegalPersonRequest extends FormRequest
             'telephone.required' => 'O campo telefone é obrigatório!',
             'public_place.required' => 'O campo endereço é obrigatório!',
             'city.required' => 'O campo cidade é obrigatório!',
-            'state.required' => 'O campo estado é obrigatório!'
+            'state.required' => 'O campo estado é obrigatório!',
+            'nr_public_place' => 'O campo Nº é obrigatório!'
         ];
     }
 }

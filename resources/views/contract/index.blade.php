@@ -89,14 +89,38 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    $('#message-delete').html(response.status);
-                    $('#modal-delete').modal('hide');
-                    $('#message-delete').addClass('alert alert-success').show();
-                    $('#contract-'+id_contract).remove();
-                    $('#message-delete').fadeOut(3000);
-                    setTimeout(function() {
+
+                    if(response.linked){
+                        $('#message-delete').html(response.linked);
+                        $('#message-delete').removeClass('alert alert-success');
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-warning').show();
+                        $('#message-delete').fadeOut(4000);
+                        setTimeout(function() {
                         $('#message-delete').hide();
-                    }, 2000);
+                        }, 4000);
+                    }
+                    if(response.sign){
+                        $('#message-delete').html(response.sign);
+                        $('#message-delete').removeClass('alert alert-success');
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-warning').show();
+                        $('#message-delete').fadeOut(4000);
+                        setTimeout(function() {
+                        $('#message-delete').hide();
+                        }, 4000);
+                    }
+                    if(response.status){
+                        $('#message-delete').html(response.status);
+                        $('#message-delete').removeClass('alert alert-warning');
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-success').show();
+                        $('#contract-'+id_contract).remove();
+                        $('#message-delete').fadeOut(3000);
+                        setTimeout(function() {
+                        $('#message-delete').hide();
+                        }, 2000);
+                    }
                 },
                 error: function(data){
                     console.log(data);

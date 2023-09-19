@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="my-4 text-secondary text-center"> Cadastro Pessoa Física</h2>
+                <h2 class="my-4 text-secondary text-center">{{$legalPerson->corporate_name}}</h2>
             </div>
             <div class="">
                 <form action="{{route('legalPerson.update', ['legalPerson' => $legalPerson->id])}}" method="post" autocomplete="off">

@@ -205,11 +205,11 @@ class ContractController extends Controller
                     return response()->json(['status' => 'O contrato foi excluído com sucesso!']);
                     //return redirect()->route('contract.index')->with('status', 'O contrato nº: '.$contract->id.' foi excluído com sucesso!');
                 }else{
-                    return response()->json(['status' => 'O contrato tem lojas vínculada, por favor remover!']);
+                    return response()->json(['linked' => 'O contrato tem lojas vínculada, por favor remover!']);
                     //return redirect()->route('contract.index')->with('alert', 'O contrato nº: '.$contract->id.' tem lojas vínculada, por favor remover!');
                 }
             }else{
-                return response()->json(['status' => 'Não foi possível excluir o contrato, pois o contrato já está assinado!']);
+                return response()->json(['sign' => 'Não foi possível excluir o contrato, pois o contrato já está assinado!']);
                 //return redirect()->route('contract.index')->with('alert', 'Não foi possível excluir o contrato nº: '.$contract->id.' , pois o contrato já está assinado!');
             }
 

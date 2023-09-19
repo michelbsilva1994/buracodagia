@@ -30,7 +30,8 @@ class LegalPersonUpdateRequest extends FormRequest
             'cnpj' => ['required', 'max:14', Rule::unique('legal_people')->ignore($this->route()->legalPerson)],
             'public_place' => ['required'],
             'city' => ['required'],
-            'state' => ['required']
+            'state' => ['required'],
+            'nr_public_place' => ['required']
         ];
     }
 
@@ -50,7 +51,8 @@ class LegalPersonUpdateRequest extends FormRequest
             'telephone.required' => 'O campo telefone é obrigatório!',
             'public_place.required' => 'O campo endereço é obrigatório!',
             'city.required' => 'O campo cidade é obrigatório!',
-            'state.required' => 'O campo estado é obrigatório!'
+            'state.required' => 'O campo estado é obrigatório!',
+            'nr_public_place' => 'O campo Nº é obrigatório!'
         ];
     }
 }

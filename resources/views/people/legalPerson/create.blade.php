@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="my-4 text-secondary text-center">Cadastro Pessoa Física</h2>
+                <h2 class="my-4 text-secondary text-center">Cadastro Pessoa Jurídica</h2>
             </div>
             <div class="col-sm-12 col-12 d-lg-flex justify-content-lg-center mx-auto">
                 <form action="{{route('legalPerson.store')}}" method="post" autocomplete="off">

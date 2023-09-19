@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Structure;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Structure\Store\StoreRequest;
 use App\Http\Requests\Structure\Store\StoreUpdateRequest;
+use App\Models\Contract\ContractStore;
 use App\Models\Domain\StoreStatus;
 use App\Models\Domain\StoreType;
 use App\Models\Structure\Pavement;
@@ -13,12 +14,13 @@ use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
-    public function __construct(Store $store, Pavement $pavement, StoreType $storeType, StoreStatus $storeStatus)
+    public function __construct(Store $store, Pavement $pavement, StoreType $storeType, StoreStatus $storeStatus, ContractStore $contractStore)
     {
         $this->store = $store;
         $this->pavement = $pavement;
         $this->storeType = $storeType;
         $this->storeStatus = $storeStatus;
+        $this->contractStore = $contractStore;
     }
     /**
      * Display a listing of the resource.
@@ -75,9 +77,17 @@ class StoreController extends Controller
             $store = $this->store->where('id',$id)->first();
             $storeType =  $this->storeType->all();
             $storeStatues = $this->storeStatus->where('status', 'A')->get();
-            return view('structure.store.edit', compact('store', 'pavementies','storeType','storeStatues'));
+
+            $contractStore = $this->contractStore->where('id_store',$id)->count();
+            $contract = $this->contractStore->select('id_contract')->where('id_store',$id)->first();
+
+            if($contractStore > 0){
+                return redirect()->route('store.index')->with('alert','Não pode alterar a '.$store->name.' - '.$store->pavement->name.' pois à mesma está vínculada ao contrato '.$contract->id_contract.' !');
+            }else{
+                return view('structure.store.edit', compact('store', 'pavementies','storeType','storeStatues'));
+            }
         } catch (\Throwable $th) {
-            return view('structure.store.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('store.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
@@ -102,9 +112,15 @@ class StoreController extends Controller
     {
         try {
             $store = $this->store->where('id',$id)->first();
-            $store->delete();
-            return response()->json(['status' => 'Loja excluída com sucesso!'] );
-            //return redirect()->route('store.index')->with('status', 'Loja excluída com sucesso!');
+            $contractStore = $this->contractStore->where('id_store',$id)->count();
+            $contract = $this->contractStore->select('id_contract')->where('id_store',$id)->first();
+
+            if($contractStore > 0 ){
+                return response()->json(['linked' => 'A loja '.$store->name.' - '.$store->pavement->name.' não pode ser excluída pois está vínculada ao contrato '.$contract->id_contract.' !']);
+            }else{
+                $store->delete();
+                return response()->json(['status' => 'Loja excluída com sucesso!'] );
+            }
         } catch (\Throwable $th) {
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
