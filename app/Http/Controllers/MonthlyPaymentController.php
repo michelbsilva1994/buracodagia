@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
 use App\Models\Contract\MonthlyPayment;
+use App\Models\Domain\TypePayment;
 use Illuminate\Http\Request;
 
 class MonthlyPaymentController extends Controller
 {
 
-    public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore)
+    public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore, TypePayment $typePayment)
     {
         $this->monthlyPayment = $monthlyPayment;
         $this->contract = $contract;
         $this->contractStore = $contractStore;
-
+        $this->typePayment = $typePayment;
     }
     /**
      * Display a listing of the resource.
@@ -29,7 +30,8 @@ class MonthlyPaymentController extends Controller
         $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->get();
-        return view('monthlyPayment.tuition', compact('tuition'));
+        $typesPayments = $this->typePayment->where('status', 'A')->get();
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments']));
     }
 
     public function filter(Request $request){
@@ -60,7 +62,7 @@ class MonthlyPaymentController extends Controller
             $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->get();
-            return view('monthlyPayment.tuition', compact('tuition'));
+            return redirect()->route('monthly.tuition');
         }
 
     }
@@ -154,12 +156,14 @@ class MonthlyPaymentController extends Controller
         return view('monthlyPayment.monthlyPaymentContract', compact(['monthlyPayment', 'physicalPerson']));
     }
 
-    public function lowerMonthlyFee($MonthlyPayment){
-        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
-        $monthlyPayment->dt_payday = date('Y/m/d');
+    public function lowerMonthlyFee(Request $request){
+
+        $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
+        $monthlyPayment->dt_payday = $request->dt_payday;
+        $monthlyPayment->type_payment = $request->id_payment;
         $monthlyPayment->save();
 
-        return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$MonthlyPayment.' realizada com sucesso!');
+        return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!');
     }
 
     public function cancelTuition($MonthlyPayment){
