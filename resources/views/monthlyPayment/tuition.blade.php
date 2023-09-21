@@ -54,12 +54,12 @@
                         <td>{{$monthlyPayment->id}}</td>
                         <td>{{$monthlyPayment->name_contractor}}</td>
                         <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                        <td>R$ {{$monthlyPayment->total_payable}}</td>
+                        <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                         <td>
                             @if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation))
                                 <div class="d-flex">
                                     <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
-                                    <a class="mr-3 btn btn-sm btn-outline-danger" href="{{route('monthly.cancelTuition', ['monthlyPayment' => $monthlyPayment->id])}}">Cancelar</a>
+                                    <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                                 </div>
                             @else
                                 <div>
@@ -73,14 +73,17 @@
             </table>
         </div>
     </div>
+
+    <!-- modal baixar mensalidade -->
     <div class="modal fade" id="modal-low" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel">Baixar</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
                 <form action="{{route('monthly.lowerMonthlyFee')}}" method="post">
                     @csrf
                     <div>
@@ -95,23 +98,66 @@
                         <select name="id_payment" id="id_payment" class="form-control" required>
                             <option value="" disabled selected>Selecione uma opção</option>
                             @foreach ($typesPayments as $typePayment)
-                                <option value="{{$typePayment->description}}">{{$typePayment->description}}</option>
+                                <option value="{{$typePayment->value}}">{{$typePayment->description}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="d-grid gap-2 my-3">
                         <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
                     </div>
                 </form>
             </div>
           </div>
         </div>
     </div>
+
+    <!-- modal cancelar mensalidade -->
+    <div class="modal fade" id="modal-cancel" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Tem certeza que deseja cancelar a mensalidade?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('monthly.cancelTuition')}}" method="post">
+                    @csrf
+                    <div>
+                        <input type="hidden" name="id_monthly_cancel" id="id_monthly_cancel">
+                    </div>
+                    <div>
+                        <label for="dt_cancellation">Data da Cancelamento</label>
+                        <input type="date" name="dt_cancellation" id="dt_cancellation" class="form-control" required>
+                    </div>
+                    <div>
+                        <label for="id_cancellation">Forma de pagamento</label>
+                        <select name="id_cancellation" id="id_cancellation" class="form-control" required>
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            @foreach ($typesCancellations as $typeCancellation)
+                                <option value="{{$typeCancellation->value}}">{{$typeCancellation->description}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2 my-3">
+                        <button type="submit" class="btn btn-success" id="btn-cancel-monthly">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
     <script>
         $(document).delegate('#btn-low','click',function(){
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly').val(id_monthly);
+        });
+
+        $(document).delegate('#btn-cancel', 'click', function(){
+            var id_monthly = $(this).attr('data-id-monthly');
+            $('#id_monthly_cancel').val(id_monthly);
         });
     </script>
 @endsection

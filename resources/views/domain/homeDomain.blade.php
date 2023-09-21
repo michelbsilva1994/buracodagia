@@ -10,6 +10,7 @@
             <a class="btn btn-lg btn-success" type="button" href="{{route('typeContract.index')}}">Tipo de Contrato</a>
             <a class="btn btn-lg btn-success" type="button" href="{{route('typePayment.index')}}">Tipo de Pagamento</a>
             <a class="btn btn-lg btn-success" type="button" href="{{route('typeCharge.index')}}">Tipo de Cobrança</a>
+            <a class="btn btn-lg btn-success" type="button" href="{{route('typeCancellation.index')}}">Tipo de Cancelamento</a>
           </div>
     </div>
 @endsection

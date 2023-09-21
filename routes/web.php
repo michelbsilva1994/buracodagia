@@ -3,6 +3,7 @@
 use App\Http\Controllers\Contract\ContractController;
 use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
+use App\Http\Controllers\Domain\TypeCancellationController;
 use App\Http\Controllers\Domain\TypeChargeController;
 use App\Http\Controllers\Domain\TypeContractController;
 use App\Http\Controllers\Domain\TypePayment;
@@ -77,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'monthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
     Route::post('lowerMonthlyFee/',[MonthlyPaymentController::class, 'lowerMonthlyFee'])->name('monthly.lowerMonthlyFee');
     Route::get('lowerMonthlyFeeContract/{monthlyPayment}',[MonthlyPaymentController::class, 'lowerMonthlyFeeContract'])->name('monthly.lowerMonthlyFeeContract');
-    Route::get('cancelTuition/{monthlyPayment}',[MonthlyPaymentController::class, 'cancelTuition'])->name('monthly.cancelTuition');
+    Route::post('cancelTuition/',[MonthlyPaymentController::class, 'cancelTuition'])->name('monthly.cancelTuition');
     Route::get('cancelTuitionContract/{monthlyPayment}',[MonthlyPaymentController::class, 'cancelTuitionContract'])->name('monthly.cancelTuitionContract');
     Route::get('tuition/', [MonthlyPaymentController::class, 'tuition'])->name('monthly.tuition');
     Route::post('tuition/filter',[MonthlyPaymentController::class, 'filter'])->name('monthly.filter');
@@ -91,6 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('storeStatus', StoreStatusController::class);
         Route::resource('typePayment', TypePayment::class);
         Route::resource('typeCharge', TypeChargeController::class);
+        Route::resource('typeCancellation', TypeCancellationController::class);
     });
 
     /**Homes Services */

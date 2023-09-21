@@ -20,8 +20,10 @@ return new class extends Migration
             $table->float('interest_amount')->nullable();
             $table->float('discount_value')->nullable();
             $table->float('total_payable');
-            $table->bigInteger('id_type_payment')->nullable();
+            $table->char('id_type_payment',2)->nullable();
             $table->string('type_payment')->nullable();
+            $table->char('id_type_cancellation',2)->nullable();
+            $table->string('type_cancellation')->nullable();
 
             $table->bigInteger('id_contract')->unsigned();
             $table->foreign('id_contract')->references('id')->on('contracts');

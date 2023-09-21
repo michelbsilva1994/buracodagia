@@ -19,7 +19,9 @@ class MonthlyPayment extends Model
         'total_payable',
         'id_type_payment',
         'type_payment',
-        'id_contract'
+        'id_contract',
+        'id_type_cancellation',
+        'type_cancellation'
     ];
 
     public function contract(){

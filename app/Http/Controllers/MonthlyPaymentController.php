@@ -5,18 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
 use App\Models\Contract\MonthlyPayment;
+use App\Models\Domain\TypeCancellation;
 use App\Models\Domain\TypePayment;
 use Illuminate\Http\Request;
 
 class MonthlyPaymentController extends Controller
 {
 
-    public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore, TypePayment $typePayment)
+    public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore, TypePayment $typePayment, TypeCancellation $typeCancellation)
     {
         $this->monthlyPayment = $monthlyPayment;
         $this->contract = $contract;
         $this->contractStore = $contractStore;
         $this->typePayment = $typePayment;
+        $this->typeCancellation = $typeCancellation;
     }
     /**
      * Display a listing of the resource.
@@ -31,7 +33,9 @@ class MonthlyPaymentController extends Controller
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->get();
         $typesPayments = $this->typePayment->where('status', 'A')->get();
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments']));
+        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
+
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
     }
 
     public function filter(Request $request){
@@ -98,6 +102,8 @@ class MonthlyPaymentController extends Controller
             $monthlyPayment->total_payable = $price_store;
             $monthlyPayment->id_type_payment = null;
             $monthlyPayment->type_payment = null;
+            $monthlyPayment->id_type_cancellation = null;
+            $monthlyPayment->type_cancellation = null;
             $monthlyPayment->id_contract = $contract->id;
 
             $monthlyPayment->create([
@@ -157,21 +163,34 @@ class MonthlyPaymentController extends Controller
     }
 
     public function lowerMonthlyFee(Request $request){
+        try {
+            $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
+            $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
 
-        $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
-        $monthlyPayment->dt_payday = $request->dt_payday;
-        $monthlyPayment->type_payment = $request->id_payment;
-        $monthlyPayment->save();
-
-        return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!');
+            if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation)){
+                $monthlyPayment->dt_payday = $request->dt_payday;
+                $monthlyPayment->id_type_payment = $typePayment->value;
+                $monthlyPayment->type_payment = $typePayment->description;
+                $monthlyPayment->save();
+            }
+            return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('monthly.tuition')->with('error','Ops, ocorreu um erro'.$th);
+        }
     }
 
-    public function cancelTuition($MonthlyPayment){
-        $monthlyPayment = $this->monthlyPayment->where('id', $MonthlyPayment)->first();
-        $monthlyPayment->dt_cancellation = date('Y/m/d');
-        $monthlyPayment->save();
+    public function cancelTuition(Request $request){
+        $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly_cancel)->first();
+        $typeCancellation = $this->typeCancellation->where('value',$request->id_cancellation)->where('status', 'A')->first();
 
-        return redirect()->route('monthly.tuition')->with('status','Mensalidade: '.$MonthlyPayment.' cancelada realizada com sucesso!');
+        if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation)){
+            $monthlyPayment->dt_cancellation = $request->dt_cancellation;
+            $monthlyPayment->id_type_cancellation = $typeCancellation->value;
+            $monthlyPayment->type_cancellation = $typeCancellation->description;
+            $monthlyPayment->save();
+        }
+
+        return redirect()->route('monthly.tuition')->with('status','Mensalidade: '.$monthlyPayment->id.' cancelada com sucesso!');
     }
 
     public function lowerMonthlyFeeContract($MonthlyPayment){
@@ -187,6 +206,6 @@ class MonthlyPaymentController extends Controller
         $monthlyPayment->dt_cancellation = date('Y/m/d');
         $monthlyPayment->save();
 
-        return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Mensalidade: '.$MonthlyPayment.' cancelada realizada com sucesso!');
+        return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Mensalidade: '.$MonthlyPayment.' cancelada com sucesso!');
     }
 }
