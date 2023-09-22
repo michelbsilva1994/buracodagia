@@ -34,23 +34,61 @@
                 </thead>
                 <tbody>
                     @foreach ($monthlyPayment as $monthly)
-                    <tr>
-                        <td>{{$monthly->id}}</td>
-                        <td>{{date('d/m/Y', strtotime($monthly->due_date))}}</td>
-                        <td>R$ {{number_format($monthly->total_payable, 2, ',', '.')}}</td>
-                        <td>
-                            @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
-                                <div class="d-flex">
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
-                                </div>
-                            @else
-                                <div>
-                                    <h6>-</h6>
-                                </div>
-                            @endif
-                        </td>
-                    </tr>
+                        @if ($monthly->dt_payday)
+                            <tr class="bg-success text-white">
+                                <td>{{$monthly->id}}</td>
+                                <td>{{date('d/m/Y', strtotime($monthly->due_date))}}</td>
+                                <td>R$ {{number_format($monthly->total_payable, 2, ',', '.')}}</td>
+                                <td>
+                                    @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
+                                        <div class="d-flex">
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <h6>-</h6>
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        @elseif ($monthly->dt_cancellation)
+                            <tr class="bg-danger text-white">
+                                <td>{{$monthly->id}}</td>
+                                <td>{{date('d/m/Y', strtotime($monthly->due_date))}}</td>
+                                <td>R$ {{number_format($monthly->total_payable, 2, ',', '.')}}</td>
+                                <td>
+                                    @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
+                                        <div class="d-flex">
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <h6>-</h6>
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        @else
+                            <tr class="">
+                                <td>{{$monthly->id}}</td>
+                                <td>{{date('d/m/Y', strtotime($monthly->due_date))}}</td>
+                                <td>R$ {{number_format($monthly->total_payable, 2, ',', '.')}}</td>
+                                <td>
+                                    @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
+                                        <div class="d-flex">
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <h6>-</h6>
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
