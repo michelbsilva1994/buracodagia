@@ -77,9 +77,9 @@ Route::middleware('auth')->group(function () {
     /**Generate Tuition */
     Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'monthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
     Route::post('lowerMonthlyFee/',[MonthlyPaymentController::class, 'lowerMonthlyFee'])->name('monthly.lowerMonthlyFee');
-    Route::get('lowerMonthlyFeeContract/{monthlyPayment}',[MonthlyPaymentController::class, 'lowerMonthlyFeeContract'])->name('monthly.lowerMonthlyFeeContract');
+    Route::post('lowerMonthlyFeeContract/',[MonthlyPaymentController::class, 'lowerMonthlyFeeContract'])->name('monthly.lowerMonthlyFeeContract');
     Route::post('cancelTuition/',[MonthlyPaymentController::class, 'cancelTuition'])->name('monthly.cancelTuition');
-    Route::get('cancelTuitionContract/{monthlyPayment}',[MonthlyPaymentController::class, 'cancelTuitionContract'])->name('monthly.cancelTuitionContract');
+    Route::post('cancelTuitionContract/',[MonthlyPaymentController::class, 'cancelTuitionContract'])->name('monthly.cancelTuitionContract');
     Route::get('tuition/', [MonthlyPaymentController::class, 'tuition'])->name('monthly.tuition');
     Route::post('tuition/filter',[MonthlyPaymentController::class, 'filter'])->name('monthly.filter');
     Route::resource('monthly', MonthlyPaymentController::class);
