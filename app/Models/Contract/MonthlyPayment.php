@@ -17,11 +17,15 @@ class MonthlyPayment extends Model
         'interest_amount',
         'discount_value',
         'total_payable',
-        'id_type_payment',
-        'type_payment',
-        'id_contract',
+        'amount_paid',
+        'balance_value',
+        'id_monthly_status',
+        'monthly_status',
         'id_type_cancellation',
-        'type_cancellation'
+        'type_cancellation',
+        'download_user',
+        'cancellation_user',
+        'id_contract',
     ];
 
     public function contract(){

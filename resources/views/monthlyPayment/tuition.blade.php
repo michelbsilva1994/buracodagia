@@ -45,29 +45,75 @@
                         <td>Contrante</td>
                         <td>Data de vencimento</td>
                         <td>Valor a pagar</td>
+                        <td>Valor Pago</td>
+                        <td>Saldo</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($tuition as $monthlyPayment)
-                    <tr>
-                        <td>{{$monthlyPayment->id}}</td>
-                        <td>{{$monthlyPayment->name_contractor}}</td>
-                        <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                        <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
-                        <td>
-                            @if(empty($monthlyPayment->dt_payday) && empty($monthlyPayment->dt_cancellation))
-                                <div class="d-flex">
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
-                                </div>
-                            @else
+                        @if ($monthlyPayment->id_monthly_status === 'F')
+                        <tr class="bg-success text-white">
+                            <td>{{$monthlyPayment->id}}</td>
+                            <td>{{$monthlyPayment->name_contractor}}</td>
+                            <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                            <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
+                            <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
+                            <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
+                            <td>
                                 <div>
                                     <h6>-</h6>
                                 </div>
+                            </td>
+                        </tr>
+                        @elseif ($monthlyPayment->id_monthly_status === 'P')
+                            <tr class="bg-secondary text-white">
+                                <td>{{$monthlyPayment->id}}</td>
+                                <td>{{$monthlyPayment->name_contractor}}</td>
+                                <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                                <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
+                                <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
+                                <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @elseif($monthlyPayment->id_monthly_status === 'C')
+                            <tr class="bg-danger text-white">
+                                <td>{{$monthlyPayment->id}}</td>
+                                <td>{{$monthlyPayment->name_contractor}}</td>
+                                <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                                <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
+                                <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
+                                <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
+                                <td>
+                                    <div>
+                                        <h6>-</h6>
+                                    </div>
+                                </td>
+                            </tr>
+                        @else
+                        <tr class="">
+                            <td>{{$monthlyPayment->id}}</td>
+                            <td>{{$monthlyPayment->name_contractor}}</td>
+                            <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                            <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
+                            <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
+                            <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
+                            <td>
+                                @if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P')
+                                <div class="d-flex">
+                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                    @if ($monthlyPayment->id_monthly_status === 'A')
+                                        <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
+                                    @endif
+                                </div>
                             @endif
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
@@ -101,6 +147,10 @@
                                 <option value="{{$typePayment->value}}">{{$typePayment->description}}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div>
+                        <label for="amount_paid">Valor Recebido</label>
+                        <input type="number" step="0.01" name="amount_paid" id="amount_paid" class="form-control" required>
                     </div>
                     <div class="d-grid gap-2 my-3">
                         <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
