@@ -36,5 +36,6 @@
             </main>
         </div>
         <script src="{{asset('js/jquery.min.js')}}"></script>
+        <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     </body>
 </html>

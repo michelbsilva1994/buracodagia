@@ -26,7 +26,7 @@ class PhysicalPersonUpdateRequest extends FormRequest
             'name' => ['required', 'min:5'],
             'birth_date' => ['required'],
             'email' => ['required', 'email', 'max:255'],
-            'cpf' => ['required', 'max:11', Rule::unique('physical_people')->ignore($this->route()->physicalPerson)],
+            'cpf' => ['required', Rule::unique('physical_people')->ignore($this->route()->physicalPerson)],
             'rg' => ['required', Rule::unique('physical_people')->ignore($this->route()->physicalPerson)],
             'telephone' => ['required'],
             'public_place' => ['required'],

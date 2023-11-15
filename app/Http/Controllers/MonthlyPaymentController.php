@@ -98,49 +98,59 @@ class MonthlyPaymentController extends Controller
         $contracts = $this->contract->all();
 
         /**Percorrendo todos os contratos para gerar a mensalidade*/
-        foreach ($contracts as $contract) {
-            $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
+        try {
+            if($request->due_date < date('Y-m-d') ){
+                return redirect()->route('monthly.index')->with('alert', 'Não é permitida gerar mensalidade em lote com data retroativa!');
+            }else{
+                foreach ($contracts as $contract) {
+                    $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
+                    $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->first();
 
-            $monthlyPayment = $this->monthlyPayment;
+                    $monthlyPayment = $this->monthlyPayment;
 
-            $monthlyPayment->due_date = $request->due_date;
-            $monthlyPayment->dt_payday = null;
-            $monthlyPayment->dt_cancellation = null;
-            $monthlyPayment->fine_value = 0;
-            $monthlyPayment->interest_amount = 0;
-            $monthlyPayment->discount_value = 0;
-            $monthlyPayment->total_payable = $price_store;
-            $monthlyPayment->amount_paid = 0;
-            $monthlyPayment->balance_value = $price_store;
-            $monthlyPayment->id_monthly_status = 'A';
-            $monthlyPayment->monthly_status = 'Aberto';
-            $monthlyPayment->id_type_cancellation = null;
-            $monthlyPayment->type_cancellation = null;
-            $monthlyPayment->download_user = null;
-            $monthlyPayment->cancellation_user = null;
-            $monthlyPayment->id_contract = $contract->id;
+                    if(empty($tution)){
+                        $monthlyPayment->due_date = $request->due_date;
+                        $monthlyPayment->dt_payday = null;
+                        $monthlyPayment->dt_cancellation = null;
+                        $monthlyPayment->fine_value = 0;
+                        $monthlyPayment->interest_amount = 0;
+                        $monthlyPayment->discount_value = 0;
+                        $monthlyPayment->total_payable = $price_store;
+                        $monthlyPayment->amount_paid = 0;
+                        $monthlyPayment->balance_value = $price_store;
+                        $monthlyPayment->id_monthly_status = 'A';
+                        $monthlyPayment->monthly_status = 'Aberto';
+                        $monthlyPayment->id_type_cancellation = null;
+                        $monthlyPayment->type_cancellation = null;
+                        $monthlyPayment->download_user = null;
+                        $monthlyPayment->cancellation_user = null;
+                        $monthlyPayment->id_contract = $contract->id;
 
-            $monthlyPayment->create([
-                'due_date' => $monthlyPayment->due_date,
-                'dt_payday' => $monthlyPayment->dt_payday,
-                'dt_cancellation' => $monthlyPayment->dt_cancellation,
-                'fine_value' => $monthlyPayment->fine_value,
-                'interest_amount' => $monthlyPayment->interest_amount,
-                'discount_value' => $monthlyPayment->discount_value,
-                'total_payable' => $monthlyPayment->total_payable,
-                'amount_paid' => $monthlyPayment->amount_paid,
-                'balance_value' => $monthlyPayment->balance_value,
-                'id_monthly_status' => $monthlyPayment->id_monthly_status,
-                'monthly_status' => $monthlyPayment->monthly_status,
-                'id_type_cancellation' => $monthlyPayment->id_type_cancellation,
-                'type_cancellation' => $monthlyPayment->type_cancellation,
-                'download_user' => $monthlyPayment->download_user,
-                'cancellation_user' => $monthlyPayment->cancellation_user,
-                'id_contract' => $monthlyPayment->id_contract
-            ]);
+                        $monthlyPayment->create([
+                            'due_date' => $monthlyPayment->due_date,
+                            'dt_payday' => $monthlyPayment->dt_payday,
+                            'dt_cancellation' => $monthlyPayment->dt_cancellation,
+                            'fine_value' => $monthlyPayment->fine_value,
+                            'interest_amount' => $monthlyPayment->interest_amount,
+                            'discount_value' => $monthlyPayment->discount_value,
+                            'total_payable' => $monthlyPayment->total_payable,
+                            'amount_paid' => $monthlyPayment->amount_paid,
+                            'balance_value' => $monthlyPayment->balance_value,
+                            'id_monthly_status' => $monthlyPayment->id_monthly_status,
+                            'monthly_status' => $monthlyPayment->monthly_status,
+                            'id_type_cancellation' => $monthlyPayment->id_type_cancellation,
+                            'type_cancellation' => $monthlyPayment->type_cancellation,
+                            'download_user' => $monthlyPayment->download_user,
+                            'cancellation_user' => $monthlyPayment->cancellation_user,
+                            'id_contract' => $monthlyPayment->id_contract
+                        ]);
+                    }
+                }
+                return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento '.date('d/m/Y', strtotime($request->due_date)).' foram geradas com sucesso!');
+            }
+        } catch (\Throwable $th) {
+                return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
         }
-
-        return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento '.date('d/m/Y', strtotime($monthlyPayment->due_date)).' foram geradas com sucesso!');
     }
 
     /**

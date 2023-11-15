@@ -31,7 +31,7 @@
                         <div class="col-md-6">
                             <label for="cpf" class="text-secondary">CPF</label>
                             <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf"
-                                placeholder="Ex: 999.999.999-99" name="cpf" value="{{ old('cpf') ?? $physicalPerson->cpf }}">
+                                placeholder="Ex: 999.999.999-99" data-mask="000.000.000-00" name="cpf" value="{{ old('cpf') ?? $physicalPerson->cpf }}">
                             @error('cpf')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
@@ -43,13 +43,13 @@
                         <div class="col-md-6">
                             <label for="telephone" class="text-secondary">Telefone</label>
                             <input type="text" class="form-control @error('telephone') is-invalid @enderror" id="telephone"
-                                placeholder="Ex: 987000000" name="telephone" value="{{ old('telephone') ?? $physicalPerson->telephone }}">
+                                placeholder="Ex: 987000000" data-mask="(00) 00000-0000" name="telephone" value="{{ old('telephone') ?? $physicalPerson->telephone }}">
                             @error('telephone')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="cep" class="text-secondary">CEP</label>
                             <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
-                                placeholder="Ex: 60000-000" name="cep" value="{{ old('cep') ?? $physicalPerson->cep }}">
+                                placeholder="Ex: 60000-000" data-mask="00000-000" name="cep" value="{{ old('cep') ?? $physicalPerson->cep }}">
                             @error('cep')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-10">

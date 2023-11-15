@@ -60,10 +60,42 @@ class PhysicalPersonController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(PhysicalPersonRequest $request)
     {
+        $cpf = str_replace('.','', $request->cpf);
+        $cpf = str_replace('-','', $cpf);
+        $cep = str_replace('-','', $request->cep);
+
         try {
-            $this->physicalPerson->create($request->all());
+            $physicalPerson = $this->physicalPerson;
+
+            $physicalPerson->name = $request->name;
+            $physicalPerson->birth_date = $request->birth_date;
+            $physicalPerson->email = $request->email;
+            $physicalPerson->cpf = $cpf;
+            $physicalPerson->rg = $request->rg;
+            $physicalPerson->telephone = $request->telephone;
+            $physicalPerson->cep = $cep;
+            $physicalPerson->public_place = $request->public_place;
+            $physicalPerson->nr_public_place = $request->nr_public_place;
+            $physicalPerson->city = $request->city;
+            $physicalPerson->state = $request->state;
+
+            $physicalPerson->create([
+                'name' => $physicalPerson->name,
+                'birth_date' => $physicalPerson->birth_date,
+                'email' => $physicalPerson->email,
+                'cpf' => $physicalPerson->cpf,
+                'rg' => $physicalPerson->rg,
+                'telephone' => $physicalPerson->telephone,
+                'cep' => $physicalPerson->cep,
+                'public_place' => $physicalPerson->public_place,
+                'nr_public_place' => $physicalPerson->nr_public_place,
+                'city' => $physicalPerson->city,
+                'state' => $physicalPerson->state
+            ]);
+
             return redirect()->route('physicalPerson.index')->with('status','Cadastro efetuado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -98,8 +130,26 @@ class PhysicalPersonController extends Controller
     public function update(PhysicalPersonUpdateRequest $request, string $id)
     {
         try {
+            $cpf = str_replace('.','', $request->cpf);
+            $cpf = str_replace('-','', $cpf);
+            $cep = str_replace('-','', $request->cep);
+
             $physicalPerson = $this->physicalPerson->findorfail($id);
-            $physicalPerson->update($request->all());
+
+            $physicalPerson->name = $request->name;
+            $physicalPerson->birth_date = $request->birth_date;
+            $physicalPerson->email = $request->email;
+            $physicalPerson->cpf = $cpf;
+            $physicalPerson->rg = $request->rg;
+            $physicalPerson->telephone = $request->telephone;
+            $physicalPerson->cep = $cep;
+            $physicalPerson->public_place = $request->public_place;
+            $physicalPerson->nr_public_place = $request->nr_public_place;
+            $physicalPerson->city = $request->city;
+            $physicalPerson->state = $request->state;
+
+            $physicalPerson->save();
+
             return redirect()->route('physicalPerson.index')->with('status','Cadastro alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('physicalPerson.edit',$physicalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

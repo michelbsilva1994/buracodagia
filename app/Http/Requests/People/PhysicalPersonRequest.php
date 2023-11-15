@@ -25,7 +25,7 @@ class PhysicalPersonRequest extends FormRequest
             'name' => ['required', 'min:5'],
             'birth_date' => ['required'],
             'email' => ['required', 'email', 'max:255'],
-            'cpf' => ['required', 'unique:physical_people', 'max:11'],
+            'cpf' => ['required', 'unique:physical_people'],
             'rg' => ['required', 'unique:physical_people'],
             'telephone' => ['required'],
             'public_place' => ['required'],
