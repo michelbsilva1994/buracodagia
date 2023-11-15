@@ -41,7 +41,26 @@ class LegalPersonController extends Controller
     public function store(LegalPersonRequest $request)
     {
         try {
-            $this->legalPerson->create($request->all());
+            $cnpj = str_replace('.','',$request->cnpj);
+            $cnpj = str_replace('/','',$cnpj);
+            $cnpj = str_replace('-','',$cnpj);
+            $cep = str_replace('-','', $request->cep);
+
+            $legalPerson = $this->legalPerson;
+
+            $legalPerson->create([
+                'corporate_name' => $request->corporate_name,
+                'fantasy_name' => $request->fantasy_name,
+                'email' => $request->email,
+                'telephone' => $request->telephone,
+                'cnpj' => $cnpj,
+                'cep' => $cep,
+                'public_place' => $request->public_place,
+                'nr_public_place' => $request->nr_public_place,
+                'city' => $request->city,
+                'state' => $request->state
+            ]);
+
             return redirect()->route('legalPerson.index')->with('status','Cadastro realizado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('legalPerson.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -75,8 +94,26 @@ class LegalPersonController extends Controller
     public function update(LegalPersonUpdateRequest $request, string $id)
     {
         try {
+            $cnpj = str_replace('.','',$request->cnpj);
+            $cnpj = str_replace('/','',$cnpj);
+            $cnpj = str_replace('-','',$cnpj);
+            $cep = str_replace('-','', $request->cep);
+
             $legalPerson = $this->legalPerson->findorfail($id);
-            $legalPerson->update($request->all());
+
+            $legalPerson->corporate_name = $request->corporate_name;
+            $legalPerson->fantasy_name = $request->fantasy_name;
+            $legalPerson->email = $request->email;
+            $legalPerson->telephone = $request->telephone;
+            $legalPerson->cnpj = $cnpj;
+            $legalPerson->cep = $cep;
+            $legalPerson->public_place = $request->public_place;
+            $legalPerson->nr_public_place = $request->nr_public_place;
+            $legalPerson->city = $request->city;
+            $legalPerson->state = $request->state;
+
+            $legalPerson->save();
+
             return redirect()->route('legalPerson.index')->with('status','Cadastro alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('legalPerson.edit',$legalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

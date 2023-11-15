@@ -27,7 +27,7 @@ class LegalPersonUpdateRequest extends FormRequest
             'fantasy_name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'telephone' => ['required'],
-            'cnpj' => ['required', 'max:14', Rule::unique('legal_people')->ignore($this->route()->legalPerson)],
+            'cnpj' => ['required', Rule::unique('legal_people')->ignore($this->route()->legalPerson)],
             'public_place' => ['required'],
             'city' => ['required'],
             'state' => ['required'],

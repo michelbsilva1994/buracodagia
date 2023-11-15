@@ -26,7 +26,7 @@ class LegalPersonRequest extends FormRequest
             'fantasy_name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'telephone' => ['required'],
-            'cnpj' => ['required', 'max:14','unique:legal_people'],
+            'cnpj' => ['required','unique:legal_people'],
             'public_place' => ['required'],
             'city' => ['required'],
             'state' => ['required'],

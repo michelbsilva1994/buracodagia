@@ -31,19 +31,19 @@
                         <div class="col-md-6">
                             <label for="telephone" class="text-secondary">Telefone</label>
                             <input type="text" class="form-control @error('telephone') is-invalid @enderror" id="telephone"
-                                placeholder="Ex: 987000000" name="telephone" value="{{ old('telephone') ?? $legalPerson->telephone }}">
+                                placeholder="Ex: 987000000" data-mask="(00) 00000-0000" name="telephone" value="{{ old('telephone') ?? $legalPerson->telephone }}">
                             @error('telephone')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="cnpj" class="text-secondary">CNPJ</label>
                             <input type="text" class="form-control @error('cnpj') is-invalid @enderror" id="cnpj"
-                                placeholder="Ex: 99.999.999/9999-99" name="cnpj" value="{{ old('cnpj') ?? $legalPerson->cnpj}}">
+                                placeholder="Ex: 99.999.999/9999-99" data-mask="00.000.000/0000-00" name="cnpj" value="{{ old('cnpj') ?? $legalPerson->cnpj}}">
                             @error('cnpj')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="cep" class="text-secondary">CEP</label>
                             <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
-                                placeholder="Ex: 60000-000" name="cep" value="{{ old('cep') ?? $legalPerson->cep}}">
+                                placeholder="Ex: 60000-000" data-mask="00000-000" name="cep" value="{{ old('cep') ?? $legalPerson->cep}}">
                             @error('cep')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-10">
