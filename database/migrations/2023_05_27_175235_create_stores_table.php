@@ -21,6 +21,9 @@ return new class extends Migration
             $table->bigInteger('id_pavement')->unsigned();
             $table->foreign('id_pavement')->references('id')->on('pavements');
 
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
+
             $table->timestamps();
         });
     }

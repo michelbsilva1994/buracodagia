@@ -7,6 +7,7 @@ use App\Http\Requests\Domain\TypeCancellation\TypeCancellationRequest;
 use App\Http\Requests\Domain\TypeCancellation\TypeCancellationUpdateRequest;
 use App\Models\Domain\TypeCancellation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TypeCancellationController extends Controller
 {
@@ -41,7 +42,13 @@ class TypeCancellationController extends Controller
     public function store(TypeCancellationRequest $request)
     {
         try {
-            $this->typeCancellation->create($request->all());
+            $this->typeCancellation->create([
+                'value' => $request->value,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('typeCancellation.index')->with('status','Tipo de cancelamento cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typeCancellation.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -76,7 +83,14 @@ class TypeCancellationController extends Controller
     {
         try {
             $typeCancellation = $this->typeCancellation->where('id', $id)->first();
-            $typeCancellation->update($request->all());
+
+            $typeCancellation->value = $request->value;
+            $typeCancellation->description = $request->description;
+            $typeCancellation->status = $request->status;
+            $typeCancellation->update_user = Auth::user()->name;
+
+            $typeCancellation->save();
+
             return redirect()->route('typeCancellation.index')->with('status','Tipo de cancelamento alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typeCancellation.edit', $typeCancellation->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

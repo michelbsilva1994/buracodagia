@@ -7,6 +7,7 @@ use App\Http\Requests\Domain\StoreType\StoreTypeRequest;
 use App\Http\Requests\Domain\StoreType\StoreTypeUpdateRequest;
 use App\Models\Domain\StoreType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoreTypeController extends Controller
 {
@@ -41,7 +42,13 @@ class StoreTypeController extends Controller
     public function store(StoreTypeRequest $request)
     {
         try {
-            $this->storeType->create($request->all());
+            $this->storeType->create([
+                'value' => $request->value,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('storeType.index')->with('status','Tipo de loja cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('storeType.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -76,7 +83,14 @@ class StoreTypeController extends Controller
     {
         try {
             $storeType = $this->storeType->where('id', $id)->first();
-            $storeType->update($request->all());
+
+            $storeType->value = $request->value;
+            $storeType->description = $request->description;
+            $storeType->status = $request->status;
+            $storeType->update_user = Auth::user()->name;
+
+            $storeType->save();
+
             return redirect()->route('storeType.index')->with('status','Tipo de loja alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('storeType.edit', $storeType->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

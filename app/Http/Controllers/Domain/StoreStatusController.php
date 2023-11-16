@@ -7,6 +7,7 @@ use App\Http\Requests\Domain\StoreStatus\StoreStatusRequest;
 use App\Http\Requests\Domain\StoreStatus\StoreStatusUpdateRequest;
 use App\Models\Domain\StoreStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoreStatusController extends Controller
 {
@@ -41,7 +42,13 @@ class StoreStatusController extends Controller
     public function store(StoreStatusRequest $request)
     {
         try {
-            $this->storeStatus->create($request->all());
+            $this->storeStatus->create([
+                'value' => $request->value,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('storeStatus.index')->with('status','Status cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('storeStatus.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -76,7 +83,14 @@ class StoreStatusController extends Controller
     {
         try {
             $status = $this->storeStatus->where('id',$id)->first();
-            $status->update($request->all());
+
+            $status->value = $request->value;
+            $status->description = $request->description;
+            $status->status = $request->status;
+            $status->update_user = Auth::user()->name;
+
+            $status->save();
+
             return redirect()->route('storeStatus.index')->with('status','Status alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('storeStatus.create',$status->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

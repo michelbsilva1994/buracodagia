@@ -11,6 +11,7 @@ use App\Models\Domain\StoreType;
 use App\Models\Structure\Pavement;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoreController extends Controller
 {
@@ -52,7 +53,15 @@ class StoreController extends Controller
     public function store(StoreRequest $request)
     {
         try {
-            $this->store->create($request->all());
+            $this->store->create([
+                'name' => $request->name,
+                'status' => $request->status,
+                'type' => $request->type,
+                'description' => $request->description,
+                'id_pavement' => $request->id_pavement,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('store.index')->with('status', 'Loja cadastrada com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('store.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -98,7 +107,16 @@ class StoreController extends Controller
     {
         try {
             $store = $this->store->where('id',$id)->first();
-            $store->update($request->all());
+
+            $store->name = $request->name;
+            $store->status = $request->status;
+            $store->type = $request->type;
+            $store->description = $request->description;
+            $store->id_pavement = $request->id_pavement;
+            $store->update_user = Auth::user()->name;
+
+            $store->save();
+
             return redirect()->route('store.index')->with('status', 'Loja alterada com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('store.update', $store->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

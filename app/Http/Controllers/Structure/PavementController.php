@@ -7,6 +7,7 @@ use App\Http\Requests\Structure\Pavement\PavementeRequest;
 use App\Http\Requests\Structure\Pavement\PavementeUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Structure\Pavement;
+use Illuminate\Support\Facades\Auth;
 
 class PavementController extends Controller
 {
@@ -41,7 +42,13 @@ class PavementController extends Controller
     public function store(PavementeRequest $request)
     {
         try {
-            $this->pavement->create($request->all());
+            $this->pavement->create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('pavement.index')->with('status', 'Pavimento cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('pavement.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -72,7 +79,14 @@ class PavementController extends Controller
     {
         try {
             $pavement = $this->pavement->where('id',$id)->first();
-            $pavement->update($request->all());
+
+            $pavement->name = $request->name;
+            $pavement->description = $request->description;
+            $pavement->status = $request->status;
+            $pavement->update_user = Auth::user()->name;
+
+            $pavement->save();
+
             return redirect()->route('pavement.index')->with('status', 'Pavimento alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('pavement.edit', $pavement->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

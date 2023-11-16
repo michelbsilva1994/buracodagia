@@ -7,6 +7,7 @@ use App\Http\Requests\Domain\TypeContract\TypeContractRequest;
 use App\Http\Requests\Domain\TypeContract\TypeContractUpdateRequest;
 use App\Models\Domain\TypeContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TypeContractController extends Controller
 {
@@ -41,7 +42,13 @@ class TypeContractController extends Controller
     public function store(TypeContractRequest $request)
     {
         try {
-            $this->typeContract->create($request->all());
+            $this->typeContract->create([
+                'value' => $request->value,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('typeContract.index')->with('status','Tipo de contrato cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typeContract.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -77,7 +84,14 @@ class TypeContractController extends Controller
     {
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();
-            $typeContract->update($request->all());
+
+            $typeContract->value = $request->value;
+            $typeContract->description = $request->description;
+            $typeContract->status = $request->status;
+            $typeContract->update_user = Auth::user()->name;
+
+            $typeContract->save();
+
             return redirect()->route('typeContract.index')->with('status','Tipo de contrato alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typeContract.edit', $typeContract->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

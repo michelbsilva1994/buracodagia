@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->longText('description')->nullable();
             $table->char('status', 1);
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
             $table->timestamps();
         });
     }

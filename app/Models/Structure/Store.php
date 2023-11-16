@@ -14,7 +14,9 @@ class Store extends Model
         'status',
         'type',
         'description',
-        'id_pavement'
+        'id_pavement',
+        'create_user',
+        'update_user'
     ];
 
     public function pavement(){

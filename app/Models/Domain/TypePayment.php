@@ -12,6 +12,8 @@ class TypePayment extends Model
     protected $fillable = [
         'value',
         'description',
-        'status'
+        'status',
+        'create_user',
+        'update_user'
     ];
 }

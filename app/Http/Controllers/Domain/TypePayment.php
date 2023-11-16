@@ -7,6 +7,7 @@ use App\Http\Requests\Domain\TypePayment\TypePaymentRequest;
 use App\Http\Requests\Domain\TypePayment\TypePaymentUpdateRequest;
 use App\Models\Domain\TypePayment as DomainTypePayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TypePayment extends Controller
 {
@@ -41,7 +42,13 @@ class TypePayment extends Controller
     public function store(TypePaymentRequest $request)
     {
         try {
-            $this->typePayment->create($request->all());
+            $this->typePayment->create([
+                'value' => $request->value,
+                'description' => $request->description,
+                'status' => $request->status,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
             return redirect()->route('typePayment.index')->with('status','Tipo de pagamento cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typePayment.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -76,7 +83,14 @@ class TypePayment extends Controller
     {
         try {
             $typePayment = $this->typePayment->where('id', $id)->first();
-            $typePayment->update($request->all());
+
+            $typePayment->value = $request->value;
+            $typePayment->description = $request->description;
+            $typePayment->status = $request->status;
+            $typePayment->update_user = Auth::user()->name;
+
+            $typePayment->save();
+
             return redirect()->route('typePayment.index')->with('status','Tipo de pagamento alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('typePayment.edit', $typePayment->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

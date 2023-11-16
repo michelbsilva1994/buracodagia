@@ -12,7 +12,9 @@ class Pavement extends Model
     protected $fillable = [
         'name',
         'description',
-        'status'
+        'status',
+        'create_user',
+        'update_user'
     ];
 
     public function store() {
