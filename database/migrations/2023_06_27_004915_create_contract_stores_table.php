@@ -21,6 +21,9 @@ return new class extends Migration
             $table->foreign('id_contract')->references('id')->on('contracts');
 
             $table->float('store_price');
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
+
             $table->timestamps();
         });
     }

@@ -26,6 +26,8 @@ class MonthlyPayment extends Model
         'download_user',
         'cancellation_user',
         'id_contract',
+        'create_user',
+        'update_user'
     ];
 
     public function contract(){

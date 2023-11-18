@@ -21,5 +21,7 @@ class PhysicalPerson extends Model
         'nr_public_place',
         'city',
         'state',
+        'create_user',
+        'update_user'
     ];
 }

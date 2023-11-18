@@ -7,6 +7,7 @@ use App\Http\Requests\People\LegalPersonRequest;
 use App\Http\Requests\People\LegalPersonUpdateRequest;
 use App\Models\People\LegalPerson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LegalPersonController extends Controller
 {
@@ -58,7 +59,9 @@ class LegalPersonController extends Controller
                 'public_place' => $request->public_place,
                 'nr_public_place' => $request->nr_public_place,
                 'city' => $request->city,
-                'state' => $request->state
+                'state' => $request->state,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
             ]);
 
             return redirect()->route('legalPerson.index')->with('status','Cadastro realizado com sucesso!');
@@ -111,6 +114,7 @@ class LegalPersonController extends Controller
             $legalPerson->nr_public_place = $request->nr_public_place;
             $legalPerson->city = $request->city;
             $legalPerson->state = $request->state;
+            $legalPerson->update_user = Auth::user()->name;
 
             $legalPerson->save();
 

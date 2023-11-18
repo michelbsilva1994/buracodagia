@@ -26,6 +26,9 @@ return new class extends Migration
             $table->bigInteger('id_monthly_payment')->unsigned();
             $table->foreign('id_monthly_payment')->references('id')->on('monthly_payments');
 
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
+
             $table->timestamps();
         });
     }

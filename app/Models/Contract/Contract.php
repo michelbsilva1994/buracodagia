@@ -25,7 +25,9 @@ class Contract extends Model
         'dt_signature',
         'id_physical_person',
         'id_legal_person',
-        'ds_cancellation_reason'
+        'ds_cancellation_reason',
+        'create_user',
+        'update_user'
     ];
 
     public function physicalPerson(){

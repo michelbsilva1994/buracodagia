@@ -20,7 +20,9 @@ class LowerMonthlyFee extends Model
         'dt_chargeback',
         'download_user',
         'chargeback_user',
-        'id_monthly_payment'
+        'id_monthly_payment',
+        'create_user',
+        'update_user'
     ];
 
     public function monthly_payment(){

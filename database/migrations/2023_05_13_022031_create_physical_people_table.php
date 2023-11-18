@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('nr_public_place');
             $table->string('city');
             $table->string('state');
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
             $table->timestamps();
         });
     }

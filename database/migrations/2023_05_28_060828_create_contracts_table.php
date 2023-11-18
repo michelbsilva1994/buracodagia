@@ -32,6 +32,9 @@ return new class extends Migration
             $table->bigInteger('id_legal_person')->unsigned()->nullable();
             $table->foreign('id_legal_person')->references('id')->on('legal_people');
 
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
+
             $table->timestamps();
         });
     }

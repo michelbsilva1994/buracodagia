@@ -12,6 +12,7 @@ use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContractController extends Controller
 {
@@ -72,6 +73,8 @@ class ContractController extends Controller
                 $contract->dt_signature = null;
                 $contract->id_physical_person = $physicalPerson->id;
                 $contract->id_legal_person = null;
+                $contract->create_user = Auth::user()->name;
+                $contract->update_user = null;
 
                 $contract->save();
 
@@ -92,6 +95,8 @@ class ContractController extends Controller
                 $contract->dt_signature = null;
                 $contract->id_physical_person = null;
                 $contract->id_legal_person = $legalPerson->id;
+                $contract->create_user = Auth::user()->name;
+                $contract->update_user = null;
 
                 $contract->save();
 
@@ -161,6 +166,7 @@ class ContractController extends Controller
                 $contract->dt_signature = null;
                 $contract->id_physical_person = $physicalPerson->id;
                 $contract->id_legal_person = null;
+                $contract->update_user = Auth::user()->name;
 
                 $contract->save();
 
@@ -181,6 +187,7 @@ class ContractController extends Controller
                 $contract->dt_signature = null;
                 $contract->id_physical_person = null;
                 $contract->id_legal_person = $legalPerson->id;
+                $contract->update_user = Auth::user()->name;
 
                 $contract->save();
 
@@ -228,6 +235,7 @@ class ContractController extends Controller
             if(empty($contract->dt_signature)){
                 $contract->dt_signature = date('Y/m/d');
                 $contract->total_price = $total_price_store;
+                $contract->update_user = Auth::user()->name;
                 $contract->save();
                 return redirect()->route('contract.show', $contract)->with('status', 'Contrato assinado com sucesso!');
             }else{
@@ -246,10 +254,12 @@ class ContractController extends Controller
                 $contractStore->id_store = $request->id_store;
                 $contractStore->id_contract = $contract;
                 $contractStore->store_price = $request->store_price;
+                $contractStore->create_user = Auth::user()->name;
                 $contractStore->save();
 
                 $store = $this->store->where('id',$request->id_store)->first();
                 $store->status = 'O';
+                $store->update_user = Auth::user()->name;
                 $store->save();
 
                 $total_price_store = $this->contractStore->where('id_contract', $contract)->sum('store_price');
@@ -277,6 +287,7 @@ class ContractController extends Controller
 
                 $store = $this->store->where('id', $contractStore->id_store)->first();
                 $store->status = 'L';
+                $store->update_user = Auth::user()->name;
                 $store->save();
 
                 $total_price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');

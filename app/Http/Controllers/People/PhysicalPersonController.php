@@ -8,6 +8,7 @@ use App\Http\Requests\People\PhysicalPersonUpdateRequest;
 use App\Models\Contract\Contract;
 use App\Models\People\PhysicalPerson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PhysicalPersonController extends Controller
 {
@@ -70,30 +71,20 @@ class PhysicalPersonController extends Controller
         try {
             $physicalPerson = $this->physicalPerson;
 
-            $physicalPerson->name = $request->name;
-            $physicalPerson->birth_date = $request->birth_date;
-            $physicalPerson->email = $request->email;
-            $physicalPerson->cpf = $cpf;
-            $physicalPerson->rg = $request->rg;
-            $physicalPerson->telephone = $request->telephone;
-            $physicalPerson->cep = $cep;
-            $physicalPerson->public_place = $request->public_place;
-            $physicalPerson->nr_public_place = $request->nr_public_place;
-            $physicalPerson->city = $request->city;
-            $physicalPerson->state = $request->state;
-
             $physicalPerson->create([
-                'name' => $physicalPerson->name,
-                'birth_date' => $physicalPerson->birth_date,
-                'email' => $physicalPerson->email,
-                'cpf' => $physicalPerson->cpf,
-                'rg' => $physicalPerson->rg,
-                'telephone' => $physicalPerson->telephone,
-                'cep' => $physicalPerson->cep,
-                'public_place' => $physicalPerson->public_place,
-                'nr_public_place' => $physicalPerson->nr_public_place,
-                'city' => $physicalPerson->city,
-                'state' => $physicalPerson->state
+                'name' => $request->name,
+                'birth_date' => $request->birth_date,
+                'email' => $request->email,
+                'cpf' => $cpf,
+                'rg' => $request->rg,
+                'telephone' => $request->telephone,
+                'cep' => $cep,
+                'public_place' => $request->public_place,
+                'nr_public_place' => $request->nr_public_place,
+                'city' => $request->city,
+                'state' => $request->state,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
             ]);
 
             return redirect()->route('physicalPerson.index')->with('status','Cadastro efetuado com sucesso!');
@@ -147,6 +138,7 @@ class PhysicalPersonController extends Controller
             $physicalPerson->nr_public_place = $request->nr_public_place;
             $physicalPerson->city = $request->city;
             $physicalPerson->state = $request->state;
+            $physicalPerson->update_user = Auth::user()->name;
 
             $physicalPerson->save();
 

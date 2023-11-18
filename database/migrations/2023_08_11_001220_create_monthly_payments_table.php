@@ -32,6 +32,9 @@ return new class extends Migration
             $table->bigInteger('id_contract')->unsigned();
             $table->foreign('id_contract')->references('id')->on('contracts');
 
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
+
             $table->timestamps();
         });
     }

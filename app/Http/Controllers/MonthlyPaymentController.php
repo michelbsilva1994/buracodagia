@@ -142,7 +142,9 @@ class MonthlyPaymentController extends Controller
                             'type_cancellation' => $monthlyPayment->type_cancellation,
                             'download_user' => $monthlyPayment->download_user,
                             'cancellation_user' => $monthlyPayment->cancellation_user,
-                            'id_contract' => $monthlyPayment->id_contract
+                            'id_contract' => $monthlyPayment->id_contract,
+                            'create_user' => Auth::user()->name,
+                            'update_user' => null
                         ]);
                     }
                 }
@@ -213,7 +215,9 @@ class MonthlyPaymentController extends Controller
                         'dt_chargeback' => null,
                         'download_user' => Auth()->user()->name,
                         'chargeback_user' => null,
-                        'id_monthly_payment' => $monthlyPayment->id
+                        'id_monthly_payment' => $monthlyPayment->id,
+                        'create_user' => Auth::user()->name,
+                        'update_user' => null
                     ]);
 
                     $balance = $monthlyPayment->balance_value - $request->amount_paid;
@@ -223,6 +227,8 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'P';
                         $monthlyPayment->monthly_status = 'Parcial';
+                        $monthlyPayment->download_user = Auth::user()->name;
+                        $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
                     if($balance === 0.0 ){
@@ -231,7 +237,8 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'F';
                         $monthlyPayment->monthly_status = 'Fechado';
-                        $monthlyPayment->download_user = Auth()->user()->name;
+                        $monthlyPayment->download_user = Auth::user()->name;
+                        $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
                 }else{
@@ -256,7 +263,8 @@ class MonthlyPaymentController extends Controller
                 $monthlyPayment->type_cancellation = $typeCancellation->description;
                 $monthlyPayment->id_monthly_status = 'C';
                 $monthlyPayment->monthly_status = 'Cancelada';
-                $monthlyPayment->cancellation_user = Auth()->user()->name;
+                $monthlyPayment->cancellation_user = Auth::user()->name;
+                $monthlyPayment->update_user = Auth::user()->name;
                 $monthlyPayment->save();
             }
 
@@ -285,7 +293,9 @@ class MonthlyPaymentController extends Controller
                         'dt_chargeback' => null,
                         'download_user' => Auth()->user()->name,
                         'chargeback_user' => null,
-                        'id_monthly_payment' => $monthlyPayment->id
+                        'id_monthly_payment' => $monthlyPayment->id,
+                        'create_user' => Auth::user()->name,
+                        'update_user' => null
                     ]);
 
                     $balance = $monthlyPayment->balance_value - $request->amount_paid;
@@ -295,6 +305,8 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'P';
                         $monthlyPayment->monthly_status = 'Parcial';
+                        $monthlyPayment->download_user = Auth::user()->name;
+                        $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
                     if($balance === 0.0 ){
@@ -303,7 +315,8 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'F';
                         $monthlyPayment->monthly_status = 'Fechado';
-                        $monthlyPayment->download_user = Auth()->user()->name;
+                        $monthlyPayment->download_user = Auth::user()->name;
+                        $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
                 }else{
@@ -328,7 +341,8 @@ class MonthlyPaymentController extends Controller
                 $monthlyPayment->type_cancellation = $typeCancellation->description;
                 $monthlyPayment->id_monthly_status = 'C';
                 $monthlyPayment->monthly_status = 'Cancelada';
-                $monthlyPayment->cancellation_user = Auth()->user()->name;
+                $monthlyPayment->cancellation_user = Auth::user()->name;
+                $monthlyPayment->update_user = Auth::user()->name;
                 $monthlyPayment->save();
             }
 

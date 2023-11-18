@@ -19,6 +19,8 @@ class LegalPerson extends Model
         'public_place',
         'nr_public_place',
         'city',
-        'state'
+        'state',
+        'create_user',
+        'update_user'
     ];
 }

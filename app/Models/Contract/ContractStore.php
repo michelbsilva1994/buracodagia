@@ -14,7 +14,9 @@ class ContractStore extends Model
     protected $fillable = [
         'id_store',
         'id_contract',
-        'store_price'
+        'store_price',
+        'create_user',
+        'update_user'
     ];
 
     public function store(){
