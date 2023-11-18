@@ -23,14 +23,14 @@ class LegalPersonRequest extends FormRequest
     {
         return [
             'corporate_name' => ['required', 'max:255'],
-            'fantasy_name' => ['required', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'fantasy_name' => ['max:255'],
+            'email' => ['max:255'],
             'telephone' => ['required'],
             'cnpj' => ['required','unique:legal_people'],
-            'public_place' => ['required'],
-            'city' => ['required'],
-            'state' => ['required'],
-            'nr_public_place' => ['required']
+            //'public_place' => ['required'],
+            //'city' => ['required'],
+            //'state' => ['required'],
+            //'nr_public_place' => ['required']
         ];
     }
 
@@ -39,19 +39,19 @@ class LegalPersonRequest extends FormRequest
         return [
             'corporate_name.required' => 'O campo razão social é obrigatório!',
             'corporate_name.max' => 'O campo razão social deve ter no máximo 255 caracteres!',
-            'fantasy_name.required' => 'O campo nome fantasia é obrigatório!',
+            //'fantasy_name.required' => 'O campo nome fantasia é obrigatório!',
             'fantasy_name.max' => 'O campo nome fantasia deve ter no máximo 255 caracteres!',
-            'email.required' => 'O campo email é obrigatório!',
-            'email.email' => 'Email inválido, por favor informar um email válido!',
+            //'email.required' => 'O campo email é obrigatório!',
+            //'email.email' => 'Email inválido, por favor informar um email válido!',
             'email.max' =>  'O campo email deve ter no máximo 255 caracteres!',
             'cnpj.required' => 'O campo CNPJ é obrigatório!',
             'cnpj.unique' => 'CNPJ já cadastrado, por favor verificar!',
             'cnpj.max' => 'O CNPJ deve conter no máximo 14 caracteres!',
             'telephone.required' => 'O campo telefone é obrigatório!',
-            'public_place.required' => 'O campo endereço é obrigatório!',
-            'city.required' => 'O campo cidade é obrigatório!',
-            'state.required' => 'O campo estado é obrigatório!',
-            'nr_public_place' => 'O campo Nº é obrigatório!'
+            //'public_place.required' => 'O campo endereço é obrigatório!',
+            //'city.required' => 'O campo cidade é obrigatório!',
+            //'state.required' => 'O campo estado é obrigatório!',
+            //'nr_public_place' => 'O campo Nº é obrigatório!'
         ];
     }
 }

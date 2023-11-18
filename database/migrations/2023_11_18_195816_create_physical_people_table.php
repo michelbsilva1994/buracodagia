@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('physical_people', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('birth_date');
-            $table->string('email');
+            $table->date('birth_date')->nullable();
+            $table->string('email')->nullable();
             $table->string('cpf')->unique();
-            $table->string('rg')->unique();
+            $table->string('rg')->unique()->nullable();
             $table->string('telephone');
-            $table->string('cep');
-            $table->string('public_place');
-            $table->integer('nr_public_place');
-            $table->string('city');
-            $table->string('state');
+            $table->string('cep')->nullable();
+            $table->string('public_place')->nullable();
+            $table->integer('nr_public_place')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('create_user')->nullable();
             $table->string('update_user')->nullable();
             $table->timestamps();

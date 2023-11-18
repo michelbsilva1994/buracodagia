@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('legal_people', function (Blueprint $table) {
             $table->id();
             $table->string('corporate_name');
-            $table->string('fantasy_name');
-            $table->string('email');
+            $table->string('fantasy_name')->nullable();
+            $table->string('email')->nullable();
             $table->string('telephone');
             $table->string('cnpj')->unique();
-            $table->string('cep');
-            $table->string('public_place');
-            $table->integer('nr_public_place');
-            $table->string('city');
-            $table->string('state');
+            $table->string('cep')->nullable();
+            $table->string('public_place')->nullable();
+            $table->integer('nr_public_place')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('create_user')->nullable();
             $table->string('update_user')->nullable();
             $table->timestamps();
