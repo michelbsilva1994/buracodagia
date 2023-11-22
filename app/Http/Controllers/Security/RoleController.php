@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Security;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Security\RoleRequest;
 use App\Http\Requests\Security\RoleUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -27,6 +28,9 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_role')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('security.roles.create');
         } catch (\Throwable $th) {
