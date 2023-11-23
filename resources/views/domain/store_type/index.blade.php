@@ -4,16 +4,6 @@
         <div class="col-12">
             <h1 class="my-4 text-secondary text-center">Tipo de Loja</h1>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
         <div id="message-delete"></div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('storeType.create')}}" class="btn btn-lg btn-success"> + Novo</a>

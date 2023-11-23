@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleController extends Controller
 {
@@ -19,6 +18,9 @@ class RoleController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_role')) {
+            return redirect()->route('services.securityService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $roles = Role::all();
         return view('security.roles.index', compact('roles'));
     }
@@ -43,6 +45,9 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_role')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $role = new Role();
             $role->name = $request->name;
@@ -66,6 +71,9 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_role')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $role = Role::where('id', $id)->first();
             return view('security.roles.edit', compact('role'));
@@ -79,10 +87,13 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_role')) {
+            return redirect()->route('role.edit',$id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $role = Role::where('id', $id)->first();
             $role->update($request->all());
-            return redirect()->route('role.index')->with('status', 'Perfil alterado com sucesso!');
+            return redirect()->route('role.index',$id)->with('status', 'Perfil alterado com sucesso!');
         } catch (\Throwable $th) {
             return $th;
         }
@@ -93,6 +104,9 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_role')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $role = Role::findOrFail($id);
             $role->delete();
@@ -104,6 +118,9 @@ class RoleController extends Controller
 
     public function permissions($role)
     {
+        if (!Auth::user()->hasPermissionTo('add_permission_role')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $role = Role::where('id', $role)->first();
         $permissions = Permission::all();
 
@@ -120,6 +137,9 @@ class RoleController extends Controller
 
     public function permissionsSync(Request $request, $role)
     {
+        if (!Auth::user()->hasPermissionTo('sync_permission')) {
+            return redirect()->route('role.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $permissionRequest = $request->except(['_token', '_method']);
 

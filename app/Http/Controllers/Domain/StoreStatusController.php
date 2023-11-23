@@ -20,6 +20,9 @@ class StoreStatusController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_store_status')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $storeStatus = $this->storeStatus->all();
         return view('domain.store_status.index', compact('storeStatus'));
     }
@@ -29,6 +32,9 @@ class StoreStatusController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_store_status')) {
+            return redirect()->route('storeStatus.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.store_status.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class StoreStatusController extends Controller
      */
     public function store(StoreStatusRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_store_status')) {
+            return redirect()->route('storeStatus.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->storeStatus->create([
                 'value' => $request->value,
@@ -68,6 +77,9 @@ class StoreStatusController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_store_status')) {
+            return redirect()->route('storeStatus.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $status = $this->storeStatus->where('id',$id)->first();
             return view('domain.store_status.edit', compact('status'));
@@ -81,6 +93,9 @@ class StoreStatusController extends Controller
      */
     public function update(StoreStatusUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_store_status')) {
+            return redirect()->route('storeStatus.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $status = $this->storeStatus->where('id',$id)->first();
 
@@ -93,7 +108,7 @@ class StoreStatusController extends Controller
 
             return redirect()->route('storeStatus.index')->with('status','Status alterado com sucesso!');
         } catch (\Throwable $th) {
-            return redirect()->route('storeStatus.create',$status->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('storeStatus.edit',$status->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
@@ -102,6 +117,9 @@ class StoreStatusController extends Controller
      */
     public function destroy($id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_store_status')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $status = $this->storeStatus->where('id',$id)->first();
             $status->delete();

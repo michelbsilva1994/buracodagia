@@ -6,11 +6,6 @@
             <div class="col-12">
                 <h2 class="my-4 text-secondary text-center">{{$status->description}}</h2>
             </div>
-            @if (session('error'))
-                <div class="alert alert-danger" role="alert">
-                    {{ session('error') }}
-                </div>
-            @endif
             <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
                 <form action="{{ route('storeStatus.update', ['storeStatus' => $status->id]) }}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                     @csrf

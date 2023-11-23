@@ -20,6 +20,9 @@ class StoreTypeController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_store_type')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $storeType = $this->storeType->all();
         return view('domain.store_type.index', compact('storeType'));
     }
@@ -29,6 +32,9 @@ class StoreTypeController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_store_type')) {
+            return redirect()->route('storeType.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.store_type.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class StoreTypeController extends Controller
      */
     public function store(StoreTypeRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_store_type')) {
+            return redirect()->route('storeType.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->storeType->create([
                 'value' => $request->value,
@@ -68,6 +77,9 @@ class StoreTypeController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_store_type')) {
+            return redirect()->route('storeType.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $storeType = $this->storeType->where('id', $id)->first();
             return view('domain.store_type.edit', compact('storeType'));
@@ -81,6 +93,9 @@ class StoreTypeController extends Controller
      */
     public function update(StoreTypeUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_store_type')) {
+            return redirect()->route('storeType.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $storeType = $this->storeType->where('id', $id)->first();
 
@@ -102,6 +117,9 @@ class StoreTypeController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_store_type')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $storeType = $this->storeType->where('id', $id)->first();
             $storeType->delete();

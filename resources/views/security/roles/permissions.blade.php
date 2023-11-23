@@ -5,23 +5,6 @@
         <div class="row justify-content-center">
             <h3 class="my-4 text-secondary text-center">Permissões do Perfil {{ $role->name }}</h3>
             <div>
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
-                @endif
-                @if ($errors)
-                    @foreach ($errors->all() as $error)
-                        <div class="alert alert-danger mt-4" role="alert">
-                            {{ $error }}
-                        </div>
-                    @endforeach
-                @endif
                 <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
                     <form action="{{ route('role.permissionsSync', ['role' => $role->id]) }}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                         @csrf
@@ -40,9 +23,7 @@
                         </div>
                     </form>
                 </div>
-
             </div>
-
         </div>
     </div>
     </div>
