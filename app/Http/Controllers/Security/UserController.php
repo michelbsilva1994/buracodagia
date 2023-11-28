@@ -11,6 +11,7 @@ use App\Http\Requests\Security\UserUpdateRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -28,7 +29,7 @@ class UserController extends Controller
         if (!Auth::user()->hasPermissionTo('view_user')) {
             return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-
+        
         $users = $this->user->all();
         return view('security.users.index', compact('users'));
     }
@@ -132,8 +133,8 @@ class UserController extends Controller
     public function roles($user){
 
         if (!Auth::user()->hasPermissionTo('roles_user')) {
-            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
-        }
+             return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+         }
 
         $user = $this->user->where('id', $user)->first();
         $roles = $this->role->all();

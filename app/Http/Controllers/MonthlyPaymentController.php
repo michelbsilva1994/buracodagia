@@ -29,9 +29,9 @@ class MonthlyPaymentController extends Controller
      */
     public function index()
     {
-        //if (!Auth::user()->hasPermissionTo('view_monthly_payment')) {
-        //    return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
-        //}
+        if (!Auth::user()->hasPermissionTo('view_monthly_payment')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         return view('monthlyPayment.index');
     }
 
@@ -205,7 +205,7 @@ class MonthlyPaymentController extends Controller
 
     public function monthlyPaymentContract($id_contract){
 
-        if (!Auth::user()->hasPermissionTo('store_monthly_payment')) {
+        if (!Auth::user()->hasPermissionTo('monthly_payment_contract')) {
             return redirect()->route('physical.contractPerson', $id_contract)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
