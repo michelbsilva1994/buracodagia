@@ -25,6 +25,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $users = $this->user->all();
         return view('security.users.index', compact('users'));
     }
@@ -34,6 +38,10 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             return view('security.users.create');
         } catch (\Throwable $th) {
@@ -46,6 +54,9 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
             try {
                 $user = User::create([
                     'name' => $request->name,
@@ -72,6 +83,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $user = $this->user->where('id',$id)->first();
             return view('security.users.edit', compact('user'));
@@ -85,6 +99,10 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $user = $this->user->findorfail($id);
             $user->update($request->all());
@@ -99,6 +117,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $user = $this->user->findorfail($id);
             $user->delete();
@@ -109,6 +130,11 @@ class UserController extends Controller
     }
 
     public function roles($user){
+
+        if (!Auth::user()->hasPermissionTo('roles_user')) {
+            return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $user = $this->user->where('id', $user)->first();
         $roles = $this->role->all();
 
@@ -123,6 +149,11 @@ class UserController extends Controller
     }
 
     public function rolesSync(Request $request, $user){
+
+        if (!Auth::user()->hasPermissionTo('roles_sync_user')) {
+            return redirect()->route('user.roles', $user)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $roleRequest = $request->except('_token', '_method');
 
         foreach ($roleRequest as $key => $value) {

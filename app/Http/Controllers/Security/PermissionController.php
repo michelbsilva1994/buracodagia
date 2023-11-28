@@ -17,6 +17,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_permission')) {
+            return redirect()->route('services.securityService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $permissions = Permission::all();
         return view('security.permissions.index', compact('permissions'));
     }
@@ -26,10 +30,14 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_permission')) {
+            return redirect()->route('permission.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             return view('security.permissions.create');
         } catch (\Throwable $th) {
-            return $th;
+            return redirect()->route('permission.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 
@@ -38,6 +46,10 @@ class PermissionController extends Controller
      */
     public function store(PermissionRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_permission')) {
+            return redirect()->route('permission.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $permission = new Permission();
             $permission->name = $request->name;
@@ -61,6 +73,10 @@ class PermissionController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_permission')) {
+            return redirect()->route('permission.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $permission = Permission::where('id', $id)->first();
             return view('security.permissions.edit', compact('permission'));
@@ -74,6 +90,10 @@ class PermissionController extends Controller
      */
     public function update(PermissionUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('store_permission')) {
+            return redirect()->route('permission.create', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $permission = Permission::findOrFail($id);
             $permission->update($request->all());
@@ -88,6 +108,10 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_permission')) {
+            return redirect()->route('permission.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $permission = Permission::findOrFail($id);
             $permission->delete();

@@ -23,11 +23,19 @@ class PhysicalPersonController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_physical_person')) {
+            return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $physicalPeople = $this->physicalPerson->all();
         return view('people.physicalPerson.index', compact('physicalPeople'));
     }
 
     public function filter(Request $request){
+        if (!Auth::user()->hasPermissionTo('view_physical_person')) {
+            return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $name = $request->name;
         $cpf = $request->cpf;
 
@@ -51,6 +59,9 @@ class PhysicalPersonController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_physical_person')) {
+            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('people.physicalPerson.create');
         } catch (\Throwable $th) {
@@ -64,11 +75,15 @@ class PhysicalPersonController extends Controller
 
     public function store(PhysicalPersonRequest $request)
     {
-        $cpf = str_replace('.','', $request->cpf);
-        $cpf = str_replace('-','', $cpf);
-        $cep = str_replace('-','', $request->cep);
+        if (!Auth::user()->hasPermissionTo('store_physical_person')) {
+            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
 
         try {
+            $cpf = str_replace('.','', $request->cpf);
+            $cpf = str_replace('-','', $cpf);
+            $cep = str_replace('-','', $request->cep);
+
             $physicalPerson = $this->physicalPerson;
 
             $physicalPerson->create([
@@ -106,6 +121,9 @@ class PhysicalPersonController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_physical_person')) {
+            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $physicalPerson = $this->physicalPerson->where('id',$id)->first();
             return view('people.physicalPerson.edit', compact('physicalPerson'));
@@ -120,6 +138,10 @@ class PhysicalPersonController extends Controller
      */
     public function update(PhysicalPersonUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_physical_person')) {
+            return redirect()->route('physicalPerson.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $cpf = str_replace('.','', $request->cpf);
             $cpf = str_replace('-','', $cpf);
@@ -153,6 +175,10 @@ class PhysicalPersonController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_physical_person')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
+
         try {
             $physicalPerson = $this->physicalPerson->findorfail($id);
             $physicalPerson->delete();
@@ -163,9 +189,18 @@ class PhysicalPersonController extends Controller
     }
 
     public function contractPerson($id_person){
-        $contracts = $this->contract->where('id_physical_person', '=' , $id_person)->get();
-        $physicalPerson = $this->physicalPerson->where('id', '=' , $id_person)->first();
 
-        return view('contract.contractPerson', compact(['contracts', 'physicalPerson']));
+        if (!Auth::user()->hasPermissionTo('view_contract_physical_person')) {
+            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
+        try {
+            $contracts = $this->contract->where('id_physical_person', '=' , $id_person)->get();
+            $physicalPerson = $this->physicalPerson->where('id', '=' , $id_person)->first();
+
+            return view('contract.contractPerson', compact(['contracts', 'physicalPerson']));
+        } catch (\Throwable $th) {
+            return redirect()->route('physicalPerson.index',$physicalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }

@@ -20,6 +20,9 @@ class LegalPersonController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_legal_person')) {
+            return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $legalPerson = $this->legalPerson->all();
         return view('people.legalPerson.index', compact('legalPerson'));
     }
@@ -29,6 +32,9 @@ class LegalPersonController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_legal_person')) {
+            return redirect()->route('legalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('people.legalPerson.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class LegalPersonController extends Controller
      */
     public function store(LegalPersonRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_legal_person')) {
+            return redirect()->route('legalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $cnpj = str_replace('.','',$request->cnpj);
             $cnpj = str_replace('/','',$cnpj);
@@ -83,6 +92,9 @@ class LegalPersonController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_legal_person')) {
+            return redirect()->route('legalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $legalPerson = $this->legalPerson->where('id',$id)->first();
             return view('people.legalPerson.edit', compact('legalPerson'));
@@ -96,6 +108,10 @@ class LegalPersonController extends Controller
      */
     public function update(LegalPersonUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_legal_person')) {
+            return redirect()->route('legalPerson.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $cnpj = str_replace('.','',$request->cnpj);
             $cnpj = str_replace('/','',$cnpj);
@@ -129,6 +145,10 @@ class LegalPersonController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_legal_person')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
+
         try {
             $legalPerson = $this->legalPerson->findorfail($id);
             $legalPerson->delete();

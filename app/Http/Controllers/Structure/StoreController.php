@@ -28,6 +28,9 @@ class StoreController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_store')) {
+            return redirect()->route('services.structureService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $stores = $this->store->all();
         return view('structure.store.index', compact('stores'));
     }
@@ -37,10 +40,14 @@ class StoreController extends Controller
      */
     public function create()
     {
-        $pavementies = $this->pavement->where('status', 'A')->get();
-        $storeType =  $this->storeType->where('status', 'A')->get();
-        $storeStatues = $this->storeStatus->where('status', 'A')->get();
+        if (!Auth::user()->hasPermissionTo('create_store')) {
+            return redirect()->route('store.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
+            $pavementies = $this->pavement->where('status', 'A')->get();
+            $storeType =  $this->storeType->where('status', 'A')->get();
+            $storeStatues = $this->storeStatus->where('status', 'A')->get();
+
             return view('structure.store.create', compact('pavementies', 'storeType','storeStatues'));
         } catch (\Throwable $th) {
             return redirect()->route('store.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
@@ -52,6 +59,9 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_store')) {
+            return redirect()->route('store.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->store->create([
                 'name' => $request->name,
@@ -81,6 +91,9 @@ class StoreController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_store')) {
+            return redirect()->route('store.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $pavementies = $this->pavement->where('status', 'A')->get();
             $store = $this->store->where('id',$id)->first();
@@ -105,6 +118,10 @@ class StoreController extends Controller
      */
     public function update(StoreUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_store')) {
+            return redirect()->route('store.create', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $store = $this->store->where('id',$id)->first();
 
@@ -128,6 +145,10 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_store')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
+
         try {
             $store = $this->store->where('id',$id)->first();
             $contractStore = $this->contractStore->where('id_store',$id)->count();

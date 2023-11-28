@@ -20,6 +20,9 @@ class TypePayment extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_type_payment')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $typePayment = $this->typePayment->all();
         return view('domain.type_payment.index', compact('typePayment'));
     }
@@ -29,6 +32,9 @@ class TypePayment extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_type_payment')) {
+            return redirect()->route('typePayment.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.type_payment.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class TypePayment extends Controller
      */
     public function store(TypePaymentRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_type_payment')) {
+            return redirect()->route('typePayment.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->typePayment->create([
                 'value' => $request->value,
@@ -68,6 +77,9 @@ class TypePayment extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_type_payment')) {
+            return redirect()->route('typePayment.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typePayment = $this->typePayment->where('id', $id)->first();
             return view('domain.type_payment.edit', compact('typePayment'));
@@ -81,6 +93,9 @@ class TypePayment extends Controller
      */
     public function update(TypePaymentUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_type_payment')) {
+            return redirect()->route('typePayment.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typePayment = $this->typePayment->where('id', $id)->first();
 
@@ -102,6 +117,9 @@ class TypePayment extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_type_payment')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $typePayment = $this->typePayment->where('id', $id)->first();
             $typePayment->delete();

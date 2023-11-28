@@ -32,6 +32,10 @@ class ContractController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_contract')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $contracts = $this->contract->all();
         return view('contract.index', compact('contracts'));
     }
@@ -41,6 +45,10 @@ class ContractController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_contract')) {
+            return redirect()->route('contract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $physicalPerson = $this->physicalPerson->all();
         $legalPerson = $this->legalPerson->all();
         $typeContracts = $this->typeContract->where('status', 'A')->get();
@@ -56,6 +64,10 @@ class ContractController extends Controller
      */
     public function store(ContractRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_contract')) {
+            return redirect()->route('contract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $contract = $this->contract;
 
@@ -112,6 +124,10 @@ class ContractController extends Controller
      */
     public function show(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('show_contract')) {
+            return redirect()->route('contract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $contract = $this->contract->where('id',$id)->first();
         $stores = $this->store->where('status','<>', 'O')->get();
         $contractStore = $this->contractStore->where('id_contract',$contract->id)->get();
@@ -123,6 +139,10 @@ class ContractController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_contract')) {
+            return redirect()->route('contract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $contract = $this->contract->where('id', $id)->first();
             $physicalPerson = $this->physicalPerson->all();
@@ -149,6 +169,10 @@ class ContractController extends Controller
      */
     public function update(ContractRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_contract')) {
+            return redirect()->route('contract.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $contract = $this->contract->findorfail($id);
 
@@ -203,6 +227,10 @@ class ContractController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_contract')) {
+            return response()->json(['linked'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
+
         try {
             $contract = $this->contract->where('id', $id)->first();
             $contractStore = $this->contractStore->where('id_contract', $contract->id)->count();
@@ -228,6 +256,10 @@ class ContractController extends Controller
     }
 
     public function signContract(string $contract){
+        if (!Auth::user()->hasPermissionTo('sing_contract')) {
+            return redirect()->route('contract.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $contract = $this->contract->where('id', $contract)->first();
             $total_price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
@@ -247,6 +279,11 @@ class ContractController extends Controller
     }
 
     public function contractStore(ContractStoreRequest $request, $contract){
+
+        if (!Auth::user()->hasPermissionTo('contract_store_contract')) {
+            return redirect()->route('contract.show', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $contractStore = $this->contractStore;
 
@@ -278,6 +315,11 @@ class ContractController extends Controller
     }
 
     public function contractRemoveStore($contractRemoveStore){
+
+        if (!Auth::user()->hasPermissionTo('contract_remove_store_contract')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
+
         try {
             $contractStore = $this->contractStore->where('id', $contractRemoveStore)->first();
             $contract = $this->contract->where('id', $contractStore->id_contract)->first();

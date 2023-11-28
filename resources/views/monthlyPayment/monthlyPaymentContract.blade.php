@@ -8,21 +8,6 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-3">
             <a href="{{route('physical.contractPerson', ['id_person' => $contract->id])}}" class="btn btn-lg btn-danger mr-2">Voltar</a>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
-        @if (session('alert'))
-            <div class="alert alert-warning" role="alert">
-                {{ session('alert') }}
-            </div>
-        @endif
         <div class="col-12 table-responsive">
             <table class="table align-middle">
                 <thead>

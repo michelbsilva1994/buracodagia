@@ -20,6 +20,9 @@ class TypeChargeController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_type_charge')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $typeCharge = $this->typeCharge->all();
         return view('domain.type_charge.index', compact('typeCharge'));
     }
@@ -29,6 +32,9 @@ class TypeChargeController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_type_charge')) {
+            return redirect()->route('typeCharge.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.type_charge.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class TypeChargeController extends Controller
      */
     public function store(TypeChargeRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_type_charge')) {
+            return redirect()->route('typeCharge.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->typeCharge->create([
                 'value' => $request->value,
@@ -68,6 +77,9 @@ class TypeChargeController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_type_charge')) {
+            return redirect()->route('typeCharge.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $type = $this->typeCharge->where('id',$id)->first();
             return view('domain.type_charge.edit', compact('type'));
@@ -81,6 +93,9 @@ class TypeChargeController extends Controller
      */
     public function update(TypeChargeUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_type_charge')) {
+            return redirect()->route('typeCharge.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $type = $this->typeCharge->where('id',$id)->first();
 
@@ -102,6 +117,9 @@ class TypeChargeController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_type_charge')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $type = $this->typeCharge->where('id',$id)->first();
             $type->delete();

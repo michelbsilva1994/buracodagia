@@ -20,6 +20,9 @@ class TypeCancellationController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_type_cancellation')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $typeCancellation = $this->typeCancellation->all();
         return view('domain.type_cancellation.index', compact('typeCancellation'));
     }
@@ -29,6 +32,9 @@ class TypeCancellationController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_type_cancellation')) {
+            return redirect()->route('typeCancellation.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.type_cancellation.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class TypeCancellationController extends Controller
      */
     public function store(TypeCancellationRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_type_cancellation')) {
+            return redirect()->route('typeCancellation.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->typeCancellation->create([
                 'value' => $request->value,
@@ -68,6 +77,9 @@ class TypeCancellationController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_type_cancellation')) {
+            return redirect()->route('typeCancellation.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typeCancellation = $this->typeCancellation->where('id', $id)->first();
             return view('domain.type_cancellation.edit', compact('typeCancellation'));
@@ -81,6 +93,9 @@ class TypeCancellationController extends Controller
      */
     public function update(TypeCancellationUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_type_cancellation')) {
+            return redirect()->route('typeCancellation.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typeCancellation = $this->typeCancellation->where('id', $id)->first();
 
@@ -102,6 +117,9 @@ class TypeCancellationController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_type_cancellation')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $typeCancellation = $this->typeCancellation->where('id', $id)->first();
             $typeCancellation->delete();

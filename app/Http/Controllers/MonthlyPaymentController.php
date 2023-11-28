@@ -29,10 +29,18 @@ class MonthlyPaymentController extends Controller
      */
     public function index()
     {
+        //if (!Auth::user()->hasPermissionTo('view_monthly_payment')) {
+        //    return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        //}
         return view('monthlyPayment.index');
     }
 
     public function tuition(){
+
+        if (!Auth::user()->hasPermissionTo('view_tution')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->get();
@@ -43,6 +51,10 @@ class MonthlyPaymentController extends Controller
     }
 
     public function filter(Request $request){
+
+        if (!Auth::user()->hasPermissionTo('view_tution')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
 
         $contractor = $request->contractor;
         $due_date = $request->due_date;
@@ -94,6 +106,10 @@ class MonthlyPaymentController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         /**pegando todos os contratos */
         $contracts = $this->contract->all();
 
@@ -188,6 +204,11 @@ class MonthlyPaymentController extends Controller
     }
 
     public function monthlyPaymentContract($id_contract){
+
+        if (!Auth::user()->hasPermissionTo('store_monthly_payment')) {
+            return redirect()->route('physical.contractPerson', $id_contract)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $typesPayments = $this->typePayment->where('status', 'A')->get();
         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
         $contract = $this->contract->where('id', $id_contract)->first();
@@ -197,6 +218,10 @@ class MonthlyPaymentController extends Controller
     }
 
     public function lowerMonthlyFee(Request $request){
+        if (!Auth::user()->hasPermissionTo('lower_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
             $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
@@ -253,6 +278,10 @@ class MonthlyPaymentController extends Controller
     }
 
     public function cancelTuition(Request $request){
+        if (!Auth::user()->hasPermissionTo('cancel_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly_cancel)->first();
             $typeCancellation = $this->typeCancellation->where('value',$request->id_cancellation)->where('status', 'A')->first();
@@ -275,6 +304,10 @@ class MonthlyPaymentController extends Controller
     }
 
     public function lowerMonthlyFeeContract(Request $request){
+        if (!Auth::user()->hasPermissionTo('lower_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
             $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
@@ -331,6 +364,9 @@ class MonthlyPaymentController extends Controller
     }
 
     public function cancelTuitionContract(Request $request){
+        if (!Auth::user()->hasPermissionTo('cancel_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly_cancel)->first();
             $typeCancellation = $this->typeCancellation->where('value',$request->id_cancellation)->where('status', 'A')->first();

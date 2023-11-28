@@ -20,6 +20,9 @@ class PavementController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_pavement')) {
+            return redirect()->route('services.structureService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $pavementies = $this->pavement->all();
         return view('structure.pavement.index', compact('pavementies'));
     }
@@ -29,6 +32,9 @@ class PavementController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_pavement')) {
+            return redirect()->route('structure.pavement.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('structure.pavement.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class PavementController extends Controller
      */
     public function store(PavementeRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_pavement')) {
+            return redirect()->route('structure.pavement.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->pavement->create([
                 'name' => $request->name,
@@ -68,8 +77,15 @@ class PavementController extends Controller
      */
     public function edit(string $id)
     {
-        $pavement = $this->pavement->where('id',$id)->first();
-        return view('structure.pavement.edit', compact('pavement'));
+        if (!Auth::user()->hasPermissionTo('edit_pavement')) {
+            return redirect()->route('structure.pavement.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+        try {
+            $pavement = $this->pavement->where('id',$id)->first();
+            return view('structure.pavement.edit', compact('pavement'));
+        } catch (\Throwable $th) {
+            return redirect()->route('pavement.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**
@@ -77,6 +93,9 @@ class PavementController extends Controller
      */
     public function update(PavementeUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_pavement')) {
+            return redirect()->route('structure.pavement.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $pavement = $this->pavement->where('id',$id)->first();
 
@@ -98,6 +117,9 @@ class PavementController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_pavement')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $pavement = $this->pavement->where('id',$id)->first();
             $pavement->delete();

@@ -20,6 +20,9 @@ class TypeContractController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo('view_type_contract')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $typeContracts = $this->typeContract->all();
         return view('domain.type_contract.index', compact('typeContracts'));
     }
@@ -29,6 +32,9 @@ class TypeContractController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_type_contract')) {
+            return redirect()->route('typeContract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             return view('domain.type_contract.create');
         } catch (\Throwable $th) {
@@ -41,6 +47,9 @@ class TypeContractController extends Controller
      */
     public function store(TypeContractRequest $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_type_contract')) {
+            return redirect()->route('typeContract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $this->typeContract->create([
                 'value' => $request->value,
@@ -69,6 +78,9 @@ class TypeContractController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('edit_type_contract')) {
+            return redirect()->route('typeContract.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();
             return view('domain.type_contract.edit', compact('typeContract'));
@@ -82,6 +94,9 @@ class TypeContractController extends Controller
      */
     public function update(TypeContractUpdateRequest $request, string $id)
     {
+        if (!Auth::user()->hasPermissionTo('update_type_contract')) {
+            return redirect()->route('typeContract.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();
 
@@ -103,6 +118,9 @@ class TypeContractController extends Controller
      */
     public function destroy($id)
     {
+        if (!Auth::user()->hasPermissionTo('destroy_type_contract')) {
+            return response()->json(['status'=> 'Sem permissão para realizar a ação, procure o administrador do sistema!']);
+        }
         try {
             $typeContract = $this->typeContract->where('id', $id)->first();
             $typeContract->delete();
