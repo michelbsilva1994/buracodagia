@@ -31,7 +31,9 @@
                         <li><a class="dropdown-item" href="{{route('monthly.index')}}">Geração de Mensalidades</a></li>
                         <li><a class="dropdown-item" href="{{route('monthly.tuition')}}">Mensalidades</a></li>
                         <li><a class="dropdown-item" href="{{route('user.index')}}">Gestão de Usuários</a></li>
-                        <li><a class="dropdown-item" href="{{route('services.securityService')}}">Gestão de Segurança</a></li>
+                        @can('view_security_management')
+                            <li><a class="dropdown-item" href="{{route('services.securityService')}}">Gestão de Segurança</a></li>
+                        @endcan
                         <li><a class="dropdown-item" href="{{route('services.structureService')}}">Estrutura</a></li>
                         <li><a class="dropdown-item" href="{{route('services.domainService')}}">Domínios</a></li>
                         <li>
