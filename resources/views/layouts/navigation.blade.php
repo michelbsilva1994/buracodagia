@@ -26,16 +26,30 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{{route('profile.edit')}}">{{ __('Perfil') }}</a></li>
+                        @can('view_person_management')
                         <li><a class="dropdown-item" href="{{route('services.peopleService')}}">Cadastro de Pessoas</a></li>
+                        @endcan
+                        @can('view_contract')
                         <li><a class="dropdown-item" href="{{route('contract.index')}}">Contratos</a></li>
+                        @endcan
+                        @can('view_generate_monthly_fee')
                         <li><a class="dropdown-item" href="{{route('monthly.index')}}">Geração de Mensalidades</a></li>
+                        @endcan
+                        @can('view_tution')
                         <li><a class="dropdown-item" href="{{route('monthly.tuition')}}">Mensalidades</a></li>
+                        @endcan
+                        @can('view_user_management')
                         <li><a class="dropdown-item" href="{{route('user.index')}}">Gestão de Usuários</a></li>
+                        @endcan
                         @can('view_security_management')
                             <li><a class="dropdown-item" href="{{route('services.securityService')}}">Gestão de Segurança</a></li>
                         @endcan
+                        @can('view_structure_management')
                         <li><a class="dropdown-item" href="{{route('services.structureService')}}">Estrutura</a></li>
+                        @endcan
+                        @can('view_domain_management')
                         <li><a class="dropdown-item" href="{{route('services.domainService')}}">Domínios</a></li>
+                        @endcan
                         <li>
                             <form action="{{route('logout')}}" method="POST">
                                 @csrf
