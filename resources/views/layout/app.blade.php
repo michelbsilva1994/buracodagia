@@ -13,7 +13,6 @@
 
         <!-- Scripts -->
         <script src="{{asset('js/jquery.min.js')}}"></script>
-        <script src="{{asset('js/jquery.mask.min.js')}}"></script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -52,5 +51,6 @@
                 @yield('content')
             </main>
         </div>
+        <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     </body>
 </html>
