@@ -19,16 +19,15 @@
             <a href="{{route('physicalPerson.create')}}" class="btn btn-lg btn-success"> + Cadastrar Pessoal Física</a>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('physical.filter')}}" method="post" class="col-sm-12 col-md-12 col-lg-12">
-                @csrf
+            <form action="{{route('physical.filter')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="name">Nome</label>
-                        <input type="text" name="name" id="name" class="form-control">
+                        <input type="text" name="name" id="name" class="form-control" value="{{request('filtroNome')}}">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="cpf">CPF</label>
-                        <input type="text" name="cpf" id="cpf" class="form-control">
+                        <input type="text" name="cpf" id="cpf" class="form-control" data-mask="000.000.000-00" value="{{request('filtroCPF')}}">
                     </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
                         <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
@@ -36,7 +35,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-12 table-responsive mt-4">
+        <div class="col-12 table-responsive mt-2">
             <table class="table align-middle">
                 <thead>
                     <tr>
@@ -60,6 +59,11 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="d-flex justify-content-center my-2">
+            {{ $physicalPeople->appends(request()->input())->links()}}
+        </div>
+
     </div>
     <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">

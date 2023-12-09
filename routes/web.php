@@ -60,10 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::put('user/{user}/roles/sync', [UserController::class, 'rolesSync'])->name('user.rolesSync');
     Route::resource('user', UserController::class);
 
-    Route::resource('physicalPerson', PhysicalPersonController::class);
     /**rota filtrar pessoal fisica */
-    Route::post('physicalPerson/filter', [PhysicalPersonController::class, 'filter'])->name('physical.filter');
+    Route::get('physicalPerson/filter', [PhysicalPersonController::class, 'filter'])->name('physical.filter');
     Route::get('contractPerson/{id_person}', [PhysicalPersonController::class, 'contractPerson'])->name('physical.contractPerson');
+    Route::resource('physicalPerson', PhysicalPersonController::class);
 
     Route::resource('legalPerson', LegalPersonController::class);
     Route::resource('pavement', PavementController::class);

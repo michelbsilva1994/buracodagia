@@ -27,7 +27,7 @@ class PhysicalPersonController extends Controller
             return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $physicalPeople = $this->physicalPerson->all();
+        $physicalPeople = $this->physicalPerson->paginate(10);
         return view('people.physicalPerson.index', compact('physicalPeople'));
     }
 
@@ -37,19 +37,22 @@ class PhysicalPersonController extends Controller
         }
 
         $name = $request->name;
-        $cpf = $request->cpf;
+
+        $cpf = str_replace('.','', $request->cpf);
+        $cpf = str_replace('-','', $cpf);
 
         if($name && $cpf){
-            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->where('cpf','like',"%$cpf%")->get();
+            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->where('cpf','like',"%$cpf%")->paginate(10);
             return view('people.physicalPerson.index', compact('physicalPeople'));
         }elseif($name){
-            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->get();
+            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->paginate(10);
             return view('people.physicalPerson.index', compact('physicalPeople'));
         }elseif($cpf){
-            $physicalPeople = $this->physicalPerson->where('cpf','like',"%$cpf%")->get();
+            $physicalPeople = $this->physicalPerson->where('cpf','like',"%$cpf%")->paginate(10);
             return view('people.physicalPerson.index', compact('physicalPeople'));
         }else{
-            $physicalPeople = $this->physicalPerson->all();
+            return redirect()->route('physicalPerson.index');
+            $physicalPeople = $this->physicalPerson->paginate(10);
             return view('people.physicalPerson.index', compact('physicalPeople'));
         }
     }
