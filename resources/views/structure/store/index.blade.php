@@ -23,6 +23,28 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('store.create')}}" class="btn btn-success btn-lg"> + Criar Loja</a>
         </div>
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form action="{{route('store.index')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="name">Nome</label>
+                        <input type="text" name="name" id="name" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="cpf">Pavimento</label>
+                        <select name="pavement" id="pavement" class="form-control">
+                            <option selected disabled>Selecione uma opção</option>
+                            @foreach ($pavements as $pavement)
+                                <option value="{{$pavement->id}}">{{$pavement->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">
                 <thead>
@@ -47,6 +69,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="d-flex justify-content-center my-2">
+            {{ $stores->appends(request()->input())->links()}}
         </div>
     </div>
     <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">

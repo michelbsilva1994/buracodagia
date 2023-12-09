@@ -26,13 +26,31 @@ class StoreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->hasPermissionTo('view_store')) {
             return redirect()->route('services.structureService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        $stores = $this->store->all();
-        return view('structure.store.index', compact('stores'));
+
+        $pavements = $this->pavement->all();
+
+        $name = $request->name;
+        $pavement = $request->pavement;
+
+        if($name && $pavement){
+            $stores = $this->store->where('name','like',"%$name%")->where('id_pavement','=',$pavement)->paginate(10);
+            return view('structure.store.index', compact('stores','pavements'));
+        }elseif($name){
+            $stores = $this->store->where('name','like',"%$name%")->paginate(10);
+            return view('structure.store.index', compact('stores', 'pavements'));
+        }elseif($pavement){
+            $stores = $this->store->where('id_pavement','=',$pavement)->paginate(10);
+            return view('structure.store.index', compact('stores','pavements'));
+        }
+        else {
+            $stores = $this->store->paginate(10);
+            return view('structure.store.index', compact('stores', 'pavements'));
+        }
     }
 
     /**
