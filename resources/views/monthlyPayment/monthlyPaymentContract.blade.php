@@ -125,7 +125,7 @@
                     </div>
                     <div>
                         <label for="dt_payday">Data da baixa</label>
-                        <input type="date" name="dt_payday" id="dt_payday" class="form-control" required>
+                        <input type="date" name="dt_payday" id="dt_payday" class="form-control" value="" required>
                     </div>
                     <div>
                         <label for="id_payment">Forma de pagamento</label>

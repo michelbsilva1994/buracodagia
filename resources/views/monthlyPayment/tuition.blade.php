@@ -76,7 +76,7 @@
                                 <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                        <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
                                     </div>
                                 </td>
                             </tr>
@@ -105,7 +105,7 @@
                             <td>
                                 @if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P')
                                 <div class="d-flex">
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
                                     @if ($monthlyPayment->id_monthly_status === 'A')
                                         <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                                     @endif
@@ -142,7 +142,6 @@
                     <div>
                         <label for="id_payment">Forma de pagamento</label>
                         <select name="id_payment" id="id_payment" class="form-control" required>
-                            <option value="" disabled selected>Selecione uma opção</option>
                             @foreach ($typesPayments as $typePayment)
                                 <option value="{{$typePayment->value}}">{{$typePayment->description}}</option>
                             @endforeach
@@ -150,7 +149,7 @@
                     </div>
                     <div>
                         <label for="amount_paid">Valor Recebido</label>
-                        <input type="number" step="0.01" name="amount_paid" id="amount_paid" class="form-control" required>
+                        <input type="text" name="amount_paid" id="amount_paid" class="form-control" data-mask="000.000.000.000.000,00" data-mask-reverse="true" required>
                     </div>
                     <div class="d-grid gap-2 my-3">
                         <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
@@ -181,7 +180,7 @@
                         <input type="date" name="dt_cancellation" id="dt_cancellation" class="form-control" required>
                     </div>
                     <div>
-                        <label for="id_cancellation">Forma de pagamento</label>
+                        <label for="id_cancellation">Motivo do Cancelamento</label>
                         <select name="id_cancellation" id="id_cancellation" class="form-control" required>
                             <option value="" disabled selected>Selecione uma opção</option>
                             @foreach ($typesCancellations as $typeCancellation)
@@ -208,6 +207,11 @@
         $(document).delegate('#btn-cancel', 'click', function(){
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly_cancel').val(id_monthly);
+        });
+
+        $(document).delegate('#btn-low','click',function(){
+            var balance_value = $(this).attr('data-balance-value');
+            $('#amount_paid').val(balance_value);
         });
     </script>
 @endsection
