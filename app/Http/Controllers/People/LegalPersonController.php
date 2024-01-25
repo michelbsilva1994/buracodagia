@@ -23,8 +23,33 @@ class LegalPersonController extends Controller
         if (!Auth::user()->hasPermissionTo('view_legal_person')) {
             return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        $legalPerson = $this->legalPerson->all();
+        $legalPerson = $this->legalPerson->paginate(10);
         return view('people.legalPerson.index', compact('legalPerson'));
+    }
+
+    public function filter(Request $request){
+        if (!Auth::user()->hasPermissionTo('view_legal_person')) {
+            return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+            $corporate_name = $request->corporate_name;
+
+            $cnpj = $cnpj = str_replace('.','',$request->cnpj);
+            $cnpj = str_replace('/','',$cnpj);
+            $cnpj = str_replace('-','',$cnpj);
+
+            if($corporate_name && $cnpj) {
+                $legalPerson = $this->legalPerson->where('corporate_name', 'like', "%$corporate_name%")->where('cnpj', 'like', "%$cnpj%")->paginate(10);
+                return view('people.legalPerson.index', compact('legalPerson'));
+            }elseif($corporate_name){
+                $legalPerson = $this->legalPerson->where('corporate_name', 'like', "%$corporate_name%")->paginate(10);
+                return view('people.legalPerson.index', compact('legalPerson'));
+            }elseif($cnpj){
+                $legalPerson = $this->legalPerson->where('cnpj', 'like', "%$cnpj%")->paginate(10);
+                return view('people.legalPerson.index', compact('legalPerson'));
+            }else{
+                $legalPerson = $this->legalPerson->paginate(10);
+                return view('people.legalPerson.index', compact('legalPerson'));
+            }
     }
 
     /**

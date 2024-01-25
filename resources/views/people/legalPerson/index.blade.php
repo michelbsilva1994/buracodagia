@@ -4,19 +4,26 @@
         <div class="col-12">
             <h3 class="my-4 text-secondary text-center">Cadastro Pessoa Jurídica</h3>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
         <div id="message-delete"></div>
         <div class="d-grid gap-2 d-lg-flex justify-content-lg-start my-3">
             <a href="{{route('legalPerson.create')}}" class="btn btn-lg btn-success"> + Cadastrar Pessoa Jurídica</a>
+        </div>
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form action="{{route('legalPerson.filter')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="corporate_name">Razão Social</label>
+                        <input type="text" name="corporate_name" id="corporate_name" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="cnpj">CNPJ</label>
+                        <input type="text" name="cnpj" id="cnpj" class="form-control" data-mask="00.000.000/0000-00">
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="col-12 table-responsive mt-4">
             <table class="table align-middle">
@@ -41,6 +48,11 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="d-flex justify-content-center my-2">
+            {{ $legalPerson->appends(request()->input())->links()}}
+        </div>
+
     </div>
     <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">

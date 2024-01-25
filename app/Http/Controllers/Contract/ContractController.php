@@ -36,7 +36,7 @@ class ContractController extends Controller
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $contracts = $this->contract->all();
+        $contracts = $this->contract->paginate(10);
         return view('contract.index', compact('contracts'));
     }
 

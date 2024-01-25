@@ -4,16 +4,6 @@
         <div class="col-12">
             <h2 class="my-4 text-secondary text-center">Contrato Nº {{$contract->id}}</h2>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="{{route('contract.index')}}" class="btn btn-lg btn-danger">Voltar</a>
                 @if(empty($contract->dt_signature))
