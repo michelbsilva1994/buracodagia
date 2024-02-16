@@ -20,8 +20,7 @@
             </div>
         @endif
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('monthly.filter')}}" class="col-12" method="post">
-                @csrf
+            <form action="{{route('monthly.filter')}}" class="col-12" method="get">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="contractor">Contrante</label>
@@ -117,6 +116,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="d-flex justify-content-center my-2">
+            {{ $tuition->appends(request()->input())->links()}}
         </div>
     </div>
 

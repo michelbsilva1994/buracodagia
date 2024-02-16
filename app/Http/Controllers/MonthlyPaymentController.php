@@ -43,7 +43,8 @@ class MonthlyPaymentController extends Controller
 
         $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->get();
+                        ->paginate(10);
+
         $typesPayments = $this->typePayment->where('status', 'A')->get();
         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
 
@@ -64,15 +65,17 @@ class MonthlyPaymentController extends Controller
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->where('name_contractor', 'like', "%$contractor%")
                         ->where('due_date', $due_date)
-                        ->get();
+                        ->paginate(10);
+
                         $typesPayments = $this->typePayment->where('status', 'A')->get();
                         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
+
             return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
         }elseif($contractor){
             $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->where('name_contractor', 'like', "%$contractor%")
-                        ->get();
+                        ->paginate(10);
                         $typesPayments = $this->typePayment->where('status', 'A')->get();
                         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
             return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
@@ -80,14 +83,14 @@ class MonthlyPaymentController extends Controller
             $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                         ->where('due_date', $due_date)
-                        ->get();
+                        ->paginate(10);
                         $typesPayments = $this->typePayment->where('status', 'A')->get();
                         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
             return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
         }else{
             $tuition = $this->contract
                         ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->get();
+                        ->paginate(10);
             return redirect()->route('monthly.tuition');
         }
 
