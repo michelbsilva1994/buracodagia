@@ -83,6 +83,11 @@
             </div>
             @endif
         </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
+            @if($contract->dt_signature)
+                <a href="{{route('contract.cancelContract', ['contract' => $contract->id])}}" class="btn btn-lg btn-danger">Cancelar Contrato</a>
+            @endif
+        </div>
     </div>
 
     <div class="modal fade" id="modal-store-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">

@@ -347,4 +347,11 @@ class ContractController extends Controller
             //return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
+
+    public function cancelContract($contract){
+
+        $contract = $this->contract->where('id', $contract)->first();
+        $contract->dt_cancellation = date('Y/m/d');
+        $contract->save();
+    }
 }
