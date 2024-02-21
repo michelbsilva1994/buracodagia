@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Contract\ContractController;
+use App\Http\Controllers\Domain\ContractCancellationTypeController;
 use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
 use App\Http\Controllers\Domain\TypeCancellationController;
@@ -95,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('typePayment', TypePayment::class);
         Route::resource('typeCharge', TypeChargeController::class);
         Route::resource('typeCancellation', TypeCancellationController::class);
+        Route::resource('contractCancellationType', ContractCancellationTypeController::class);
     });
 
     /**Homes Services */
