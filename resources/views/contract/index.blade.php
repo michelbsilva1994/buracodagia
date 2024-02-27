@@ -69,7 +69,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Tem certeza que deseja excluir o status da loja?
+              Tem certeza que deseja excluir o contrato?
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id_contract" id="id_contract">
@@ -116,6 +116,7 @@
                         }, 4000);
                     }
                     if(response.status){
+                        console.log(response.status);
                         $('#message-delete').html(response.status);
                         $('#message-delete').removeClass('alert alert-warning');
                         $('#modal-delete').modal('hide');
