@@ -83,13 +83,43 @@
             </div>
             @endif
         </div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
+        {{-- <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
             @if($contract->dt_signature)
-                <a href="{{route('contract.cancelContract', ['contract' => $contract->id])}}" class="btn btn-lg btn-danger">Cancelar Contrato</a>
+                <a href="" class="btn btn-lg btn-danger" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel-contract">Cancelar Contrato</a>
             @endif
+        </div> --}}
+    </div>
+
+    {{-- Modal cancelar contrato --}}
+    <div class="modal fade" id="modal-cancel-contract" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Cancelar Contrato</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja cancelar o contrato?
+              <form action="{{route('contract.cancelContract', ['contract' => $contract->id])}}" method="post">
+                @csrf
+                <label for="id_cancellation">Motivo do Cancelamento do Contrato</label>
+                <select name="id_cancellation" id="id_cancellation" class="form-control" required>
+                    <option value="" disabled selected>Selecione uma opção</option>
+                    @foreach ($contractCancellationType as $typeCancellationContract)
+                        <option value="{{$typeCancellationContract->value}}">{{$typeCancellationContract->description}}</option>
+                    @endforeach
+                </select>
+                <div class="d-grid gap-2 my-3">
+                    <button type="submit" class="btn btn-success" id="btn-cancel-monthly">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
     </div>
 
+    {{-- Modal excluir Loja --}}
     <div class="modal fade" id="modal-store-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -119,7 +149,7 @@
             var id_store_contract = $('#id_store_contract').val();
 
             $.ajax({
-                url: id_store_contract+"/removeStore",
+                url: "/puclic/"+id_store_contract+"/removeStore",
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

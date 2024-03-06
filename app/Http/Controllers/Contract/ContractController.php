@@ -7,6 +7,7 @@ use App\Http\Requests\Contract\ContractRequest;
 use App\Http\Requests\Contract\ContractStoreRequest;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
+use App\Models\Domain\ContractCancellationType;
 use App\Models\Domain\TypeContract;
 use App\Models\People\LegalPerson;
 use App\Models\People\PhysicalPerson;
@@ -18,7 +19,7 @@ class ContractController extends Controller
 {
     public function __construct(Contract $contract, PhysicalPerson $physicalPerson,
                                 LegalPerson $legalPerson, TypeContract $typeContract, Store $store,
-                                ContractStore $contractStore)
+                                ContractStore $contractStore, ContractCancellationType $contractCancellationType)
     {
         $this->contract = $contract;
         $this->physicalPerson = $physicalPerson;
@@ -26,6 +27,7 @@ class ContractController extends Controller
         $this->typeContract = $typeContract;
         $this->store = $store;
         $this->contractStore = $contractStore;
+        $this->contractCancellationType = $contractCancellationType;
     }
     /**
      * Display a listing of the resource.
@@ -131,7 +133,8 @@ class ContractController extends Controller
         $contract = $this->contract->where('id',$id)->first();
         $stores = $this->store->where('status','<>', 'O')->get();
         $contractStore = $this->contractStore->where('id_contract',$contract->id)->get();
-        return view('contract.show', compact(['contract', 'stores', 'contractStore']));
+        $contractCancellationType = $this->contractCancellationType->where('status', '=', 'A')->get();
+        return view('contract.show', compact(['contract', 'stores', 'contractStore','contractCancellationType']));
     }
 
     /**
@@ -348,10 +351,9 @@ class ContractController extends Controller
         }
     }
 
-    public function cancelContract($contract){
-
-        $contract = $this->contract->where('id', $contract)->first();
-        $contract->dt_cancellation = date('Y/m/d');
-        $contract->save();
+    public function cancelContract(Request $request, $contract){
+        // $contract = $this->contract->where('id', $contract)->first();
+        // $contract->dt_cancellation = date('Y/m/d');
+        // $contract->save();
     }
 }
