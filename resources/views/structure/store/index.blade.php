@@ -102,7 +102,7 @@
             var id_store = $('#id_store').val();
 
             $.ajax({
-                url: '/store/'+id_store,
+                url: '/public/store/'+id_store,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

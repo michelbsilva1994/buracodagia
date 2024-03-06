@@ -92,7 +92,7 @@
             var id_person = $('#id_person').val();
 
             $.ajax({
-                url: '/physicalPerson/'+id_person,
+                url: '/public/physicalPerson/'+id_person,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

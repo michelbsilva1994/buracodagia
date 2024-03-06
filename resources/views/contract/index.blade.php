@@ -88,7 +88,7 @@
             var id_contract = $('#id_contract').val();
 
             $.ajax({
-                url: "/contract/"+id_contract,
+                url: '/public/contract/'+id_contract,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

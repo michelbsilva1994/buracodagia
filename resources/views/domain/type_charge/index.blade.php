@@ -71,7 +71,7 @@
             var id_type_charge = $('#id_type_charge').val();
 
             $.ajax({
-                url: "/domain/typeCharge/"+id_type_charge,
+                url: "/public/domain/typeCharge/"+id_type_charge,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

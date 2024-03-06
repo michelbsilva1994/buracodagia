@@ -61,7 +61,7 @@
             var id_status = $('#id_status').val();
 
             $.ajax({
-                url: "/domain/storeStatus/"+id_status,
+                url: "/public/domain/storeStatus/"+id_status,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

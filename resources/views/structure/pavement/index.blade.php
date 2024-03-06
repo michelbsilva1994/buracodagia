@@ -69,7 +69,7 @@
         $(document).delegate('#btn-destroy', 'click', function(){
             var id_pavement = $('#id_pavement').val();
             $.ajax({
-                url:"/pavement/"+id_pavement,
+                url:"/public/pavement/"+id_pavement,
                 type:'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

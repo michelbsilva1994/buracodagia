@@ -71,7 +71,7 @@
             var id_type = $('#id_type').val();
 
             $.ajax({
-                url: "/domain/contractCancellationType/"+id_type,
+                url: "/public/domain/contractCancellationType/"+id_type,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

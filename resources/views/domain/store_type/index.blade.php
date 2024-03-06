@@ -61,7 +61,7 @@
             var id_store_type = $('#id_store_type').val();
 
             $.ajax({
-                url: "/domain/storeType/"+id_store_type,
+                url: "/public/domain/storeType/"+id_store_type,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

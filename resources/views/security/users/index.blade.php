@@ -70,7 +70,7 @@
             var id_user = $('#id_user').val();
 
             $.ajax({
-                url: '/user/'+id_user,
+                url: '/public/user/'+id_user,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
