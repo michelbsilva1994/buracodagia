@@ -12,7 +12,7 @@
             <form action="{{route('legalPerson.filter')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="corporate_name">Razão Social</label>
+                        <label for="corporate_name">Contratante</label>
                         <input type="text" name="corporate_name" id="corporate_name" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
@@ -32,7 +32,7 @@
                         <td>ID</td>
                         <td>Tipo de Pessoa</td>
                         <td>Tipo de Contrato</td>
-                        <td>Contrante</td>
+                        <td>Contratante</td>
                         <td>CPF/CNPJ</td>
                         <td>Valor do Contrato</td>
                         <td>Ações</td>

@@ -352,8 +352,30 @@ class ContractController extends Controller
     }
 
     public function cancelContract(Request $request, $contract){
-        // $contract = $this->contract->where('id', $contract)->first();
-        // $contract->dt_cancellation = date('Y/m/d');
-        // $contract->save();
+
+        try {
+            $contractCancellationType = $this->contractCancellationType->where('value', '=', $request->id_cancellation)->first();
+            $contract = $this->contract->where('id', $contract)->first();
+            $contractStore = $this->contractStore->where('id_contract','=', $contract->id)->get();
+
+            if(!empty($contract->dt_signature) && empty($contract->dt_cancellation)){
+                $contract->dt_cancellation = date('Y/m/d');
+                $contract->ds_cancellation_reason = $contractCancellationType->description;
+                $contract->update_user = Auth::user()->name;
+                $contract->save();
+            }
+
+        foreach($contractStore as $store){
+            $store = $this->store->where('id', '=', $store->id_store)->first();
+            $store->status = 'L';
+            $store->update_user = Auth::user()->name;
+            $store->save();
+        }
+
+        return redirect()->route('contract.show',$contract->id)->with('status', 'Contrato cancelado com sucesso!');
+
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.show',$contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 }

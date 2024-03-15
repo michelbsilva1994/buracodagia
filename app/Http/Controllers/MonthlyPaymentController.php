@@ -7,15 +7,17 @@ use App\Models\Contract\ContractStore;
 use App\Models\Contract\MonthlyPayment;
 use App\Models\Domain\TypeCancellation;
 use App\Models\Domain\TypePayment;
+use App\Models\Structure\Pavement;
 use App\Models\Tution\LowerMonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MonthlyPaymentController extends Controller
 {
 
     public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore,
-    TypePayment $typePayment, TypeCancellation $typeCancellation, LowerMonthlyFee $lowerMonthlyFee)
+    TypePayment $typePayment, TypeCancellation $typeCancellation, LowerMonthlyFee $lowerMonthlyFee, Pavement $pavement)
     {
         $this->monthlyPayment = $monthlyPayment;
         $this->contract = $contract;
@@ -23,6 +25,7 @@ class MonthlyPaymentController extends Controller
         $this->typePayment = $typePayment;
         $this->typeCancellation = $typeCancellation;
         $this->lowerMonthlyFee = $lowerMonthlyFee;
+        $this->pavement = $pavement;
     }
     /**
      * Display a listing of the resource.
@@ -41,14 +44,30 @@ class MonthlyPaymentController extends Controller
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $tuition = $this->contract
-                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->paginate(10);
+        $tuition = DB::table('contracts')
+                    ->selectRaw('contracts.name_contractor,
+                    monthly_payments.id,
+                    monthly_payments.due_date,
+                    monthly_payments.total_payable,
+                    monthly_payments.amount_paid,
+                    monthly_payments.balance_value,
+                    monthly_payments.id_monthly_status,
+                    GROUP_CONCAT(stores.name) as stores,
+                    pavements.name as pavements'
+                    )
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->groupByRaw('monthly_payments.id, pavements.name')
+                    ->orderBy('contracts.name_contractor', 'asc')
+                    ->paginate(10);
 
         $typesPayments = $this->typePayment->where('status', 'A')->get();
         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
+        $pavements = $this->pavement->where('status', 'A')->get();
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements']));
     }
 
     public function filter(Request $request){
@@ -57,42 +76,50 @@ class MonthlyPaymentController extends Controller
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
+
+        $typesPayments = $this->typePayment->where('status', 'A')->get();
+        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
+        $pavements = $this->pavement->where('status', 'A')->get();
+
         $contractor = $request->contractor;
         $due_date = $request->due_date;
+        $store = $request->store;
+        $pavement = $request->pavement;
 
-        if($contractor && $due_date) {
-            $tuition = $this->contract
-                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->where('name_contractor', 'like', "%$contractor%")
-                        ->where('due_date', $due_date)
-                        ->paginate(10);
+        $query = DB::table('contracts')
+                    ->selectRaw('contracts.name_contractor,
+                    monthly_payments.id,
+                    monthly_payments.due_date,
+                    monthly_payments.total_payable,
+                    monthly_payments.amount_paid,
+                    monthly_payments.balance_value,
+                    monthly_payments.id_monthly_status,
+                    GROUP_CONCAT(stores.name) as stores,
+                    pavements.name as pavements'
+                    )
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->groupByRaw('monthly_payments.id, pavements.name')
+                    ->orderBy('contracts.name_contractor', 'asc');
 
-                        $typesPayments = $this->typePayment->where('status', 'A')->get();
-                        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
-
-            return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
-        }elseif($contractor){
-            $tuition = $this->contract
-                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->where('name_contractor', 'like', "%$contractor%")
-                        ->paginate(10);
-                        $typesPayments = $this->typePayment->where('status', 'A')->get();
-                        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
-            return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
-        }elseif($due_date){
-            $tuition = $this->contract
-                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->where('due_date', $due_date)
-                        ->paginate(10);
-                        $typesPayments = $this->typePayment->where('status', 'A')->get();
-                        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
-            return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations']));
-        }else{
-            $tuition = $this->contract
-                        ->join('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                        ->paginate(10);
-            return redirect()->route('monthly.tuition');
+        if($contractor){
+            $query->where('contracts.name_contractor', 'like', "%$contractor%");
         }
+        if($due_date){
+            $query->where('monthly_payments.due_date', $due_date);
+        }
+        if($store){
+            $query->where('stores.name', 'like', "%$store%");
+        }
+        if($pavement){
+            $query->where('pavements.id',$pavement);
+        }
+
+        $tuition = $query->paginate(10);
+
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations', 'pavements']));
 
     }
 
@@ -113,8 +140,11 @@ class MonthlyPaymentController extends Controller
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        /**pegando todos os contratos */
-        $contracts = $this->contract->all();
+        /**pegando todos os contratos assinados e não cancelados*/
+        $contracts = $this->contract->whereNotNull('dt_signature')
+                                    ->whereNull('dt_cancellation')
+                                    ->whereNull('ds_cancellation_reason')
+                                    ->get();
 
         /**Percorrendo todos os contratos para gerar a mensalidade*/
         try {

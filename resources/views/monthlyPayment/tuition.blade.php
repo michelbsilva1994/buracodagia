@@ -30,6 +30,19 @@
                         <label for="due_date">Data Vencimento</label>
                         <input type="date" name="due_date" id="due_date" class="form-control">
                     </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="store">Loja</label>
+                        <input type="text" name="store" id="store" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="pavement">Pavimento</label>
+                        <select name="pavement" id="pavement" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            @foreach ( $pavements as $pavement)
+                                <option value="{{$pavement->id}}">{{$pavement->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
                         <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
                     </div>
@@ -42,6 +55,8 @@
                     <tr>
                         <td>Nº Mensalidade</td>
                         <td>Contrante</td>
+                        <td>Lojas</td>
+                        <td>Pavimentos</td>
                         <td>Data de vencimento</td>
                         <td>Valor a pagar</td>
                         <td>Valor Pago</td>
@@ -97,6 +112,8 @@
                         <tr class="">
                             <td>{{$monthlyPayment->id}}</td>
                             <td>{{$monthlyPayment->name_contractor}}</td>
+                            <td>{{$monthlyPayment->stores}}</td>
+                            <td>{{$monthlyPayment->pavements}}</td>
                             <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
                             <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>

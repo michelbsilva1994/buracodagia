@@ -83,11 +83,11 @@
             </div>
             @endif
         </div>
-        {{-- <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
-            @if($contract->dt_signature)
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
+            @if(!empty($contract->dt_signature) && empty($contract->dt_cancellation))
                 <a href="" class="btn btn-lg btn-danger" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel-contract">Cancelar Contrato</a>
             @endif
-        </div> --}}
+        </div>
     </div>
 
     {{-- Modal cancelar contrato --}}
