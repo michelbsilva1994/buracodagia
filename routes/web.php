@@ -16,6 +16,7 @@ use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\UserController;
 use App\Http\Controllers\People\PhysicalPersonController;
 use App\Http\Controllers\People\LegalPersonController;
+use App\Http\Controllers\Reports\ReportsController;
 use App\Http\Controllers\Services\HomeServiceDomainController;
 use App\Http\Controllers\Services\HomeServicesController;
 use App\Http\Controllers\Services\HomeServiceSecurityController;
@@ -105,6 +106,10 @@ Route::middleware('auth')->group(function () {
     Route::get('people/services/', [HomeServicesController::class, 'peopleService'])->name('services.peopleService');
     Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
 
+    /**Reports */
+
+    Route::get('reports/Users/', [ReportsController::class, 'repostUsers'])->name('reports.users');
+    Route::get('reports/Users/index', [ReportsController::class, 'reportUsersIndex'])->name('reportUsers.index');
 
 });
 
