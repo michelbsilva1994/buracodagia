@@ -13,7 +13,7 @@ class UsersExport implements FromCollection
     */
     public function collection()
     {
-        return DB::table('users')
-                ->selectRaw('id,name, email')->get();
+        // return DB::table('users')
+        //         ->selectRaw('id,name, email')->get();
     }
 }

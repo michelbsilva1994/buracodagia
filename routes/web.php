@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
 
     /**Reports */
 
-    Route::get('reports/Users/', [ReportsController::class, 'repostUsers'])->name('reports.users');
+    Route::post('reports/Users/', [ReportsController::class, 'repostUsers'])->name('reports.users');
     Route::get('reports/Users/index', [ReportsController::class, 'reportUsersIndex'])->name('reportUsers.index');
 
 });
