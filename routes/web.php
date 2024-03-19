@@ -107,10 +107,14 @@ Route::middleware('auth')->group(function () {
     Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
 
     /**Reports */
-    Route::get('reports/Users/index', [ReportsController::class, 'reportUsersIndex'])->name('reports.usersIndex');
+
+    /**Index Reports */
+    Route::get('reports/index', [ReportsController::class, 'reportsIndex'])->name('reports.index');
+
+    /** Reports Views */
     Route::get('reports/contractStores/index', [ReportsController::class, 'reportContractStoresIndex'])->name('reports.contractStoresIndex');
 
-    Route::post('reports/Users/', [ReportsController::class, 'reportUsers'])->name('reports.users');
+    /** Generation Reports */
     Route::post('reports/contractStores/', [ReportsController::class, 'reportContractStores'])->name('reports.reportContractStores');
 
 });

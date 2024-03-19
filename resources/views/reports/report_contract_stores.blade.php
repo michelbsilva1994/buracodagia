@@ -1,15 +1,11 @@
 @extends('layout.app')
 @section('content')
     <div class="container">
-        <h3>Relatório Contratos</h3>
+        <h3 class="my-4 text-secondary text-center">Relatório Contratos</h3>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
             <form action="{{route('reports.reportContractStores')}}" method="post" class="col-sm-12 col-md-12 col-lg-12">
                 @csrf
                 <div class="row">
-                    {{-- <div class="col-sm-12 col-md-12 col-lg-12">
-                        <label for="corporate_name">Nome</label>
-                        <input type="text" name="name" id="name" class="form-control">
-                    </div> --}}
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="signed">Assinados</label>
                         <select name="signed" id="signed" class="form-control">

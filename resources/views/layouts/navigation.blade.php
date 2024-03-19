@@ -50,6 +50,9 @@
                         @can('view_domain_management')
                         <li><a class="dropdown-item" href="{{route('services.domainService')}}">Domínios</a></li>
                         @endcan
+                        @can('view_reports')
+                        <li><a class="dropdown-item" href="{{route('reports.index')}}">Relatórios</a></li>
+                        @endcan
                         <li>
                             <form action="{{route('logout')}}" method="POST">
                                 @csrf

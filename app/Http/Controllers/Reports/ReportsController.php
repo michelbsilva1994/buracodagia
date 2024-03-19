@@ -18,28 +18,13 @@ class ReportsController extends Controller
         $this->pavement = $pavement;
     }
 
-    public function reportUsersIndex(){
+    public function reportsIndex(){
         return view('reports.index');
     }
 
     public function reportContractStoresIndex(){
         $pavements = $this->pavement->where('status','A')->get();
         return view('reports.report_contract_stores', compact('pavements'));
-    }
-
-    public function reportUsers(Request $request){
-        $name = $request->name;
-
-        $query = DB::table('users')
-                    ->selectRaw('id,name, email');
-
-        if($name){
-            $query->where('name', 'like',"%$name%");
-        }
-
-        $users = $query->get();
-
-        return $users->downloadExcel('users.xlsx', ExcelReport::XLSX ,true);
     }
 
     public function reportContractStores(Request $request){
