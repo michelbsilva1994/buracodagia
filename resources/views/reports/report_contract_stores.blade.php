@@ -18,6 +18,15 @@
                             <option value="3">Não Assinados</option>
                         </select>
                     </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="pavement">Pavimento</label>
+                        <select name="pavement" id="pavement" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            @foreach ( $pavements as $pavement)
+                                <option value="{{$pavement->id}}">{{$pavement->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-center my-3">
                         <button type="submit" class="btn btn-lg btn-success">Gerar Relatório</button>
                     </div>
