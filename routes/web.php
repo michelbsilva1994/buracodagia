@@ -9,6 +9,7 @@ use App\Http\Controllers\Domain\TypeChargeController;
 use App\Http\Controllers\Domain\TypeContractController;
 use App\Http\Controllers\Domain\TypePayment;
 use App\Http\Controllers\MonthlyPaymentController;
+use App\Http\Controllers\PdfReports\PdfReportsController;
 use App\Http\Controllers\Permissions\RoleController as PermissionsRoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Security\PermissionController;
@@ -117,6 +118,8 @@ Route::middleware('auth')->group(function () {
     /** Generation Reports */
     Route::post('reports/contractStores/', [ReportsController::class, 'reportContractStores'])->name('reports.reportContractStores');
 
+    /** PDF Reports */
+    Route::get('pdfReports/receipt/{id_receipt}', [PdfReportsController::class, 'receipt'])->name('pdfReports.receipt');
 });
 
 require __DIR__.'/auth.php';

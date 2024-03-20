@@ -4,21 +4,6 @@
         <div class="col-12">
             <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
-        @if (session('alert'))
-            <div class="alert alert-warning" role="alert">
-                {{ session('alert') }}
-            </div>
-        @endif
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
             <form action="{{route('monthly.filter')}}" class="col-12" method="get">
                 <div class="row">
@@ -70,13 +55,15 @@
                         <tr class="bg-success text-white">
                             <td>{{$monthlyPayment->id}}</td>
                             <td>{{$monthlyPayment->name_contractor}}</td>
+                            <td>{{$monthlyPayment->stores}}</td>
+                            <td>{{$monthlyPayment->pavements}}</td>
                             <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
                             <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
                             <td>
                                 <div>
-                                    <h6>-</h6>
+                                    <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-primary">Recibo</a>
                                 </div>
                             </td>
                         </tr>
@@ -84,6 +71,8 @@
                             <tr class="bg-secondary text-white">
                                 <td>{{$monthlyPayment->id}}</td>
                                 <td>{{$monthlyPayment->name_contractor}}</td>
+                                <td>{{$monthlyPayment->stores}}</td>
+                                <td>{{$monthlyPayment->pavements}}</td>
                                 <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
                                 <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
@@ -98,6 +87,8 @@
                             <tr class="bg-danger text-white">
                                 <td>{{$monthlyPayment->id}}</td>
                                 <td>{{$monthlyPayment->name_contractor}}</td>
+                                <td>{{$monthlyPayment->stores}}</td>
+                                <td>{{$monthlyPayment->pavements}}</td>
                                 <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
                                 <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
@@ -120,13 +111,13 @@
                             <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
                             <td>
                                 @if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P')
-                                <div class="d-flex">
-                                    <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
-                                    @if ($monthlyPayment->id_monthly_status === 'A')
-                                        <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
-                                    @endif
-                                </div>
-                            @endif
+                                    <div class="d-flex">
+                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                        @if ($monthlyPayment->id_monthly_status === 'A')
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
+                                        @endif
+                                    </div>
+                                @endif
                             </td>
                         </tr>
                         @endif
