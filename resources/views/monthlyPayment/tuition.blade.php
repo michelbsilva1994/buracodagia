@@ -63,7 +63,7 @@
                             <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
                             <td>
                                 <div>
-                                    <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-primary">Recibo</a>
+                                    <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-sm btn-primary" target="_blank">Recibo</a>
                                 </div>
                             </td>
                         </tr>
