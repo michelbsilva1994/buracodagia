@@ -80,6 +80,7 @@
                                 <td>
                                     <div class="d-flex">
                                         <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
+                                        <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-sm btn-primary" target="_blank">Recibo</a>
                                     </div>
                                 </td>
                             </tr>

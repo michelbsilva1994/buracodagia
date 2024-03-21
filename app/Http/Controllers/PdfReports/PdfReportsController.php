@@ -19,8 +19,10 @@ class PdfReportsController extends Controller
 
         $monthlyPayment = DB::table('contracts')
                     ->selectRaw('contracts.name_contractor as name_contractor,
+                    contracts.id as id_contract,
+                    monthly_payments.download_user as download_user,
                     monthly_payments.id as id_monthly_payment,
-                    monthly_payments.due_date as due_date,
+                    monthly_payments.dt_payday as dt_payday,
                     monthly_payments.total_payable as total_payable,
                     monthly_payments.amount_paid as amount_paid,
                     monthly_payments.balance_value as balance_value,
@@ -36,6 +38,12 @@ class PdfReportsController extends Controller
 
         $data = ['monthlyPayment' => $monthlyPayment];
         $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
-        return $pdfReceipt->stream('receibo.pdf');
+        return $pdfReceipt->stream('recibo.pdf');
+    }
+
+    public function partialReceipt($id_receipt){
+        $data = ['teste' => $id_receipt];
+        $pdfPatialRecceipt = Pdf::loadView('pdf_reports.partialReceipt', $data);
+        return $pdfPatialRecceipt->stream('recibo_parcial.pdf');
     }
 }

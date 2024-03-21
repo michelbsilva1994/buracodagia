@@ -120,6 +120,7 @@ Route::middleware('auth')->group(function () {
 
     /** PDF Reports */
     Route::get('pdfReports/receipt/{id_receipt}', [PdfReportsController::class, 'receipt'])->name('pdfReports.receipt');
+    Route::get('pdfReports/partialReceipt/{id_receipt}', [PdfReportsController::class, 'partialReceipt'])->name('pdfReports.partialReceipt');
 });
 
 require __DIR__.'/auth.php';
