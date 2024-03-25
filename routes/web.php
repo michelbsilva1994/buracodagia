@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Contract\ContractController;
+use App\Http\Controllers\Dashboards\DashboardsController;
 use App\Http\Controllers\Domain\ContractCancellationTypeController;
 use App\Http\Controllers\Domain\StoreStatusController;
 use App\Http\Controllers\Domain\StoreTypeController;
@@ -121,6 +122,9 @@ Route::middleware('auth')->group(function () {
     /** PDF Reports */
     Route::get('pdfReports/receipt/{id_receipt}', [PdfReportsController::class, 'receipt'])->name('pdfReports.receipt');
     Route::get('pdfReports/partialReceipt/{id_receipt}', [PdfReportsController::class, 'partialReceipt'])->name('pdfReports.partialReceipt');
+
+    /** Dashboards */
+    Route::get('/dashboard/charts', [DashboardsController::class, 'dashboard'])->name('dashboard.dashboardCharts');
 });
 
 require __DIR__.'/auth.php';
