@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports;
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Models\Structure\Pavement;
+use App\Models\Structure\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -62,5 +63,21 @@ class ReportsController extends Controller
         $contracts = $query->get();
 
         return $contracts->downloadExcel('contratos.xlsx', ExcelReport::XLSX, true);
+    }
+
+    public function reportStoresIndex(){
+        return view('reports.report_stores');
+    }
+
+    public function reportStores(){
+        $query = DB::table('stores')
+                        ->selectRaw('stores.id, stores.name')
+                        ->whereNotExists( function ($query) {
+                            $query->select(DB::raw(1))
+                            ->from('contract_stores')
+                            ->whereRaw('stores.id = contract_stores.id_store');
+                        })->get();
+
+        dd($query);
     }
 }
