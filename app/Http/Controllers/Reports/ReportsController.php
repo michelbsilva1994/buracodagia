@@ -66,18 +66,32 @@ class ReportsController extends Controller
     }
 
     public function reportStoresIndex(){
-        return view('reports.report_stores');
+        $pavements = $this->pavement->where('status','A')->get();
+        return view('reports.report_stores', compact('pavements'));
     }
 
-    public function reportStores(){
+    public function reportStores(Request $request){
+
+        $pavement = $request->pavement;
+
         $query = DB::table('stores')
-                        ->selectRaw('stores.id, stores.name')
+                        ->selectRaw('stores.name as loja,
+                                     pavements.name as pavimento')
+                        ->join('pavements','stores.id_pavement','=', 'pavements.id')
+                        ->where('stores.status','<>','O')
                         ->whereNotExists( function ($query) {
                             $query->select(DB::raw(1))
                             ->from('contract_stores')
+                            ->join('contracts', 'contract_stores.id_contract', '=', 'contracts.id')
+                            ->whereRaw('contracts.dt_cancellation is null')
                             ->whereRaw('stores.id = contract_stores.id_store');
-                        })->get();
+                        });
+        if($pavement){
+            $query->where('pavements.id', $pavement);
+        }
 
-        dd($query);
+        $stores = $query->get();
+
+        return $stores->downloadExcel('lojas_sem_contratos.xlsx', ExcelReport::XLSX, true);
     }
 }
