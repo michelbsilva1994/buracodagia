@@ -44,7 +44,7 @@
                         @foreach ($contractStore as $store)
                         <tr id="store-contract-{{$store->id}}">
                                 <td>{{$store->id}}</td>
-                                <td>{{$store->name}}</td>
+                                <td>{{$store->name}} - {{$store->pavement->name}}</td>
                                 <td>R$ {{number_format($store->store_price, 2, ',', '.')}}</td>
                                 @if(empty($contract->dt_signature))
                                     <td class="d-flex">
@@ -87,9 +87,11 @@
             @if(!empty($contract->dt_signature) && empty($contract->dt_cancellation))
                 <a href="" class="btn btn-lg btn-danger" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel-contract">Cancelar Contrato</a>
             @endif
-            @if(($contract->dt_signature) && empty($contract->dt_cancellation))
-                <a href="" class="btn btn-lg btn-primary" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-contract-signature">Estornar Assinatura</a>
-            @endif
+            @can('reverse_contract_signature')
+                @if(($contract->dt_signature) && empty($contract->dt_cancellation))
+                    <a href="" class="btn btn-lg btn-primary" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-contract-signature">Estornar Assinatura</a>
+                @endif
+            @endcan
         </div>
     </div>
 

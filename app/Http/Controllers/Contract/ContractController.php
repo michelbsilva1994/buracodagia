@@ -14,6 +14,7 @@ use App\Models\People\PhysicalPerson;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
 {
@@ -132,7 +133,8 @@ class ContractController extends Controller
 
         $contract = $this->contract->where('id',$id)->first();
         $stores = $this->store->where('status','<>', 'O')->get();
-        $contractStore = $this->contractStore->select('contract_stores.id','stores.name', 'contract_stores.store_price')->join('stores', 'id_store', 'stores.id')->where('id_contract',$contract->id)->get();
+        $contractStore = $this->store->join('contract_stores','stores.id', 'contract_stores.id_store')->where('contract_stores.id_contract',$contract->id)->get();
+
         $contractCancellationType = $this->contractCancellationType->where('status', '=', 'A')->get();
         return view('contract.show', compact(['contract', 'stores', 'contractStore','contractCancellationType']));
     }
