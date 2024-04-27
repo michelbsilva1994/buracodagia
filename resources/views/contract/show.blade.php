@@ -149,7 +149,7 @@
             var id_store_contract = $('#id_store_contract').val();
 
             $.ajax({
-                url: '/puclic/contract/'+id_store_contract+'/removeStore',
+                url: '/public/contract/'+id_store_contract+'/removeStore',
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
