@@ -87,6 +87,9 @@
             @if(!empty($contract->dt_signature) && empty($contract->dt_cancellation))
                 <a href="" class="btn btn-lg btn-danger" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel-contract">Cancelar Contrato</a>
             @endif
+            @if(($contract->dt_signature) && empty($contract->dt_cancellation))
+                <a href="" class="btn btn-lg btn-primary" id="btn-cancel_contract" data-id-cancel-contract="{{$contract->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-contract-signature">Estornar Assinatura</a>
+            @endif
         </div>
     </div>
 
@@ -111,6 +114,28 @@
                 </select>
                 <div class="d-grid gap-2 my-3">
                     <button type="submit" class="btn btn-success" id="btn-cancel-monthly">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-reverse-contract-signature" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Estornar Assinatura do Contrato</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tem certeza que deseja estonar a assinatura do contrato?
+              <form action="{{route('contract.reverseContractSignature', ['contract' => $contract->id])}}" method="post">
+                @csrf
+                @method('PUT')
+                <div class="d-grid gap-2 my-3">
+                    <button type="submit" class="btn btn-success" id="btn-cancel-monthly">Estornar</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
                 </div>
               </form>

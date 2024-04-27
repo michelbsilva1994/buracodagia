@@ -281,6 +281,28 @@ class ContractController extends Controller
         }
     }
 
+    public function reverseContractSignature(string $contract){
+        if (!Auth::user()->hasPermissionTo('reverse_contract_signature')) {
+            return redirect()->route('contract.edit', $id)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
+        try {
+            $contract = $this->contract->where('id', $contract)->first();
+
+            if(($contract->dt_signature)){
+                $contract->dt_signature = null;
+                $contract->total_price = null;
+                $contract->update_user = Auth::user()->name;
+                $contract->save();
+                return redirect()->route('contract.show', $contract)->with('status', 'Assinatura do contrato estornada com sucesso!');
+            }else{
+                return redirect()->route('contract.show', $contract)->with('alert', 'Contrato sem assinatura!');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('contract.show', $contract)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
+    }
+
     public function contractStore(ContractStoreRequest $request, $contract){
 
         if (!Auth::user()->hasPermissionTo('contract_store_contract')) {
