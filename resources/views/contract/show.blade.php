@@ -44,7 +44,7 @@
                         @foreach ($contractStore as $store)
                         <tr id="store-contract-{{$store->id}}">
                                 <td>{{$store->id}}</td>
-                                <td>{{$store->id_store}}</td>
+                                <td>{{$store->name}}</td>
                                 <td>R$ {{number_format($store->store_price, 2, ',', '.')}}</td>
                                 @if(empty($contract->dt_signature))
                                     <td class="d-flex">

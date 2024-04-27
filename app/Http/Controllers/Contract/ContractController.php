@@ -132,7 +132,7 @@ class ContractController extends Controller
 
         $contract = $this->contract->where('id',$id)->first();
         $stores = $this->store->where('status','<>', 'O')->get();
-        $contractStore = $this->contractStore->where('id_contract',$contract->id)->get();
+        $contractStore = $this->contractStore->select('contract_stores.id','stores.name', 'contract_stores.store_price')->join('stores', 'id_store', 'stores.id')->where('id_contract',$contract->id)->get();
         $contractCancellationType = $this->contractCancellationType->where('status', '=', 'A')->get();
         return view('contract.show', compact(['contract', 'stores', 'contractStore','contractCancellationType']));
     }
