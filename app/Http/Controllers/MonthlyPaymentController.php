@@ -32,10 +32,17 @@ class MonthlyPaymentController extends Controller
      */
     public function index()
     {
+        $pavements = $this->pavement->where('status', 'A')->get();
+        $contracts = $this->contract->whereNotNull('dt_signature')
+                                    ->whereNull('dt_cancellation')
+                                    ->whereNull('ds_cancellation_reason')
+                                    ->orderBy('name_contractor')
+                                    ->get();
+
         if (!Auth::user()->hasPermissionTo('view_monthly_payment')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        return view('monthlyPayment.index');
+        return view('monthlyPayment.index', compact(['pavements', 'contracts']));
     }
 
     public function tuition(){
@@ -141,10 +148,27 @@ class MonthlyPaymentController extends Controller
         }
 
         /**pegando todos os contratos assinados e não cancelados*/
-        $contracts = $this->contract->whereNotNull('dt_signature')
-                                    ->whereNull('dt_cancellation')
-                                    ->whereNull('ds_cancellation_reason')
-                                    ->get();
+        // $contracts = $this->contract->whereNotNull('dt_signature')
+        //                             ->whereNull('dt_cancellation')
+        //                             ->whereNull('ds_cancellation_reason')
+        //                             ->get();
+
+        $query = DB::table('contracts')
+                            ->selectRaw('distinct contracts.id')
+                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+                            ->whereNotNull('dt_signature')
+                            ->whereNull('dt_cancellation')
+                            ->whereNull('ds_cancellation_reason');
+
+        if($request->pavement){
+            $query->where('stores.id_pavement', '=', $request->pavement);
+        }
+        if($request->contract){
+            $query->where('contracts.id', '=', $request->contract);
+        }
+
+        $contracts = $query->get();
 
         /**Percorrendo todos os contratos para gerar a mensalidade*/
         try {
