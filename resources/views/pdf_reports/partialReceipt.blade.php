@@ -35,12 +35,12 @@
             printWindow.document.write(printContents);
             printWindow.document.write('</body></html>');
 
-            printWindow.document.onload();
+            printWindow.document.body.onnload.print();
 
             // printWindow.onload = function() {
-            //     printWindow.print();
-            //     printWindow.close();
-            // };
+            //      printWindow.print();
+            //      printWindow.close();
+            //  };
         }
     </script>
 </body>
