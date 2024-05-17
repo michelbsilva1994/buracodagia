@@ -29,18 +29,18 @@
             var printContents = document.getElementById(divId).innerHTML;
             var printWindow = window.open('', '', 'height=600,width=800');
 
-            printWindow.document.write('<html><head><title>Impressão</title>');
+            printWindow.document.write('<html><head><title>Recibo</title>');
             printWindow.document.write('<style>body{font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; flex-direction: column;} h1{color: #333;} </style>');
             printWindow.document.write('</head><body>');
             printWindow.document.write(printContents);
             printWindow.document.write('</body></html>');
 
-            printWindow.document.onload.print();
+            printWindow.document.close();
 
-            // printWindow.onload = function() {
-            //     printWindow.print();
-            //     printWindow.close();
-            // };
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
         }
     </script>
 </body>
