@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container text-center">
+    <div class="container text-center" id="receipt">
         <h2 class="my-3">Recibo de Pagamento Parcial</h2>
         <h3>Mensalidade {{$monthlyPayment->id_monthly_payment}}</h3>
         <h4>Contrato {{$monthlyPayment->id_contract}} - Lojas - {{$monthlyPayment->stores}}</h4>
@@ -23,5 +23,25 @@
         <h4>Data da Baixa: {{date('d/m/Y', strtotime($monthlyPayment->dt_payday_partial))}}</h4>
         <h4>Usuário do Recebimento: {{$monthlyPayment->download_user}}</h4>
     </div>
+    <button onclick="printContent('receipt')" class="btn btn-primary">Imprimir</button>
+    <script>
+        function printContent(divId){
+            var printContents = document.getElementById(divId).innerHTML;
+            var printWindow = window.open('', '', 'height=600,width=800');
+
+            printWindow.document.write('<html><head><title>Impressão</title>');
+            printWindow.document.write('<style>body{font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; flex-direction: column;} h1{color: #333;} </style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(printContents);
+            printWindow.document.write('</body></html>');
+
+            printWindow.document.close();
+
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
 </body>
 </html>
