@@ -37,7 +37,7 @@
 
             printWindow.document.close();
 
-            printWindow.onload = function() {
+            printWindow.document.onload = function() {
                  printWindow.print();
                  printWindow.close();
              };
