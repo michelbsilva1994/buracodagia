@@ -2,7 +2,6 @@
 @section('content')
     <div class="container">
         @can('generate_retroactive_monthly_payment')
-            <hr>
             <div class="col-12">
                 <h3 class="my-4 text-secondary text-center">Geração de Mensalidade Retroativa por Contrato</h3>
             </div>

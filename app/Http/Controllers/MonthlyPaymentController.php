@@ -135,6 +135,9 @@ class MonthlyPaymentController extends Controller
     }
 
     public function createGenerateRetroactiveMonthlyPayment(){
+        if (!Auth::user()->hasPermissionTo('generate_retroactive_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $contracts = $this->contract->whereNotNull('dt_signature')
                                     ->whereNull('dt_cancellation')
                                     ->whereNull('ds_cancellation_reason')
