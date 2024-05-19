@@ -38,11 +38,9 @@ class PdfReportsController extends Controller
                     ->where('monthly_payments.id', '=', $id_receipt)
                     ->groupByRaw('monthly_payments.id')->first();
 
-        // $data = ['monthlyPayment' => $monthlyPayment];
-        // $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
-        // return $pdfReceipt->stream('recibo.pdf');
-
-        return view('pdf_reports.receipt', compact('monthlyPayment'));
+        $data = ['monthlyPayment' => $monthlyPayment];
+        $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
+        return $pdfReceipt->stream('recibo.pdf');
     }
 
     public function partialReceipt($id_receipt){
@@ -69,10 +67,8 @@ class PdfReportsController extends Controller
                     ->where('monthly_payments.id', '=', $id_receipt)
                     ->groupByRaw('monthly_payments.id')->first();
 
-        // $data = ['monthlyPayment' => $monthlyPayment];
-        // $pdfPatialRecceipt = Pdf::loadView('pdf_reports.partialReceipt', $data);
-        // return $pdfPatialRecceipt->stream('recibo_parcial.pdf');
-
-        return view('pdf_reports.partialReceipt', compact('monthlyPayment'));
+        $data = ['monthlyPayment' => $monthlyPayment];
+        $pdfPatialRecceipt = Pdf::loadView('pdf_reports.partialReceipt', $data);
+        return $pdfPatialRecceipt->stream('recibo_parcial.pdf');
     }
 }
