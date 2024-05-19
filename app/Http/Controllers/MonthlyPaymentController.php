@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MonthlyPayment\MonthlyPaymentRequest;
+use App\Http\Requests\MonthlyPayment\RetroactiveMonthlyFeeRequest;
 use App\Models\Contract\Contract;
 use App\Models\Contract\ContractStore;
 use App\Models\Contract\MonthlyPayment;
@@ -33,16 +35,11 @@ class MonthlyPaymentController extends Controller
     public function index()
     {
         $pavements = $this->pavement->where('status', 'A')->get();
-        $contracts = $this->contract->whereNotNull('dt_signature')
-                                    ->whereNull('dt_cancellation')
-                                    ->whereNull('ds_cancellation_reason')
-                                    ->orderBy('name_contractor')
-                                    ->get();
 
         if (!Auth::user()->hasPermissionTo('view_monthly_payment')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        return view('monthlyPayment.index', compact(['pavements', 'contracts']));
+        return view('monthlyPayment.index', compact(['pavements']));
     }
 
     public function tuition(){
@@ -133,6 +130,19 @@ class MonthlyPaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function monthlyService(){
+        return view('monthlyPayment.homeMonthlyPayment');
+    }
+
+    public function createGenerateRetroactiveMonthlyPayment(){
+        $contracts = $this->contract->whereNotNull('dt_signature')
+                                    ->whereNull('dt_cancellation')
+                                    ->whereNull('ds_cancellation_reason')
+                                    ->orderBy('name_contractor')
+                                    ->get();
+        return view('monthlyPayment.retroactiveMonthlyFeeRequest', compact(['contracts']));
+    }
+
     public function create()
     {
         //
@@ -141,7 +151,7 @@ class MonthlyPaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MonthlyPaymentRequest $request)
     {
         if (!Auth::user()->hasPermissionTo('store_monthly_payment')) {
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -225,6 +235,72 @@ class MonthlyPaymentController extends Controller
             }
         } catch (\Throwable $th) {
                 return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
+        }
+    }
+
+    public function generateRetroactiveMonthlyPayment(RetroactiveMonthlyFeeRequest $request){
+        if (!Auth::user()->hasPermissionTo('generate_retroactive_monthly_payment')) {
+            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
+        $query = DB::table('contracts')
+                            ->selectRaw('distinct contracts.id')
+                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+                            ->whereNotNull('dt_signature')
+                            ->whereNull('dt_cancellation')
+                            ->whereNull('ds_cancellation_reason')
+                            ->where('contracts.id', '=', $request->contract);
+
+        $contract = $query->first();
+
+        try {
+            $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
+            $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->first();
+            $monthlyPayment = $this->monthlyPayment;
+
+            if(empty($tution)){
+                $monthlyPayment->due_date = $request->due_date;
+                $monthlyPayment->dt_payday = null;
+                $monthlyPayment->dt_cancellation = null;
+                $monthlyPayment->fine_value = 0;
+                $monthlyPayment->interest_amount = 0;
+                $monthlyPayment->discount_value = 0;
+                $monthlyPayment->total_payable = $price_store;
+                $monthlyPayment->amount_paid = 0;
+                $monthlyPayment->balance_value = $price_store;
+                $monthlyPayment->id_monthly_status = 'A';
+                $monthlyPayment->monthly_status = 'Aberto';
+                $monthlyPayment->id_type_cancellation = null;
+                $monthlyPayment->type_cancellation = null;
+                $monthlyPayment->download_user = null;
+                $monthlyPayment->cancellation_user = null;
+                $monthlyPayment->id_contract = $contract->id;
+
+                $monthlyPayment->create([
+                    'due_date' => $monthlyPayment->due_date,
+                    'dt_payday' => $monthlyPayment->dt_payday,
+                    'dt_cancellation' => $monthlyPayment->dt_cancellation,
+                    'fine_value' => $monthlyPayment->fine_value,
+                    'interest_amount' => $monthlyPayment->interest_amount,
+                    'discount_value' => $monthlyPayment->discount_value,
+                    'total_payable' => $monthlyPayment->total_payable,
+                    'amount_paid' => $monthlyPayment->amount_paid,
+                    'balance_value' => $monthlyPayment->balance_value,
+                    'id_monthly_status' => $monthlyPayment->id_monthly_status,
+                    'monthly_status' => $monthlyPayment->monthly_status,
+                    'id_type_cancellation' => $monthlyPayment->id_type_cancellation,
+                    'type_cancellation' => $monthlyPayment->type_cancellation,
+                    'download_user' => $monthlyPayment->download_user,
+                    'cancellation_user' => $monthlyPayment->cancellation_user,
+                    'id_contract' => $monthlyPayment->id_contract,
+                    'create_user' => Auth::user()->name,
+                    'update_user' => null
+                ]);
+            }
+            return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('status', 'Mensalidade do vencimento '.date('d/m/Y', strtotime($request->due_date)).' do contrato - '. $contract->id .' gerada com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
         }
     }
 

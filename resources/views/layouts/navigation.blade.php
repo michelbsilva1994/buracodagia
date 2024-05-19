@@ -33,7 +33,7 @@
                         <li><a class="dropdown-item" href="{{route('contract.index')}}">Contratos</a></li>
                         @endcan
                         @can('view_generate_monthly_fee')
-                        <li><a class="dropdown-item" href="{{route('monthly.index')}}">Geração de Mensalidades</a></li>
+                        <li><a class="dropdown-item" href="{{route('services.monthly')}}">Geração de Mensalidades</a></li>
                         @endcan
                         @can('view_tution')
                         <li><a class="dropdown-item" href="{{route('monthly.tuition')}}">Mensalidades</a></li>

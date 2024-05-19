@@ -82,6 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('contract', ContractController::class);
 
     /**Generate Tuition */
+    Route::get('createGenerateRetroactiveMonthlyPayment', [MonthlyPaymentController::class, 'createGenerateRetroactiveMonthlyPayment'])->name('monthly.createGenerateRetroactiveMonthlyPayment');
+    Route::post('generateRetroactiveMonthlyPayment', [MonthlyPaymentController::class, 'generateRetroactiveMonthlyPayment'])->name('monthly.generateRetroactiveMonthlyPayment');
     Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'monthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');
     Route::post('lowerMonthlyFee/',[MonthlyPaymentController::class, 'lowerMonthlyFee'])->name('monthly.lowerMonthlyFee');
     Route::post('lowerMonthlyFeeContract/',[MonthlyPaymentController::class, 'lowerMonthlyFeeContract'])->name('monthly.lowerMonthlyFeeContract');
@@ -108,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::get('domain/services/', [HomeServicesController::class, 'domainService'])->name('services.domainService');
     Route::get('people/services/', [HomeServicesController::class, 'peopleService'])->name('services.peopleService');
     Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
+    Route::get('Monthly/services/', [MonthlyPaymentController::class, 'monthlyService'])->name('services.monthly');
 
     /**Reports */
 
