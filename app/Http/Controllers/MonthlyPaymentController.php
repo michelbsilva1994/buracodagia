@@ -362,8 +362,11 @@ class MonthlyPaymentController extends Controller
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
             $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
 
-            $amount_paid = str_replace(',','.', $request->amount_paid);
-            // dd(doubleval($amount_paid));
+            //dd($request->amount_paid);
+
+            $amount_paid = str_replace('.','', $request->amount_paid);
+            $amount_paid = str_replace(',','.', $amount_paid);
+            $amount_paid = doubleval($amount_paid);
 
             if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P'){
                 if($monthlyPayment->balance_value >= $amount_paid){
@@ -451,12 +454,16 @@ class MonthlyPaymentController extends Controller
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
             $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
 
+            $amount_paid = str_replace('.','', $request->amount_paid);
+            $amount_paid = str_replace(',','.', $amount_paid);
+            $amount_paid = doubleval($amount_paid);
+
             if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P'){
-                if($monthlyPayment->balance_value >= $request->amount_paid){
+                if($monthlyPayment->balance_value >= $amount_paid){
                     $lowerMonthlyFee = $this->lowerMonthlyFee;
 
                     $lowerMonthlyFee->create([
-                        'amount_paid' => $request->amount_paid,
+                        'amount_paid' => $amount_paid,
                         'id_type_payment' => $typePayment->value,
                         'type_payment' => $typePayment->description,
                         'id_chargeback_low' => null,
@@ -470,10 +477,10 @@ class MonthlyPaymentController extends Controller
                         'update_user' => null
                     ]);
 
-                    $balance = $monthlyPayment->balance_value - $request->amount_paid;
+                    $balance = $monthlyPayment->balance_value - $amount_paid;
 
                     if($balance > 0){
-                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $request->amount_paid;
+                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'P';
                         $monthlyPayment->monthly_status = 'Parcial';
@@ -483,7 +490,7 @@ class MonthlyPaymentController extends Controller
                     }
                     if($balance === 0.0 ){
                         $monthlyPayment->dt_payday = $request->dt_payday;
-                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $request->amount_paid;
+                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'F';
                         $monthlyPayment->monthly_status = 'Fechado';

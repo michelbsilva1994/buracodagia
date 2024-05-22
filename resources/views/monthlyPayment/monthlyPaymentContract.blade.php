@@ -118,23 +118,26 @@
             </div>
             <div class="modal-body">
 
-                <form action="{{route('monthly.lowerMonthlyFeeContract')}}" method="post">
+                <form action="{{route('monthly.lowerMonthlyFee')}}" method="post">
                     @csrf
                     <div>
                         <input type="hidden" name="id_monthly" id="id_monthly">
                     </div>
                     <div>
                         <label for="dt_payday">Data da baixa</label>
-                        <input type="date" name="dt_payday" id="dt_payday" class="form-control" value="" required>
+                        <input type="date" name="dt_payday" id="dt_payday" class="form-control" required>
                     </div>
                     <div>
                         <label for="id_payment">Forma de pagamento</label>
                         <select name="id_payment" id="id_payment" class="form-control" required>
-                            <option value="" disabled selected>Selecione uma opção</option>
                             @foreach ($typesPayments as $typePayment)
                                 <option value="{{$typePayment->value}}">{{$typePayment->description}}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div>
+                        <label for="amount_paid">Valor Recebido</label>
+                        <input type="text" name="amount_paid" id="amount_paid" class="form-control" data-mask="000.000.000.000.000,00" data-mask-reverse="true" required>
                     </div>
                     <div class="d-grid gap-2 my-3">
                         <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
@@ -192,6 +195,11 @@
         $(document).delegate('#btn-cancel', 'click', function(){
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly_cancel').val(id_monthly);
+        });
+
+        $(document).delegate('#btn-low','click',function(){
+            var balance_value = $(this).attr('data-balance-value');
+            $('#amount_paid').val(balance_value);
         });
     </script>
 @endsection
