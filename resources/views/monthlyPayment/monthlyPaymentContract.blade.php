@@ -32,7 +32,7 @@
                                 <td>
                                     @if($monthly->id_monthly_status === 'A' || $monthly->id_monthly_status === 'P')
                                         <div class="d-flex">
-                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
                                                 <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                                         </div>
                                     @else
@@ -52,7 +52,7 @@
                                 <td>
                                     @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
                                         <div class="d-flex">
-                                            <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
                                         </div>
                                     @else
                                         <div>
@@ -71,7 +71,7 @@
                                 <td>
                                     @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
                                         <div class="d-flex">
-                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                            <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
                                             <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                                         </div>
                                     @else
@@ -91,7 +91,7 @@
                             <td>
                                 @if(empty($monthly->dt_payday) && empty($monthly->dt_cancellation))
                                     <div class="d-flex">
-                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
+                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
                                         <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                                     </div>
                                 @else
