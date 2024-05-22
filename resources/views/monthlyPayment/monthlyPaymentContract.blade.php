@@ -6,7 +6,7 @@
             <h2>Contrato: {{$contract->id}}</h2>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-3">
-            <a href="{{route('physical.contractPerson', ['id_person' => $contract->id])}}" class="btn btn-lg btn-danger mr-2">Voltar</a>
+            <a href="{{route('physical.contractPerson', ['id_person' => $contract->id_physical_person])}}" class="btn btn-lg btn-danger mr-2">Voltar</a>
         </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">

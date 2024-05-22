@@ -14,6 +14,7 @@
 </head>
 <body>
     <div class="container text-center">
+        <h2>Buraco da Gia</h2>
         <h2 class="my-3">Recibo de Pagamento Total</h2>
         <h3>Mensalidade {{$monthlyPayment->id_monthly_payment}}</h3>
         <h4>Contrato {{$monthlyPayment->id_contract}} - Lojas - {{$monthlyPayment->stores}}</h4>
