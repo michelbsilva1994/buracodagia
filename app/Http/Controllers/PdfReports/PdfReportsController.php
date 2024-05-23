@@ -25,11 +25,13 @@ class PdfReportsController extends Controller
                     monthly_payments.download_user as download_user,
                     monthly_payments.id as id_monthly_payment,
                     monthly_payments.dt_payday as dt_payday,
+                    monthly_payments.due_date as due_date,
                     monthly_payments.total_payable as total_payable,
                     monthly_payments.amount_paid as amount_paid,
                     monthly_payments.balance_value as balance_value,
                     monthly_payments.id_monthly_status as id_monthly_status,
-                    GROUP_CONCAT(stores.name) as stores'
+                    GROUP_CONCAT(stores.name) as stores,
+                    GROUP_CONCAT(pavements.name) as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
@@ -52,12 +54,13 @@ class PdfReportsController extends Controller
                     monthly_payments.download_user as download_user,
                     monthly_payments.id as id_monthly_payment,
                     monthly_payments.dt_payday as dt_payday,
+                    monthly_payments.due_date as due_date,
                     monthly_payments.total_payable as total_payable,
                     monthly_payments.amount_paid as amount_paid,
                     monthly_payments.balance_value as balance_value,
                     monthly_payments.id_monthly_status as id_monthly_status,
                     GROUP_CONCAT(distinct stores.name) as stores
-                    '
+                    GROUP_CONCAT(pavements.name) as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')

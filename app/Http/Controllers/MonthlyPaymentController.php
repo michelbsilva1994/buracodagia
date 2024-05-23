@@ -57,6 +57,7 @@ class MonthlyPaymentController extends Controller
                     monthly_payments.balance_value,
                     monthly_payments.id_monthly_status,
                     GROUP_CONCAT(stores.name) as stores,
+                    GROUP_CONCAT(stores.id) as id_stores,
                     pavements.name as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
@@ -64,7 +65,8 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->groupByRaw('monthly_payments.id, pavements.name')
-                    ->orderBy('contracts.name_contractor', 'asc')
+                    ->orderBy('pavements', 'asc')
+                    ->orderBy('id_stores', 'asc')
                     ->paginate(10);
 
         $typesPayments = $this->typePayment->where('status', 'A')->get();
