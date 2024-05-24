@@ -122,6 +122,9 @@ class StoreController extends Controller
             $contract = $this->contractStore->select('id_contract')->where('id_store',$id)->first();
 
             if($contractStore > 0){
+                if (Auth::user()->hasPermissionTo('edit_store_contract')) {
+                    return view('structure.store.edit', compact('store', 'pavementies','storeType','storeStatues'));
+                }
                 return redirect()->route('store.index')->with('alert','Não pode alterar a '.$store->name.' - '.$store->pavement->name.' pois à mesma está vínculada ao contrato '.$contract->id_contract.' !');
             }else{
                 return view('structure.store.edit', compact('store', 'pavementies','storeType','storeStatues'));
@@ -141,6 +144,8 @@ class StoreController extends Controller
         }
 
         try {
+            $contractStore = $this->contractStore->where('id_store',$id)->count();
+            $contract = $this->contractStore->select('id_contract')->where('id_store',$id)->first();
             $store = $this->store->where('id',$id)->first();
 
             $store->name = $request->name;
@@ -150,9 +155,18 @@ class StoreController extends Controller
             $store->id_pavement = $request->id_pavement;
             $store->update_user = Auth::user()->name;
 
-            $store->save();
 
-            return redirect()->route('store.index')->with('status', 'Loja alterada com sucesso!');
+            if($contractStore > 0){
+                if (Auth::user()->hasPermissionTo('edit_store_contract')) {
+                    $store->save();
+                    return redirect()->route('store.index')->with('status', 'Loja alterada com sucesso!');
+                }else{
+                    return redirect()->route('store.index')->with('alert','Não pode alterar a '.$store->name.' - '.$store->pavement->name.' pois à mesma está vínculada ao contrato '.$contract->id_contract.' !');
+                }
+            }else{
+                $store->save();
+                return redirect()->route('store.index')->with('status', 'Loja alterada com sucesso!');
+            }
         } catch (\Throwable $th) {
             return redirect()->route('store.update', $store->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
