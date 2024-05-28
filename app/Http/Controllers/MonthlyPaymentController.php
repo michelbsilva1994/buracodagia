@@ -66,7 +66,7 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->groupByRaw('monthly_payments.id, pavements.name')
                     ->orderBy('pavements', 'asc')
-                    ->orderBy('id_stores', 'asc')
+                    ->orderBy('stores', 'asc')
                     ->paginate(10);
 
         $typesPayments = $this->typePayment->where('status', 'A')->get();
@@ -108,7 +108,8 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->groupByRaw('monthly_payments.id, pavements.name')
-                    ->orderBy('contracts.name_contractor', 'asc');
+                    ->orderBy('pavements', 'asc')
+                    ->orderBy('stores', 'asc');
 
         if($contractor){
             $query->where('contracts.name_contractor', 'like', "%$contractor%");
