@@ -30,8 +30,8 @@ class PdfReportsController extends Controller
                     monthly_payments.amount_paid as amount_paid,
                     monthly_payments.balance_value as balance_value,
                     monthly_payments.id_monthly_status as id_monthly_status,
-                    GROUP_CONCAT(stores.name) as stores,
-                    GROUP_CONCAT(pavements.name) as pavements'
+                    GROUP_CONCAT(distinct stores.name) as stores,
+                    GROUP_CONCAT(distinctpavements.name) as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
