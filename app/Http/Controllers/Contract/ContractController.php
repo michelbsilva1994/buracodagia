@@ -33,13 +33,34 @@ class ContractController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->hasPermissionTo('view_contract')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $contracts = $this->contract->paginate(10);
+        $name_contractor = $request->name_contractor;
+
+        $cpf = $request->cpf;
+        $cpf = str_replace('.','',$cpf);
+        $cpf = str_replace('-','',$cpf);
+
+        $query = DB::table('contracts');
+
+        if($name_contractor && $cpf){
+            $query->where('name_contractor', 'like', "%$name_contractor%")->where('cpf', 'like', "%$cpf%");
+        }
+        if($name_contractor){
+            $query->where('name_contractor', 'like', "%$name_contractor%");
+        }
+        if($cpf){
+            $query->where('cpf', 'like', "%$cpf%");
+        }else{
+            $query;
+        }
+
+        $contracts = $query->paginate(10);
+
         return view('contract.index', compact('contracts'));
     }
 

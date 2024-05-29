@@ -5,7 +5,7 @@
             <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('monthly.filter')}}" class="col-12" method="get">
+            <form action="{{route('monthly.filter')}}" class="col-12" method="get" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="contractor">Contrante</label>
@@ -38,11 +38,10 @@
             <table class="table align-middle">
                 <thead>
                     <tr>
-                        <td>Nº Mensalidade</td>
-                        <td>Contrante</td>
-                        <td>Lojas</td>
                         <td>Pavimentos</td>
+                        <td>Lojas</td>
                         <td>Data de vencimento</td>
+                        <td>Contrante</td>
                         <td>Valor a pagar</td>
                         <td>Valor Pago</td>
                         <td>Saldo</td>
@@ -53,11 +52,10 @@
                     @foreach ($tuition as $monthlyPayment)
                         @if ($monthlyPayment->id_monthly_status === 'F')
                         <tr class="bg-success text-white">
-                            <td>{{$monthlyPayment->id}}</td>
-                            <td>{{$monthlyPayment->name_contractor}}</td>
-                            <td>{{$monthlyPayment->stores}}</td>
                             <td>{{$monthlyPayment->pavements}}</td>
+                            <td>{{$monthlyPayment->stores}}</td>
                             <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                            <td>{{$monthlyPayment->name_contractor}}</td>
                             <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
@@ -69,11 +67,10 @@
                         </tr>
                         @elseif ($monthlyPayment->id_monthly_status === 'P')
                             <tr class="bg-secondary text-white">
-                                <td>{{$monthlyPayment->id}}</td>
-                                <td>{{$monthlyPayment->name_contractor}}</td>
-                                <td>{{$monthlyPayment->stores}}</td>
                                 <td>{{$monthlyPayment->pavements}}</td>
+                                <td>{{$monthlyPayment->stores}}</td>
                                 <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                                <td>{{$monthlyPayment->name_contractor}}</td>
                                 <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
@@ -86,11 +83,10 @@
                             </tr>
                         @elseif($monthlyPayment->id_monthly_status === 'C')
                             <tr class="bg-danger text-white">
-                                <td>{{$monthlyPayment->id}}</td>
-                                <td>{{$monthlyPayment->name_contractor}}</td>
-                                <td>{{$monthlyPayment->stores}}</td>
                                 <td>{{$monthlyPayment->pavements}}</td>
+                                <td>{{$monthlyPayment->stores}}</td>
                                 <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                                <td>{{$monthlyPayment->name_contractor}}</td>
                                 <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
                                 <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
@@ -102,11 +98,10 @@
                             </tr>
                         @else
                         <tr class="">
-                            <td>{{$monthlyPayment->id}}</td>
-                            <td>{{$monthlyPayment->name_contractor}}</td>
-                            <td>{{$monthlyPayment->stores}}</td>
                             <td>{{$monthlyPayment->pavements}}</td>
+                            <td>{{$monthlyPayment->stores}}</td>
                             <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
+                            <td>{{$monthlyPayment->name_contractor}}</td>
                             <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
                             <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>

@@ -4,27 +4,12 @@
         <div class="col-12">
             <h1 class="my-4 text-secondary text-center">Lojas</h1>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
-        @if (session('alert'))
-            <div class="alert alert-warning" role="alert">
-                {{ session('alert') }}
-            </div>
-        @endif
         <div id="message-delete"></div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('store.create')}}" class="btn btn-success btn-lg"> + Criar Loja</a>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('store.index')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
+            <form action="{{route('store.index')}}" method="get" class="col-sm-12 col-md-12 col-lg-12" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="name">Nome</label>

@@ -9,15 +9,15 @@
             <a href="{{route('contract.create')}}" class="btn btn-success btn-lg"> + Novo Contrato</a>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('legalPerson.filter')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
+            <form action="{{route('contract.index')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="corporate_name">Contratante</label>
-                        <input type="text" name="corporate_name" id="corporate_name" class="form-control">
+                        <label for="name_contractor">Contratante</label>
+                        <input type="text" name="name_contractor" id="name_contractor" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="cnpj">CNPJ</label>
-                        <input type="text" name="cnpj" id="cnpj" class="form-control" data-mask="00.000.000/0000-00">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control" data-mask="000.000.000-00">
                     </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
                         <button type="submit" class="btn btn-lg btn-success">Filtrar</button>

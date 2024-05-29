@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('legalPerson/filter', [LegalPersonController::class, 'filter'])->name('legalPerson.filter');
     Route::resource('legalPerson', LegalPersonController::class);
+
     Route::resource('pavement', PavementController::class);
     Route::resource('store', StoreController::class);
 
