@@ -18,7 +18,7 @@
         <h2 class="my-3">Recibo de Pagamento</h2>
         <h4>Pavimento: {{$monthlyPayment->pavements}}</h4>
         <h4>Nome do permissionario: {{$monthlyPayment->name_contractor}}</h4>
-        <h4>Nº Banca ou Loja: {{$monthlyPayment->stores}}</h4>
+        <h4>{{$monthlyPayment->types_stores}}: {{$monthlyPayment->stores}}</h4>
         <h4>Total Pago: R${{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</h4>
         <h4>Data do vencimento: {{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</h4>
         <h4>Data da Baixa: {{date('d/m/Y', strtotime($monthlyPayment->dt_payday))}}</h4>

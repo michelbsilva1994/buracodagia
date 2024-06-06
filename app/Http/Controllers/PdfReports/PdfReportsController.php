@@ -31,11 +31,14 @@ class PdfReportsController extends Controller
                     monthly_payments.balance_value as balance_value,
                     monthly_payments.id_monthly_status as id_monthly_status,
                     GROUP_CONCAT(distinct stores.name) as stores,
-                    GROUP_CONCAT(distinct pavements.name) as pavements'
+                    GROUP_CONCAT(distinct pavements.name) as pavements,
+                    GROUP_CONCAT(distinct store_types.description) as types_stores
+                    '
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('store_types', 'stores.type', '=', 'store_types.value')
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->where('monthly_payments.id', '=', $id_receipt)
                     ->groupByRaw('monthly_payments.id')->first();
