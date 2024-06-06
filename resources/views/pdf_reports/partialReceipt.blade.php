@@ -18,7 +18,8 @@
         <h2 class="my-3">Recibo de Pagamento Parcial</h2>
         <h4>Pavimento:{{$monthlyPayment->pavements}}</h4>
         <h4>Nome do permissionario: {{$monthlyPayment->name_contractor}}</h4>
-        <h4>Nº Banca ou Loja{{$monthlyPayment->stores}}</h4>
+        <h4>Nº Banca ou Loja: {{$monthlyPayment->stores}}</h4>
+        <h4>{{$monthlyPayment->types_stores}}</h4>
         <h4>Valor Pago: R${{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</h4>
         <h4>Valor em Aberto R${{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</h4>
         <h4>Data do vencimento: {{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</h4>
