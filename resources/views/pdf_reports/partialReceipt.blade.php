@@ -16,7 +16,7 @@
     <div class="container text-center" id="receipt">
         <h2>Buraco da Gia</h2>
         <h2 class="my-3">Recibo de Pagamento Parcial</h2>
-        <h4>Pavimento:</h4>
+        <h4>Pavimento:{{$monthlyPayment->pavements}}</h4>
         <h4>Nome do permissionario: {{$monthlyPayment->name_contractor}}</h4>
         <h4>Nº Banca ou Loja{{$monthlyPayment->stores}}</h4>
         <h4>Valor Pago: R${{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</h4>
