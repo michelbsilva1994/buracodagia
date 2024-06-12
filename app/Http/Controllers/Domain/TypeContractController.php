@@ -24,6 +24,7 @@ class TypeContractController extends Controller
             return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
         $typeContracts = $this->typeContract->all();
+
         return view('domain.type_contract.index', compact('typeContracts'));
     }
 
@@ -128,5 +129,10 @@ class TypeContractController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
+    }
+
+    public function ajaxIndex(){
+        $typeContracts = $this->typeContract->all();
+        echo json_encode($typeContracts);
     }
 }

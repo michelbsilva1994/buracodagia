@@ -93,4 +93,16 @@
             })
         });
     </script>
+    <script>
+            $(function(){
+                $.ajax({
+                    url: "{{route('typeContract.ajaxIndex')}}",
+                    type: "get",
+                    dataType: 'json',
+                    success: function(response){
+
+                    }
+                });
+            });
+    </script>
 @endsection
