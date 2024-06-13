@@ -4,16 +4,6 @@
         <div class="col-12">
             <h1 class="my-4 text-secondary text-center">Tipo de Contrato</h1>
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
         <div id="message-delete"></div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('typeContract.create')}}" class="btn btn-lg btn-success"> + Novo</a>
@@ -28,18 +18,7 @@
                         <td>Ações</td>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($typeContracts as $type)
-                    <tr id="type-contract-{{$type->id}}">
-                            <td>{{$type->id}}</td>
-                            <td>{{$type->value}}</td>
-                            <td>{{$type->description}}</td>
-                            <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('typeContract.edit', ['typeContract'=>$type->id])}}">Editar</a>
-                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-type="{{$type->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
-                            </td>
-                    </tr>
-                    @endforeach
+                <tbody id="body_table">
                 </tbody>
             </table>
         </div>
@@ -70,9 +49,10 @@
 
         $(document).delegate('#btn-destroy', 'click', function(){
             var id_type = $('#id_type').val();
-
+            var url = "{{route('typeContract.destroy', ['typeContract'=>':id'])}}"
+            url = url.replace(':id',id_type);
             $.ajax({
-                url: "/public/domain/typeContract/"+id_type,
+                url: url,
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -100,7 +80,21 @@
                     type: "get",
                     dataType: 'json',
                     success: function(response){
-
+                        var itemTable = $('#body_table');
+                        itemTable.empty();
+                        $.each(response, function(index, item){
+                            var url = "{{route('typeContract.edit', ['typeContract'=> ':id'])}}"
+                            url = url.replace(':id',item.id);
+                            itemTable.append('<tr id="type-contract-'+item.id+'">'+
+                                            '<td>'+item.id+'</td>'+
+                                            '<td>'+item.value+'</td>'+
+                                            '<td>'+item.description+'</td>'+
+                                            '<td>'+
+                                            '<a class="mr-3 btn btn-sm btn-outline-success" href="'+url+'">Editar</a>'+
+                                            '<a class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-type="'+item.id+'" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>'+
+                                            '</td>'+
+                                            '</tr>')
+                                        });
                     }
                 });
             });
