@@ -23,9 +23,8 @@ class TypeContractController extends Controller
         if (!Auth::user()->hasPermissionTo('view_type_contract')) {
             return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        $typeContracts = $this->typeContract->all();
 
-        return view('domain.type_contract.index', compact('typeContracts'));
+        return view('domain.type_contract.index');
     }
 
     /**
@@ -131,8 +130,13 @@ class TypeContractController extends Controller
         }
     }
 
-    public function ajaxIndex(){
-        $typeContracts = $this->typeContract->all();
-        echo json_encode($typeContracts);
+    public function ajaxIndex(Request $request){
+        if($request->description){
+            $typeContracts = $this->typeContract->where('description','like',"%$request->description%")->get();
+            echo json_encode($typeContracts);
+        }else{
+            $typeContracts = $this->typeContract->all();
+            echo json_encode($typeContracts);
+        }
     }
 }

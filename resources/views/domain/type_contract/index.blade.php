@@ -8,6 +8,19 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-4">
             <a href="{{route('typeContract.create')}}" class="btn btn-lg btn-success"> + Novo</a>
         </div>
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form class="col-sm-12 col-md-12 col-lg-12" name="form-filter">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="description">Nome</label>
+                        <input type="text" name="description" id="description" class="form-control">
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle">
                 <thead>
@@ -75,6 +88,34 @@
     </script>
     <script>
             $(function(){
+                $('form[name="form-filter"]').submit(function(event){
+                    event.preventDefault();
+                    $.ajax({
+                    url: "{{route('typeContract.ajaxIndex')}}",
+                    type: "get",
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(response){
+                        var itemTable = $('#body_table');
+                        itemTable.empty();
+                        $.each(response, function(index, item){
+                            var url = "{{route('typeContract.edit', ['typeContract'=> ':id'])}}"
+                            url = url.replace(':id',item.id);
+                            itemTable.append('<tr id="type-contract-'+item.id+'">'+
+                                            '<td>'+item.id+'</td>'+
+                                            '<td>'+item.value+'</td>'+
+                                            '<td>'+item.description+'</td>'+
+                                            '<td>'+
+                                            '<a class="mr-3 btn btn-sm btn-outline-success" href="'+url+'">Editar</a>'+
+                                            '<a class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-type="'+item.id+'" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>'+
+                                            '</td>'+
+                                            '</tr>')
+                                        });
+                        }
+                    });
+                });
+            });
+            $(function(){
                 $.ajax({
                     url: "{{route('typeContract.ajaxIndex')}}",
                     type: "get",
@@ -95,8 +136,8 @@
                                             '</td>'+
                                             '</tr>')
                                         });
-                    }
-                });
+                        }
+                    });
             });
     </script>
 @endsection

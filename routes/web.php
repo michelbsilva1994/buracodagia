@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
 
     /**Domain */
     Route::prefix('domain')->group(function(){
-        Route::get('ajaxIndexTypeContract', [TypeContractController::class, 'ajaxIndex'])->name('typeContract.ajaxIndex');
+        Route::get('ajaxIndexTypeContract/', [TypeContractController::class, 'ajaxIndex'])->name('typeContract.ajaxIndex');
         Route::resource('typeContract', TypeContractController::class);
         Route::resource('storeType', StoreTypeController::class);
         Route::resource('storeStatus', StoreStatusController::class);
