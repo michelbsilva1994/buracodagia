@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('contract', ContractController::class);
 
     /**Generate Tuition */
+    Route::get('tuition/tuitionAjax', [MonthlyPaymentController::class, 'tuitionAjax'])->name('monthly.tuitionAjax');
     Route::get('createGenerateRetroactiveMonthlyPayment', [MonthlyPaymentController::class, 'createGenerateRetroactiveMonthlyPayment'])->name('monthly.createGenerateRetroactiveMonthlyPayment');
     Route::post('generateRetroactiveMonthlyPayment', [MonthlyPaymentController::class, 'generateRetroactiveMonthlyPayment'])->name('monthly.generateRetroactiveMonthlyPayment');
     Route::get('MonthlyPaymentContract/{contract}', [MonthlyPaymentController::class, 'monthlyPaymentContract'])->name('monthly.MonthlyPaymentContract');

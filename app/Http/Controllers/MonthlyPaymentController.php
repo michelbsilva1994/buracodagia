@@ -536,4 +536,28 @@ class MonthlyPaymentController extends Controller
             return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('error','Ops, ocorreu um erro'.$th);
         }
     }
+
+    public function tuitionAjax(Request $request){
+        $tuition = DB::table('contracts')
+                    ->selectRaw('contracts.name_contractor,
+                    monthly_payments.id,
+                    monthly_payments.due_date,
+                    monthly_payments.total_payable,
+                    monthly_payments.amount_paid,
+                    monthly_payments.balance_value,
+                    monthly_payments.id_monthly_status,
+                    GROUP_CONCAT(stores.name) as stores,
+                    GROUP_CONCAT(stores.id) as id_stores,
+                    pavements.name as pavements'
+                    )
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->groupByRaw('monthly_payments.id, pavements.name')
+                    ->orderBy('pavements', 'asc')
+                    ->orderBy('stores', 'asc')->get();
+
+        echo json_encode($tuition);
+    }
 }
