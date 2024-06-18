@@ -4,6 +4,7 @@
         <div class="col-12">
             <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
         </div>
+        <div id="message-return"></div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
             <form class="col-12" autocomplete="off" id="form-filter">
                 <div class="row">
@@ -49,81 +50,13 @@
                     </tr>
                 </thead>
                 <tbody id="body-table">
-                    @foreach ($tuition as $monthlyPayment)
-                        @if ($monthlyPayment->id_monthly_status === 'F')
-                        <tr class="bg-success text-white">
-                            <td>{{$monthlyPayment->pavements}}</td>
-                            <td>{{$monthlyPayment->stores}}</td>
-                            <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                            <td>{{$monthlyPayment->name_contractor}}</td>
-                            <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
-                            <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
-                            <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
-                            <td>
-                                <div>
-                                    <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-sm btn-primary" target="_blank">Recibo</a>
-                                </div>
-                            </td>
-                        </tr>
-                        @elseif ($monthlyPayment->id_monthly_status === 'P')
-                            <tr class="bg-secondary text-white">
-                                <td>{{$monthlyPayment->pavements}}</td>
-                                <td>{{$monthlyPayment->stores}}</td>
-                                <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                                <td>{{$monthlyPayment->name_contractor}}</td>
-                                <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
-                                <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
-                                <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
-                                        <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthlyPayment->id])}}" class="btn btn-sm btn-primary" target="_blank">Recibo</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @elseif($monthlyPayment->id_monthly_status === 'C')
-                            <tr class="bg-danger text-white">
-                                <td>{{$monthlyPayment->pavements}}</td>
-                                <td>{{$monthlyPayment->stores}}</td>
-                                <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                                <td>{{$monthlyPayment->name_contractor}}</td>
-                                <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
-                                <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
-                                <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
-                                <td>
-                                    <div>
-                                        <h6>-</h6>
-                                    </div>
-                                </td>
-                            </tr>
-                        @else
-                        <tr class="">
-                            <td>{{$monthlyPayment->pavements}}</td>
-                            <td>{{$monthlyPayment->stores}}</td>
-                            <td>{{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</td>
-                            <td>{{$monthlyPayment->name_contractor}}</td>
-                            <td>R$ {{number_format($monthlyPayment->total_payable, 2, ',', '.')}}</td>
-                            <td>R$ {{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</td>
-                            <td>R$ {{number_format($monthlyPayment->balance_value, 2, ',', '.')}}</td>
-                            <td>
-                                @if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P')
-                                    <div class="d-flex">
-                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthlyPayment->id}}" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ',', '.')}}" data-bs-toggle="modal" data-bs-target="#modal-low">Baixar</a>
-                                        @if ($monthlyPayment->id_monthly_status === 'A')
-                                            <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthlyPayment->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
-                                        @endif
-                                    </div>
-                                @endif
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-center my-2">
+        {{-- <div class="d-flex justify-content-center my-2">
             {{ $tuition->appends(request()->input())->links()}}
-        </div>
+        </div> --}}
     </div>
 
     <!-- modal baixar mensalidade -->
@@ -136,8 +69,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="{{route('monthly.lowerMonthlyFee')}}" method="post">
-                    @csrf
+                <form id="lowerMonthlyFee">
                     <div>
                         <input type="hidden" name="id_monthly" id="id_monthly">
                     </div>
@@ -176,8 +108,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('monthly.cancelTuition')}}" method="post">
-                    @csrf
+                <form id="cancelTuition">
                     <div>
                         <input type="hidden" name="id_monthly_cancel" id="id_monthly_cancel">
                     </div>
@@ -226,10 +157,11 @@
             $.ajax({
                 url: "{{route('monthly.tuitionAjax')}}",
                 type: 'get',
+                data: $(this).serialize(),
                 dataType: 'json',
                 success: function(response){
-                    console.log(response);
                     var itemTable = $('#body-table');
+                    itemTable.empty();
                     $.each(response, function(index, item){
 
                         const dateString = item.due_date;
@@ -258,7 +190,7 @@
                                       '</div>';
                         }else if(item.id_monthly_status === 'C'){
                             tr = '<tr class="bg-danger text-white">';
-                            options = '<td><div><h6>-</h6></div></td>';
+                            options = '<div><h6>-</h6></div>';
                         }else{
                             tr = '<tr>';
                             options = '<a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="'+balance_value+'" data-bs-target="#modal-low">Baixar</a>'+
@@ -278,6 +210,121 @@
                                 '</tr>'
                         )
                     });
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            $.ajax({
+                url: "{{route('monthly.tuitionAjax')}}",
+                type: 'get',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response){
+                    var itemTable = $('#body-table');
+                    itemTable.empty();
+                    $.each(response, function(index, item){
+
+                        const dateString = item.due_date;
+                        const [year, month, day] = dateString.split('-');
+                        const due_date = `${day}/${month}/${year}`;
+
+                        var urlReceipt = "{{route('pdfReports.receipt', ['id_receipt' => ':id_receipt'])}}";
+                        urlReceipt = urlReceipt.replace(':id_receipt', item.id);
+
+                        var urlPartialReceipt = "{{route('pdfReports.partialReceipt', ['id_receipt' => ':idPartialReceipt'])}}";
+                        urlPartialReceipt = urlPartialReceipt.replace(':idPartialReceipt', item.id);
+
+                        var b_value = item.balance_value;
+                        var balance_value = b_value.toLocaleString('pt-br', {minimumFractionDigits: 2});
+
+                        var tr = '<tr>';
+
+                        if(item.id_monthly_status === 'F'){
+                            tr = '<tr class="bg-success">';
+                            options = '<a href="'+urlReceipt+'" class="btn btn-sm btn-primary" target="_blank">Recibo</a>';
+                        }else if(item.id_monthly_status === 'P'){
+                            tr = '<tr class="bg-secondary">';
+                            options = '<div class="d-flex">'+
+                                        '<a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="'+balance_value+'" data-bs-target="#modal-low">Baixar</a>'+
+                                        '<a href="'+urlPartialReceipt+'" class="btn btn-sm btn-primary" target="_blank">Recibo</a>'+
+                                      '</div>';
+                        }else if(item.id_monthly_status === 'C'){
+                            tr = '<tr class="bg-danger text-white">';
+                            options = '<div><h6>-</h6></div>';
+                        }else{
+                            tr = '<tr>';
+                            options = '<a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="'+balance_value+'" data-bs-target="#modal-low">Baixar</a>'+
+                                      '<a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>';
+                        }
+                        itemTable.append(
+                                    tr+
+                                    '<td>'+item.pavements+'</td>'+
+                                    '<td>'+item.stores+'</td>'+
+                                    '<td>'+due_date+'</td>'+
+                                    '<td>'+item.name_contractor+'</td>'+
+                                    "<td>R$"+item.total_payable+"</td>"+
+                                    "<td>R$"+item.amount_paid+"</td>"+
+                                    "<td>R$"+item.balance_value+"</td>"+
+                                    '<td>'+options+'</td>'+
+                                '</tr>'
+                        )
+                    });
+                }
+            });
+        });
+
+        $('#cancelTuition').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url:"{{route('monthly.cancelTuition')}}",
+                type:'post',
+                data: $(this).serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    $('#message-return').html(response.status);
+                    $('#modal-cancel').modal('hide');
+                    $('#message-return').addClass('alert alert-success').show();
+                    $('#message-return').fadeOut(3000);
+                    setInterval(() => {
+                        $('#message-return').hide();
+                    }, 2000);
+                },
+            });
+
+        });
+
+        $('#lowerMonthlyFee').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url: "{{route('monthly.lowerMonthlyFee')}}",
+                type: 'post',
+                data: $(this).serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    if(response.alert){
+                        $('#message-return').html(response.alert);
+                        $('#modal-low').modal('hide');
+                        $('#message-return').addClass('alert alert-warning').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message-return').hide();
+                        },5000);
+                    }else{
+                        $('#message-return').html(response.status);
+                        $('#modal-low').modal('hide');
+                        $('#message-return').addClass('alert alert-success').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message.return').hide();
+                        }, 5000);
+                    }
                 }
             });
         });

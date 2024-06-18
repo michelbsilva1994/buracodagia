@@ -412,13 +412,12 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->save();
                     }
                 }else{
-                    return redirect()->route('monthly.tuition')->with('alert','Valor a receber é maior que valor de saldo!');
+                    return response()->json(['alert' => 'Valor a receber é maior que valor de saldo!']);
                 }
             }
-
-            return redirect()->route('monthly.tuition')->with('status','Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!');
+            return response()->json(['status' => 'Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('monthly.tuition')->with('error','Ops, ocorreu um erro'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 
@@ -442,9 +441,9 @@ class MonthlyPaymentController extends Controller
                 $monthlyPayment->save();
             }
 
-            return redirect()->route('monthly.tuition')->with('status','Mensalidade: '.$monthlyPayment->id.' cancelada com sucesso!');
+            return response()->json(['status' => 'Mensalidade cancelada com sucesso!']);
         } catch (\Throwable $th) {
-            return redirect()->route('monthly.tuition')->with('error','Ops, ocorreu um erro'.$th);
+            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 
@@ -538,7 +537,12 @@ class MonthlyPaymentController extends Controller
     }
 
     public function tuitionAjax(Request $request){
-        $tuition = DB::table('contracts')
+        $contractor = $request->contractor;
+        $due_date = $request->due_date;
+        $store = $request->store;
+        $pavement = $request->pavement;
+
+        $query = DB::table('contracts')
                     ->selectRaw('contracts.name_contractor,
                     monthly_payments.id,
                     monthly_payments.due_date,
@@ -547,7 +551,6 @@ class MonthlyPaymentController extends Controller
                     monthly_payments.balance_value,
                     monthly_payments.id_monthly_status,
                     GROUP_CONCAT(stores.name) as stores,
-                    GROUP_CONCAT(stores.id) as id_stores,
                     pavements.name as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
@@ -556,7 +559,22 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->groupByRaw('monthly_payments.id, pavements.name')
                     ->orderBy('pavements', 'asc')
-                    ->orderBy('stores', 'asc')->get();
+                    ->orderBy('stores', 'asc');
+
+        if($contractor){
+            $query->where('contracts.name_contractor', 'like', "%$contractor%");
+        }
+        if($due_date){
+            $query->where('monthly_payments.due_date', $due_date);
+        }
+        if($store){
+            $query->where('stores.name', 'like', "%$store%");
+        }
+        if($pavement){
+            $query->where('pavements.id',$pavement);
+        }
+
+        $tuition = $query->get();
 
         echo json_encode($tuition);
     }
