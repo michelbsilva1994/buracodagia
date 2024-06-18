@@ -223,7 +223,6 @@
 
         $('#form-filter').submit(function(event){
             event.preventDefault();
-            alert('teste');
             $.ajax({
                 url: "{{route('monthly.tuitionAjax')}}",
                 type: 'get',
@@ -240,8 +239,11 @@
                         var urlReceipt = "{{route('pdfReports.receipt', ['id_receipt' => ':id_receipt'])}}";
                         urlReceipt = urlReceipt.replace(':id_receipt', item.id);
 
-                        var urlPartialReceipt = "{{route('pdfReports.partialReceipt', ['id_receipt' => 'urlPartialReceipt'])}}";
-                        urlPartialReceipt = urlPartialReceipt.replace(':urlPartialReceipt', item.id);
+                        var urlPartialReceipt = "{{route('pdfReports.partialReceipt', ['id_receipt' => ':idPartialReceipt'])}}";
+                        urlPartialReceipt = urlPartialReceipt.replace(':idPartialReceipt', item.id);
+
+                        var b_value = item.balance_value;
+                        var balance_value = b_value.toLocaleString('pt-br', {minimumFractionDigits: 2});
 
                         var tr = '<tr>';
 
@@ -251,15 +253,16 @@
                         }else if(item.id_monthly_status === 'P'){
                             tr = '<tr class="bg-secondary">';
                             options = '<div class="d-flex">'+
-                                        '<a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ",", ".")}}" data-bs-target="#modal-low">Baixar</a>'+
+                                        '<a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="'+balance_value+'" data-bs-target="#modal-low">Baixar</a>'+
                                         '<a href="'+urlPartialReceipt+'" class="btn btn-sm btn-primary" target="_blank">Recibo</a>'+
                                       '</div>';
                         }else if(item.id_monthly_status === 'C'){
-                            tr = '<tr class="bg-danger">';
+                            tr = '<tr class="bg-danger text-white">';
                             options = '<td><div><h6>-</h6></div></td>';
                         }else{
                             tr = '<tr>';
-                            options = '<a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="{{number_format($monthlyPayment->balance_value, 2, ",", ".")}}" data-bs-target="#modal-low">Baixar</a>';
+                            options = '<a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-balance-value="'+balance_value+'" data-bs-target="#modal-low">Baixar</a>'+
+                                      '<a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="'+item.id+'" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>';
                         }
 
                         itemTable.append(
