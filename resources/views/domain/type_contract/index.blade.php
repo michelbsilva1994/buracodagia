@@ -9,7 +9,7 @@
             <a href="{{route('typeContract.create')}}" class="btn btn-lg btn-success"> + Novo</a>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form class="col-sm-12 col-md-12 col-lg-12" name="form-filter">
+            <form class="col-sm-12 col-md-12 col-lg-12" id="form-filter">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="description">Nome</label>
@@ -21,19 +21,14 @@
                 </div>
             </form>
         </div>
-        <div class="col-12 table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Valor</td>
-                        <td>Descrição</td>
-                        <td>Ações</td>
-                    </tr>
-                </thead>
-                <tbody id="body_table">
-                </tbody>
-            </table>
+        <div id="table_data">
+            <div id="items-container">
+                @include('domain.type_contract.pagination_data')
+            </div>
+
+            <div id="pagination-container">
+                @include('domain.type_contract.pagination')
+            </div>
         </div>
     </div>
     <div class="modal fade" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -55,6 +50,35 @@
         </div>
     </div>
     <script>
+
+        $(document).on('submit', '#form-filter', function(event){
+            event.preventDefault();
+            fetchItems("{{route('typeContract.indexAjax')}}?" + $(this).serialize());
+        });
+
+        $(document).on('click', '.pagination a', function(event){
+            event.preventDefault();
+            var url = $(this).attr('href');
+            fetchItems(url);
+            window.history.pushState("","", url);
+        })
+
+        function fetchItems(url){
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function(response){
+                    $('#items-container').html(response.html);
+                    $('#pagination-container').html(response.pagination);
+                },
+                error: function(xhr){
+                    console.log('Error', xhr.statusText);
+                }
+            });
+        }
+
+
+
         $(document).delegate('#btn-delete','click', function(){
             var id_type = $(this).attr('data-id-type');
             $('#id_type').val(id_type);
@@ -83,10 +107,10 @@
                 error: function(data){
                     console.log(data);
                 }
-            })
+            });
         });
     </script>
-    <script>
+    {{-- <script>
             $(function(){
                 $('form[name="form-filter"]').submit(function(event){
                     event.preventDefault();
@@ -139,5 +163,5 @@
                         }
                     });
             });
-    </script>
+    </script> --}}
 @endsection

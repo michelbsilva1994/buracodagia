@@ -18,15 +18,55 @@ class TypeContractController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->hasPermissionTo('view_type_contract')) {
             return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        return view('domain.type_contract.index');
+        $query = $this->typeContract->query();
+
+        if($request->description){
+            $query->where('description', 'like', "%$request->description%");
+        }else{
+            $query;
+        }
+
+        $typeContracts = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('domain.type_contract.pagination_data', compact('typeContracts'))->render();
+            $pagination = view('domain.type_contract.pagination', compact('typeContracts'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('domain.type_contract.index', compact('typeContracts'));
     }
 
+    public function indexAjax(Request $request)
+    {
+        if (!Auth::user()->hasPermissionTo('view_type_contract')) {
+            return redirect()->route('services.domainService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
+        $query = $this->typeContract->query();
+
+        if($request->description){
+            $query->where('description', 'like', "%$request->description%");
+        }else{
+            $query;
+        }
+
+        $typeContracts = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('domain.type_contract.pagination_data', compact('typeContracts'))->render();
+            $pagination = view('domain.type_contract.pagination', compact('typeContracts'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('domain.type_contract.index', compact('typeContracts'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -126,17 +166,7 @@ class TypeContractController extends Controller
             $typeContract->delete();
             return response()->json(['status'=> 'Tipo de contrato excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
-        }
-    }
-
-    public function ajaxIndex(Request $request){
-        if($request->description){
-            $typeContracts = $this->typeContract->where('description','like',"%$request->description%")->get();
-            echo json_encode($typeContracts);
-        }else{
-            $typeContracts = $this->typeContract->all();
-            echo json_encode($typeContracts);
+            return response()->json(['status' => 'Ops,' + $th]);
         }
     }
 }
