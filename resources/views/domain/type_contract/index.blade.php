@@ -77,8 +77,6 @@
             });
         }
 
-
-
         $(document).delegate('#btn-delete','click', function(){
             var id_type = $(this).attr('data-id-type');
             $('#id_type').val(id_type);

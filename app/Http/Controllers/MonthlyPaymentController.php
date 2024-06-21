@@ -42,13 +42,17 @@ class MonthlyPaymentController extends Controller
         return view('monthlyPayment.index', compact(['pavements']));
     }
 
-    public function tuition(){
+    public function tuition(Request $request){
 
         if (!Auth::user()->hasPermissionTo('view_tution')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $tuition = DB::table('contracts')
+        $typesPayments = $this->typePayment->where('status', 'A')->get();
+        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
+        $pavements = $this->pavement->where('status', 'A')->get();
+
+        $query = DB::table('contracts')
                     ->selectRaw('contracts.name_contractor,
                     monthly_payments.id,
                     monthly_payments.due_date,
@@ -66,17 +70,33 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->groupByRaw('monthly_payments.id, pavements.name')
                     ->orderBy('pavements', 'asc')
-                    ->orderBy('stores', 'asc')
-                    ->paginate(10);
+                    ->orderBy('stores', 'asc');
 
-        $typesPayments = $this->typePayment->where('status', 'A')->get();
-        $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
-        $pavements = $this->pavement->where('status', 'A')->get();
+        if($request->contractor){
+            $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
+        }
+        if($request->due_date){
+            $query->where('monthly_payments.due_date', $request->due_date);
+        }
+        if($request->store){
+            $query->where('stores.name', 'like', "%$request->store%");
+        }
+        if($request->pavement){
+            $query->where('pavements.id',$request->pavement);
+        }
+
+        $tuition = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
+            $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
 
         return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements']));
     }
 
-    public function filter(Request $request){
+    public function tuitionAjax(Request $request){
 
         if (!Auth::user()->hasPermissionTo('view_tution')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -87,11 +107,6 @@ class MonthlyPaymentController extends Controller
         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
         $pavements = $this->pavement->where('status', 'A')->get();
 
-        $contractor = $request->contractor;
-        $due_date = $request->due_date;
-        $store = $request->store;
-        $pavement = $request->pavement;
-
         $query = DB::table('contracts')
                     ->selectRaw('contracts.name_contractor,
                     monthly_payments.id,
@@ -101,6 +116,7 @@ class MonthlyPaymentController extends Controller
                     monthly_payments.balance_value,
                     monthly_payments.id_monthly_status,
                     GROUP_CONCAT(stores.name) as stores,
+                    GROUP_CONCAT(stores.id) as id_stores,
                     pavements.name as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
@@ -111,22 +127,28 @@ class MonthlyPaymentController extends Controller
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
-        if($contractor){
-            $query->where('contracts.name_contractor', 'like', "%$contractor%");
+        if($request->contractor){
+            $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
-        if($due_date){
-            $query->where('monthly_payments.due_date', $due_date);
+        if($request->due_date){
+            $query->where('monthly_payments.due_date', $request->due_date);
         }
-        if($store){
-            $query->where('stores.name', 'like', "%$store%");
+        if($request->store){
+            $query->where('stores.name', 'like', "%$request->store%");
         }
-        if($pavement){
-            $query->where('pavements.id',$pavement);
+        if($request->pavement){
+            $query->where('pavements.id',$request->pavement);
         }
 
-        $tuition = $query->paginate(10);
+        $tuition = $query->paginate(10)->appends($request->input());
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations', 'pavements']));
+        if($request->ajax()){
+            $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
+            $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements']));
 
     }
 
@@ -536,7 +558,7 @@ class MonthlyPaymentController extends Controller
         }
     }
 
-    public function tuitionAjax(Request $request){
+    public function tuitionAjaxOld(Request $request){
         $contractor = $request->contractor;
         $due_date = $request->due_date;
         $store = $request->store;

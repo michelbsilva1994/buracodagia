@@ -35,28 +35,15 @@
                 </div>
             </form>
         </div>
-        <div class="col-12 table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <td>Pavimentos</td>
-                        <td>Lojas</td>
-                        <td>Data de vencimento</td>
-                        <td>Contrante</td>
-                        <td>Valor a pagar</td>
-                        <td>Valor Pago</td>
-                        <td>Saldo</td>
-                        <td>Ações</td>
-                    </tr>
-                </thead>
-                <tbody id="body-table">
+        <div class="table-data">
+            <div id="items-container">
+                @include('monthlyPayment.tuition_data')
+            </div>
 
-                </tbody>
-            </table>
+            <div id="pagination-container">
+                @include('monthlyPayment.pagination')
+            </div>
         </div>
-        {{-- <div class="d-flex justify-content-center my-2">
-            {{ $tuition->appends(request()->input())->links()}}
-        </div> --}}
     </div>
 
     <!-- modal baixar mensalidade -->
@@ -136,6 +123,32 @@
     </div>
 
     <script>
+        $(document).on('submit', '#form-filter', function(event){
+            event.preventDefault();
+            fetchItems("{{route('monthly.tuitionAjax')}}?" + $(this).serialize());
+        });
+
+        $(document).on('click', '.pagination a', function(event){
+            event.preventDefault();
+            var url = $(this).attr('href');
+            fetchItems(url);
+            window.history.pushState("","", url);
+        })
+
+        function fetchItems(url){
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function(response){
+                    $('#items-container').html(response.html);
+                    $('#pagination-container').html(response.pagination);
+                },
+                error: function(xhr){
+                    console.log('Error', xhr.statusText);
+                }
+            });
+        }
+
         $(document).delegate('#btn-low','click',function(){
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly').val(id_monthly);
@@ -151,7 +164,63 @@
             $('#amount_paid').val(balance_value);
         });
 
+        $('#cancelTuition').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url:"{{route('monthly.cancelTuition')}}",
+                type:'post',
+                data: $(this).serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    $('#message-return').html(response.status);
+                    $('#modal-cancel').modal('hide');
+                    $('#message-return').addClass('alert alert-success').show();
+                    $('#message-return').fadeOut(3000);
+                    setInterval(() => {
+                        $('#message-return').hide();
+                    }, 2000);
+                },
+            });
 
+        });
+
+        $('#lowerMonthlyFee').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url: "{{route('monthly.lowerMonthlyFee')}}",
+                type: 'post',
+                data: $(this).serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response){
+                    if(response.alert){
+                        $('#message-return').html(response.alert);
+                        $('#modal-low').modal('hide');
+                        $('#message-return').addClass('alert alert-warning').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message-return').hide();
+                        },5000);
+                    }else{
+                        $('#message-return').html(response.status);
+                        $('#modal-low').modal('hide');
+                        $('#message-return').addClass('alert alert-success').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message.return').hide();
+                        }, 5000);
+                    }
+                }
+            });
+        });
+    </script>
+
+    {{-- <script>
         $('#form-filter').submit(function(event){
             event.preventDefault();
             $.ajax({
@@ -273,60 +342,5 @@
                 }
             });
         });
-
-        $('#cancelTuition').submit(function(event){
-            event.preventDefault();
-            $.ajax({
-                url:"{{route('monthly.cancelTuition')}}",
-                type:'post',
-                data: $(this).serialize(),
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response){
-                    $('#message-return').html(response.status);
-                    $('#modal-cancel').modal('hide');
-                    $('#message-return').addClass('alert alert-success').show();
-                    $('#message-return').fadeOut(3000);
-                    setInterval(() => {
-                        $('#message-return').hide();
-                    }, 2000);
-                },
-            });
-
-        });
-
-        $('#lowerMonthlyFee').submit(function(event){
-            event.preventDefault();
-            $.ajax({
-                url: "{{route('monthly.lowerMonthlyFee')}}",
-                type: 'post',
-                data: $(this).serialize(),
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response){
-                    if(response.alert){
-                        $('#message-return').html(response.alert);
-                        $('#modal-low').modal('hide');
-                        $('#message-return').addClass('alert alert-warning').show();
-                        $('#message-return').fadeOut(5000);
-                        setInterval(() => {
-                            $('#message-return').hide();
-                        },5000);
-                    }else{
-                        $('#message-return').html(response.status);
-                        $('#modal-low').modal('hide');
-                        $('#message-return').addClass('alert alert-success').show();
-                        $('#message-return').fadeOut(5000);
-                        setInterval(() => {
-                            $('#message.return').hide();
-                        }, 5000);
-                    }
-                }
-            });
-        });
-    </script>
+    </script> --}}
 @endsection
