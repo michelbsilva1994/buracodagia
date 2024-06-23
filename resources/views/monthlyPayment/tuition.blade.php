@@ -78,7 +78,7 @@
                     </div>
                     <div class="d-grid gap-2 my-3">
                         <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="teste">Fechar</button>
                     </div>
                 </form>
             </div>
@@ -123,9 +123,18 @@
     </div>
 
     <script>
-        $(document).on('submit', '#form-filter', function(event){
-            event.preventDefault();
-            fetchItems("{{route('monthly.tuitionAjax')}}?" + $(this).serialize());
+        // $(document).on('submit', '#form-filter', function(event){
+        //     event.preventDefault();
+        //     fetchItems("{{route('monthly.tuitionAjax')}}?" + $(this).serialize());
+        // });
+
+        $(document).ready(function(){
+            $('#form-filter').on('submit', function(event){
+                event.preventDefault();
+                var url = "{{route('monthly.tuitionAjax')}}?" + $(this).serialize();
+                fetchItems(url);
+                window.history.pushState("", "", url);
+            });
         });
 
         $(document).on('click', '.pagination a', function(event){
@@ -133,7 +142,7 @@
             var url = $(this).attr('href');
             fetchItems(url);
             window.history.pushState("","", url);
-        })
+        });
 
         function fetchItems(url){
             $.ajax({
@@ -217,6 +226,13 @@
                     }
                 }
             });
+        });
+
+        $('#modal-low').on('hidden.bs.modal', function(event){
+            event.preventDefault();
+            var url = window.location.href;
+            fetchItems(url);
+            window.history.pushState("","", url);
         });
     </script>
 @endsection
