@@ -87,6 +87,8 @@ class MonthlyPaymentController extends Controller
 
         $tuition = $query->paginate(10)->appends($request->input());
 
+        dd($tuition);
+
         if($request->ajax()){
             $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
@@ -556,48 +558,5 @@ class MonthlyPaymentController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('error','Ops, ocorreu um erro'.$th);
         }
-    }
-
-    public function tuitionAjaxOld(Request $request){
-        $contractor = $request->contractor;
-        $due_date = $request->due_date;
-        $store = $request->store;
-        $pavement = $request->pavement;
-
-        $query = DB::table('contracts')
-                    ->selectRaw('contracts.name_contractor,
-                    monthly_payments.id,
-                    monthly_payments.due_date,
-                    monthly_payments.total_payable,
-                    monthly_payments.amount_paid,
-                    monthly_payments.balance_value,
-                    monthly_payments.id_monthly_status,
-                    GROUP_CONCAT(stores.name) as stores,
-                    pavements.name as pavements'
-                    )
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->groupByRaw('monthly_payments.id, pavements.name')
-                    ->orderBy('pavements', 'asc')
-                    ->orderBy('stores', 'asc');
-
-        if($contractor){
-            $query->where('contracts.name_contractor', 'like', "%$contractor%");
-        }
-        if($due_date){
-            $query->where('monthly_payments.due_date', $due_date);
-        }
-        if($store){
-            $query->where('stores.name', 'like', "%$store%");
-        }
-        if($pavement){
-            $query->where('pavements.id',$pavement);
-        }
-
-        $tuition = $query->get();
-
-        echo json_encode($tuition);
     }
 }

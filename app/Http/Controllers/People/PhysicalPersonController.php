@@ -11,6 +11,7 @@ use App\Models\People\PhysicalPerson;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PhysicalPersonController extends Controller
 {
@@ -26,40 +27,63 @@ class PhysicalPersonController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()->hasPermissionTo('view_physical_person')) {
             return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
+        $cpf = str_replace('.','', $request->cpf);
+        $cpf = str_replace('-','', $cpf);
 
-        $physicalPeople = $this->physicalPerson->paginate(10);
+        // $query = DB::table('physical_people')->orderBy('name', 'asc');
+        $query = $this->physicalPerson->orderBy('name', 'asc');
+
+        if($request->name){
+            $query->where('name','like',"%$request->name%");
+        }
+        if($cpf){
+            $query->where('cpf','like',"%$cpf%");
+        }
+
+        $physicalPeople = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('people.physicalPerson.physical_data', compact('physicalPeople'))->render();
+            $pagination = view('people.physicalPerson.pagination', compact('physicalPeople'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
         return view('people.physicalPerson.index', compact('physicalPeople'));
     }
 
-    public function filter(Request $request){
+    public function physicalIndex(Request $request){
         if (!Auth::user()->hasPermissionTo('view_physical_person')) {
             return redirect()->route('services.peopleService')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $name = $request->name;
-
         $cpf = str_replace('.','', $request->cpf);
         $cpf = str_replace('-','', $cpf);
 
-        if($name && $cpf){
-            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->where('cpf','like',"%$cpf%")->paginate(10);
-            return view('people.physicalPerson.index', compact('physicalPeople'));
-        }elseif($name){
-            $physicalPeople = $this->physicalPerson->where('name','like',"%$name%")->paginate(10);
-            return view('people.physicalPerson.index', compact('physicalPeople'));
-        }elseif($cpf){
-            $physicalPeople = $this->physicalPerson->where('cpf','like',"%$cpf%")->paginate(10);
-            return view('people.physicalPerson.index', compact('physicalPeople'));
-        }else{
-            return redirect()->route('physicalPerson.index');
-            $physicalPeople = $this->physicalPerson->paginate(10);
-            return view('people.physicalPerson.index', compact('physicalPeople'));
+        // $query = DB::table('physical_people')->orderBy('name', 'asc');
+        $query = $this->physicalPerson->orderBy('name', 'asc');
+
+        if($request->name){
+            $query->where('name','like',"%$request->name%");
         }
+        if($cpf){
+            $query->where('cpf','like',"%$cpf%");
+        }
+
+        $physicalPeople = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('people.physicalPerson.physical_data', compact('physicalPeople'))->render();
+            $pagination = view('people.physicalPerson.pagination', compact('physicalPeople'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('people.physicalPerson.index', compact('physicalPeople'));
+
     }
 
     /**
@@ -72,8 +96,7 @@ class PhysicalPersonController extends Controller
         }
         try {
             return view('people.physicalPerson.create');
-        } catch (\Throwable $th) {
-            return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        } catch (\Throwable $th) {            return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 

@@ -17,7 +17,7 @@
                     <h3>Totais</h3>
                     <h5>Valor Total: R$ {{number_format($total_receivable, 2, ',', '.')}}</h5>
                     <h5>Total Recebido: R$ {{number_format($total_paid, 2, ',', '.')}}</h5>
-                    <h5>Cartão à Receber: R$ {{number_format($total_received, 2, ',', '.')}}</h5>
+                    <h5>Total à Receber: R$ {{number_format($total_received, 2, ',', '.')}}</h5>
                 </div>
             </div>
             {!! $dashboard->script() !!}

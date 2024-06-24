@@ -29,7 +29,7 @@ class UserController extends Controller
         if (!Auth::user()->hasPermissionTo('view_user')) {
             return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        
+
         $users = $this->user->all();
         return view('security.users.index', compact('users'));
     }
@@ -106,7 +106,14 @@ class UserController extends Controller
 
         try {
             $user = $this->user->findorfail($id);
-            $user->update($request->all());
+            // $user->update($request->all());
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+
+            $user->save();
+
             return redirect()->route('user.index')->with('status','Usuário alterado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('user.edit', $id)->with('error','Ops, ocorreu um erro inesperado!'.$th);

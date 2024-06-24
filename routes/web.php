@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
 
     /**rota filtrar pessoal fisica */
-    Route::get('physicalPerson/filter', [PhysicalPersonController::class, 'filter'])->name('physical.filter');
+    Route::get('physicalPerson/physicalIndex', [PhysicalPersonController::class, 'physicalIndex'])->name('physical.physicalIndex');
     Route::get('contractPerson/{id_person}', [PhysicalPersonController::class, 'contractPerson'])->name('physical.contractPerson');
     Route::resource('physicalPerson', PhysicalPersonController::class);
 

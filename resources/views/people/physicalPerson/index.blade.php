@@ -9,7 +9,7 @@
             <a href="{{route('physicalPerson.create')}}" class="btn btn-lg btn-success"> + Cadastrar Pessoal Física</a>
         </div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-            <form action="{{route('physical.filter')}}" method="get" class="col-sm-12 col-md-12 col-lg-12">
+            <form class="col-sm-12 col-md-12 col-lg-12" id="form-filter">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="name">Nome</label>
@@ -25,33 +25,14 @@
                 </div>
             </form>
         </div>
-        <div class="col-12 table-responsive mt-2">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Usuário</td>
-                        <td>Ações</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($physicalPeople as $person)
-                    <tr id="person-{{$person->id}}">
-                            <td>{{$person->id}}</td>
-                            <td>{{$person->name}}</td>
-                            <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('physicalPerson.edit', ['physicalPerson'=>$person->id])}}">Editar</a>
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('physical.contractPerson', ['id_person'=>$person->id])}}">Contrato</a>
-                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-person="{{$person->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
-                            </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+        <div class="table-data">
+            <div id="items-container">
+                @include('people.physicalPerson.physical_data')
+            </div>
 
-        <div class="d-flex justify-content-center my-2">
-            {{ $physicalPeople->appends(request()->input())->links()}}
+            <div id="pagination-container">
+                @include('people.physicalPerson.pagination')
+            </div>
         </div>
 
     </div>
@@ -74,6 +55,36 @@
         </div>
     </div>
     <script>
+        $(document).ready(function(){
+            $('#form-filter').on('submit', function(event){
+                event.preventDefault();
+                var url = "{{route('physical.physicalIndex')}}?" + $(this).serialize();
+                fetchItems(url);
+                window.history.pushState("", "", url);
+            });
+        });
+
+        $(document).on('click', '.pagination a', function(event){
+            event.preventDefault();
+            var url = $(this).attr('href');
+            fetchItems(url);
+            window.history.pushState("","", url);
+        });
+
+        function fetchItems(url){
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function(response){
+                    $('#items-container').html(response.html);
+                    $('#pagination-container').html(response.pagination);
+                },
+                error: function(xhr){
+                    console.log('Error', xhr.statusText);
+                }
+            });
+        }
+
         $(document).delegate('#btn-delete', 'click', function(){
             var id_person = $(this).attr('data-id-person');
             $('#id_person').val(id_person);
