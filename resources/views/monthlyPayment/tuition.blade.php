@@ -234,5 +234,12 @@
             fetchItems(url);
             window.history.pushState("","", url);
         });
+
+        $('#modal-cancel').on('hidden.bs.modal', function(event){
+            event.preventDefault();
+            var url = window.location.href;
+            fetchItems(url);
+            window.history.pushState("","", url);
+        });
     </script>
 @endsection

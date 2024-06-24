@@ -26,6 +26,9 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{{route('profile.edit')}}">{{ __('Perfil') }}</a></li>
+                        @can('view_financial_dashboard')
+                        <li><a class="dropdown-item" href="{{route('dashboard.dashboardCharts')}}">Dashboard</a></li>
+                        @endcan
                         @can('view_person_management')
                         <li><a class="dropdown-item" href="{{route('services.peopleService')}}">Cadastro de Pessoas</a></li>
                         @endcan
