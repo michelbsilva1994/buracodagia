@@ -8,6 +8,7 @@ use App\Models\Tution\LowerMonthlyFee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Excel as ExcelReport;
 
 class PdfReportsController extends Controller
 {
@@ -43,9 +44,9 @@ class PdfReportsController extends Controller
                     ->where('monthly_payments.id', '=', $id_receipt)
                     ->groupByRaw('monthly_payments.id')->first();
 
-        $data = ['monthlyPayment' => $monthlyPayment];
-        $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
-        return $pdfReceipt->stream('recibo.pdf');
+                    $data = ['monthlyPayment' => $monthlyPayment];
+                    $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
+                    return $pdfReceipt->stream('recibo.pdf');
     }
 
     public function partialReceipt($id_receipt){
