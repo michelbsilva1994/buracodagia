@@ -99,33 +99,56 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Perfil') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('services.peopleService')">
-                    {{ __('Cadastro de Pessoas') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('contract.index')">
-                    {{ __('Contratos') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('monthly.index')">
-                    {{ __('Geração de Mensalidades') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('monthly.tuition')">
-                    {{ __('Mensalidades') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('user.index')">
-                    {{ __('Gestão de Usuários') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('services.securityService')">
-                    {{ __('Gestão de Segurança') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('services.structureService')">
-                    {{ __('Estrutura') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('services.domainService')">
-                    {{ __('Domínios') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('reports.index')">
-                    {{ __('Relatórios') }}
-                </x-responsive-nav-link>
+                @can('view_financial_dashboard')
+                    <x-responsive-nav-link :href="route('dashboard.dashboardCharts')">
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_person_management')
+                    <x-responsive-nav-link :href="route('services.peopleService')">
+                        {{ __('Cadastro de Pessoas') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_contract')
+                    <x-responsive-nav-link :href="route('contract.index')">
+                        {{ __('Contratos') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_generate_monthly_fee')
+                    <x-responsive-nav-link :href="route('services.monthly')">
+                        {{ __('Geração de Mensalidades') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_tution')
+                    <x-responsive-nav-link :href="route('monthly.tuition')">
+                        {{ __('Mensalidades') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_user_management')
+                    <x-responsive-nav-link :href="route('user.index')">
+                        {{ __('Gestão de Usuários') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_security_management')
+                    <x-responsive-nav-link :href="route('services.securityService')">
+                        {{ __('Gestão de Segurança') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_structure_management')
+                    <x-responsive-nav-link :href="route('services.structureService')">
+                        {{ __('Estrutura') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_domain_management')
+                    <x-responsive-nav-link :href="route('services.domainService')">
+                        {{ __('Domínios') }}
+                    </x-responsive-nav-link>
+                @endcan
+                @can('view_reports')
+                    <x-responsive-nav-link :href="route('reports.index')">
+                        {{ __('Relatórios') }}
+                    </x-responsive-nav-link>
+                @endcan
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

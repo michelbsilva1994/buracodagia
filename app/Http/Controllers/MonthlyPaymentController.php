@@ -87,8 +87,6 @@ class MonthlyPaymentController extends Controller
 
         $tuition = $query->paginate(10)->appends($request->input());
 
-        dd($tuition);
-
         if($request->ajax()){
             $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
