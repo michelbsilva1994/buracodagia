@@ -46,7 +46,7 @@ class PdfReportsController extends Controller
 
                     $data = ['monthlyPayment' => $monthlyPayment];
                     $pdfReceipt = Pdf::loadView('pdf_reports.receipt', $data);
-                    return $pdfReceipt->stream('recibo.pdf');
+                    return $pdfReceipt->stream('recibo'.$monthlyPayment->id_monthly_payment.'.pdf');
     }
 
     public function partialReceipt($id_receipt){

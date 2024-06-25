@@ -29,7 +29,7 @@
         <h4>Data do vencimento: {{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</h4>
         <h4>Data da Baixa: {{date('d/m/Y', strtotime($monthlyPayment->dt_payday))}}</h4>
         <h4>Usuário: {{$monthlyPayment->download_user}}</h4>
-        <br>
+        <h4>-----------------------------------------------</h4>
     </div>
 </body>
 </html>
