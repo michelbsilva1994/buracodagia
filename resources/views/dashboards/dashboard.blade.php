@@ -1,6 +1,23 @@
 @extends('layout.app')
 @section('content')
     <div class="container">
+        <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
+            <form class="col-12" autocomplete="off" id="form-filter">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="due_date_initial">Data Vencimento Inicial</label>
+                        <input type="date" name="due_date_initial" id="due_date_initial" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="due_date_initial">Data Vencimento Inicial</label>
+                        <input type="date" name="due_date_initial" id="due_date_initial" class="form-control">
+                    </div>
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
+                        <button type="submit" class="btn btn-lg btn-success" id="filter">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="row">
             <div class="col-md-6 col-lg-6 col-sm-12">
                 {!! $dashboard->container() !!}
