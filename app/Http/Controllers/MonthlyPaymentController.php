@@ -364,7 +364,7 @@ class MonthlyPaymentController extends Controller
         //
     }
 
-    public function monthlyPaymentContract($id_contract){
+    public function monthlyPaymentContract($id_contract, Request $request){
 
         if (!Auth::user()->hasPermissionTo('monthly_payment_contract')) {
             return redirect()->route('physical.contractPerson', $id_contract)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -373,9 +373,41 @@ class MonthlyPaymentController extends Controller
         $typesPayments = $this->typePayment->where('status', 'A')->get();
         $typesCancellations = $this->typeCancellation->where('status', 'A')->get();
         $contract = $this->contract->where('id', $id_contract)->first();
-        $monthlyPayment = $this->monthlyPayment->where('id_contract', '=', $id_contract)->orderBy('due_date', 'desc')->get();
 
-        return view('monthlyPayment.monthlyPaymentContract', compact(['monthlyPayment', 'contract','typesPayments','typesCancellations']));
+        $query = DB::table('contracts')
+                            ->selectRaw('contracts.name_contractor,
+                            monthly_payments.id,
+                            monthly_payments.due_date,
+                            monthly_payments.total_payable,
+                            monthly_payments.amount_paid,
+                            monthly_payments.balance_value,
+                            monthly_payments.id_monthly_status,
+                            GROUP_CONCAT(stores.name) as stores,
+                            GROUP_CONCAT(stores.id) as id_stores,
+                            pavements.name as pavements'
+                            )
+                            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                            ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                            ->where('contracts.id','=', $id_contract)
+                            ->groupByRaw('monthly_payments.id, pavements.name')
+                            ->orderBy('pavements', 'asc')
+                            ->orderBy('stores', 'asc');
+
+        if($request->due_date){
+            $query->where('monthly_payments.due_date', $request->due_date);
+        }
+
+        $tuition = $query->paginate(1)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('monthlyPayment.monthlyPaymentContract.tuition_contract', compact('tuition'))->render();
+            $pagination = view('monthlyPayment.monthlyPaymentContract.pagination', compact('tuition'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('monthlyPayment.monthlyPaymentContract', compact(['tuition', 'contract','typesPayments','typesCancellations']));
     }
 
     public function lowerMonthlyFee(Request $request){

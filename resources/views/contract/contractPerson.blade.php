@@ -7,33 +7,17 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-3">
             <a href="{{route('physicalPerson.index')}}" class="btn btn-lg btn-danger mr-2">Voltar</a>
         </div>
-        <div class="col-12 table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Tipo de Pessoa</td>
-                        <td>Tipo de Contrato</td>
-                        <td>Contrante</td>
-                        <td>CPF/CNPJ</td>
-                        <td>Ações</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($contracts as $contract)
-                    <tr>
-                            <td>{{$contract->id}}</td>
-                            <td>{{$contract->type_person}}</td>
-                            <td>{{$contract->type_contract}}</td>
-                            <td>{{$contract->name_contractor}}</td>
-                            <td>{{$contract->cpf ?? $contract->cnpj}}</td>
-                            <td class="d-flex">
-                                <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('monthly.MonthlyPaymentContract', ['contract' => $contract->id])}}">Mensalidades</a>
-                            </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="table-data">
+            <div id="items-container">
+                @include('contract.paginate.contract_person_data')
+            </div>
+
+            <div id="pagination-container">
+                @include('contract.paginate.paginate_contract_person')
+            </div>
         </div>
     </div>
+    <script>
+
+    </script>
 @endsection

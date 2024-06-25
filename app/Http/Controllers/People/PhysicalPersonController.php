@@ -86,6 +86,29 @@ class PhysicalPersonController extends Controller
 
     }
 
+    public function contractPerson($id_person, Request $request){
+
+        if (!Auth::user()->hasPermissionTo('view_contract_physical_person')) {
+            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
+        try {
+            $contracts = $this->contract->where('id_physical_person', '=' , $id_person)->paginate(10)->appends($request->input());
+            $physicalPerson = $this->physicalPerson->where('id', '=' , $id_person)->first();
+
+            if($request->ajax()){
+                $view = view('contract.paginate.contract_person_data', compact(['contracts','physicalPerson']))->render();
+                $pagination = view('contract.paginate.paginate_contract_person', compact('contracts'))->render();
+                return response()->json(['html' => $view, 'pagination' => $pagination]);
+            }
+
+            return view('contract.contractPerson', compact(['contracts', 'physicalPerson']));
+
+        } catch (\Throwable $th) {
+            return redirect()->route('physicalPerson.index',$physicalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -243,22 +266,6 @@ class PhysicalPersonController extends Controller
             return response()->json(['status' => 'Cadastro deletado com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
-        }
-    }
-
-    public function contractPerson($id_person){
-
-        if (!Auth::user()->hasPermissionTo('view_contract_physical_person')) {
-            return redirect()->route('physicalPerson.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
-        }
-
-        try {
-            $contracts = $this->contract->where('id_physical_person', '=' , $id_person)->get();
-            $physicalPerson = $this->physicalPerson->where('id', '=' , $id_person)->first();
-
-            return view('contract.contractPerson', compact(['contracts', 'physicalPerson']));
-        } catch (\Throwable $th) {
-            return redirect()->route('physicalPerson.index',$physicalPerson->id)->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 }
