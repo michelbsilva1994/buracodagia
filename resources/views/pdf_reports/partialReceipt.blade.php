@@ -11,9 +11,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <style>
+        .font{
+            font-size: 26pt;
+        }
+    </style>
 </head>
 <body>
-    <div class="container text-center" id="receipt">
+    <div class="container text-center font" id="receipt">
         <h2>Buraco da Gia</h2>
         <h2 class="my-3">Recibo de Pagamento Parcial</h2>
         <h4>Pavimento:{{$monthlyPayment->pavements}}</h4>
@@ -24,6 +29,7 @@
         <h4>Data do vencimento: {{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</h4>
         <h4>Data da Baixa: {{date('d/m/Y', strtotime($monthlyPayment->dt_payday_partial))}}</h4>
         <h4>Usuário: {{$monthlyPayment->download_user}}</h4>
+        <h4>-----------------------------------------------</h4>
     </div>
 </body>
 </html>

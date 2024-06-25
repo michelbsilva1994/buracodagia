@@ -78,6 +78,6 @@ class PdfReportsController extends Controller
 
         $data = ['monthlyPayment' => $monthlyPayment];
         $pdfPatialRecceipt = Pdf::loadView('pdf_reports.partialReceipt', $data);
-        return $pdfPatialRecceipt->stream('recibo_parcial.pdf');
+        return $pdfPatialRecceipt->stream('recibo_parcial'.$monthlyPayment->id_monthly_payment.'.pdf');
     }
 }

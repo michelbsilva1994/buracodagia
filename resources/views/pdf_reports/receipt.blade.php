@@ -14,7 +14,7 @@
 
     <style>
         .font{
-            font-size: 26pt;
+            font-size: 24pt;
         }
     </style>
 </head>
