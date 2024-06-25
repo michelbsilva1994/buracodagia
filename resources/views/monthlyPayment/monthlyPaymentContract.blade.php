@@ -6,6 +6,7 @@
             <h2>Contrato: {{ $contract->id }}</h2>
             <input type="hidden" id="id_contract" value="{{$contract->id}}">
         </div>
+        <div id="message-return"></div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start my-3">
             <a href="{{ route('physical.contractPerson', ['id_person' => $contract->id_physical_person]) }}"
                 class="btn btn-lg btn-danger mr-2">Voltar</a>

@@ -399,7 +399,7 @@ class MonthlyPaymentController extends Controller
             $query->where('monthly_payments.due_date', $request->due_date);
         }
 
-        $tuition = $query->paginate(1)->appends($request->input());
+        $tuition = $query->paginate(10)->appends($request->input());
 
         if($request->ajax()){
             $view = view('monthlyPayment.monthlyPaymentContract.tuition_contract', compact('tuition'))->render();
@@ -498,95 +498,6 @@ class MonthlyPaymentController extends Controller
             return response()->json(['status' => 'Mensalidade cancelada com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
-        }
-    }
-
-    public function lowerMonthlyFeeContract(Request $request){
-        if (!Auth::user()->hasPermissionTo('lower_monthly_payment')) {
-            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
-        }
-
-        try {
-            $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
-            $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
-
-            $amount_paid = str_replace('.','', $request->amount_paid);
-            $amount_paid = str_replace(',','.', $amount_paid);
-            $amount_paid = doubleval($amount_paid);
-
-            if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P'){
-                if($monthlyPayment->balance_value >= $amount_paid){
-                    $lowerMonthlyFee = $this->lowerMonthlyFee;
-
-                    $lowerMonthlyFee->create([
-                        'amount_paid' => $amount_paid,
-                        'id_type_payment' => $typePayment->value,
-                        'type_payment' => $typePayment->description,
-                        'id_chargeback_low' => null,
-                        'chargeback_low' => null,
-                        'dt_payday' => $request->dt_payday,
-                        'dt_chargeback' => null,
-                        'download_user' => Auth()->user()->name,
-                        'chargeback_user' => null,
-                        'id_monthly_payment' => $monthlyPayment->id,
-                        'create_user' => Auth::user()->name,
-                        'update_user' => null
-                    ]);
-
-                    $balance = $monthlyPayment->balance_value - $amount_paid;
-
-                    if($balance > 0){
-                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
-                        $monthlyPayment->balance_value = $balance;
-                        $monthlyPayment->id_monthly_status = 'P';
-                        $monthlyPayment->monthly_status = 'Parcial';
-                        $monthlyPayment->download_user = Auth::user()->name;
-                        $monthlyPayment->update_user = Auth::user()->name;
-                        $monthlyPayment->save();
-                    }
-                    if($balance === 0.0 ){
-                        $monthlyPayment->dt_payday = $request->dt_payday;
-                        $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
-                        $monthlyPayment->balance_value = $balance;
-                        $monthlyPayment->id_monthly_status = 'F';
-                        $monthlyPayment->monthly_status = 'Fechado';
-                        $monthlyPayment->download_user = Auth::user()->name;
-                        $monthlyPayment->update_user = Auth::user()->name;
-                        $monthlyPayment->save();
-                    }
-                }else{
-                    return redirect()->route('monthly.tuition')->with('alert','Valor a receber é maior que valor de saldo!');
-                }
-            }
-
-            return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!');
-        } catch (\Throwable $th) {
-            return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('error','Ops, ocorreu um erro'.$th);
-        }
-    }
-
-    public function cancelTuitionContract(Request $request){
-        if (!Auth::user()->hasPermissionTo('cancel_monthly_payment')) {
-            return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
-        }
-        try {
-            $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly_cancel)->first();
-            $typeCancellation = $this->typeCancellation->where('value',$request->id_cancellation)->where('status', 'A')->first();
-
-            if($monthlyPayment->id_monthly_status === 'A'){
-                $monthlyPayment->dt_cancellation = $request->dt_cancellation;
-                $monthlyPayment->id_type_cancellation = $typeCancellation->value;
-                $monthlyPayment->type_cancellation = $typeCancellation->description;
-                $monthlyPayment->id_monthly_status = 'C';
-                $monthlyPayment->monthly_status = 'Cancelada';
-                $monthlyPayment->cancellation_user = Auth::user()->name;
-                $monthlyPayment->update_user = Auth::user()->name;
-                $monthlyPayment->save();
-            }
-
-        return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('status','Mensalidade: '.$monthlyPayment->id.' cancelada com sucesso!');
-        } catch (\Throwable $th) {
-            return redirect()->route('monthly.MonthlyPaymentContract', $monthlyPayment->id_contract)->with('error','Ops, ocorreu um erro'.$th);
         }
     }
 }
