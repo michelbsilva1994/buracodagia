@@ -133,7 +133,7 @@ Route::middleware('auth')->group(function () {
     Route::get('pdfReports/partialReceipt/{id_receipt}', [PdfReportsController::class, 'partialReceipt'])->name('pdfReports.partialReceipt');
 
     /** Dashboards */
-    Route::get('/dashboard/charts', [DashboardsController::class, 'dashboard'])->name('dashboard.dashboardCharts');
+    Route::get('/dashboardCharts/charts', [DashboardsController::class, 'financialDashboard'])->name('dashboardCharts.dashboardCharts');
 });
 
 require __DIR__.'/auth.php';
