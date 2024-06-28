@@ -32,6 +32,7 @@
                     type: 'get',
                     data: $(this).serialize(),
                     success: function(response) {
+                        $('#values').removeClass('d-none');
                         var labels = response.items.labels.map(function(e) {
                             console.log(e);
                             return e;
@@ -62,7 +63,6 @@
                         var chart = new Chart(ctx, config);
                     }
                 })
-                $('#values').removeClass('d-none');
             });
     </script>
 @endsection
