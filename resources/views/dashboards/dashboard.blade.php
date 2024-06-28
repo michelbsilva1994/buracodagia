@@ -81,10 +81,14 @@
                             data: {
                                 labels: labels,
                                 datasets: [{
-                                    label: 'Transaksi Status',
+                                    label: 'Valores Recebidos',
                                     data: data,
-                                    backgroundColor: 'rgba(75, 192, 192, 1)',
-
+                                    backgroundColor: [
+                                        '#227093',
+                                        '#218c74',
+                                        '#84817a',
+                                        '#2c2c54'
+                                    ]
                                 }]
                             }
                         };
