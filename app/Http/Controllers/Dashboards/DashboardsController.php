@@ -63,8 +63,8 @@ class DashboardsController extends Controller
         $dashboard->dataset('Valores Recebidos', 'bar', [$pix,$money,$debit_card,$credit_card])->backgroundColor(['#227093','#218c74','#84817a','#2c2c54']);
 
         if($request->ajax()){
-            $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(['dashboard', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received']))->render();
-            return response()->json(['html' => $view]);
+            $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(['pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received']))->render();
+            return response()->json(['items' => $dashboard, 'html' => $view]);
         }
 
         return view('dashboards.dashboard', compact(['dashboard', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received']));

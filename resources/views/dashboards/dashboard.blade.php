@@ -19,33 +19,79 @@
             </form>
         </div>
         <div class="dashboard-data">
+            <div class="col-md-6 col-lg-6 col-sm-12">
+                <canvas id="myChart">
+
+                </canvas>
+            </div>
             <div id="items-container">
                 @include('dashboards.financial_dashboard.financial_dashboard_data')
             </div>
         </div>
     </div>
     <script>
+        // $(document).ready(function() {
+        //     $('#form-filter').on('submit', function(event) {
+        //         event.preventDefault();
+        //         var url = "{{ route('dashboardCharts.dashboardCharts') }}?" + $(this).serialize();
+        //         fetchItems(url);
+        //         window.history.pushState('', '', url);
+        //     });
+        // });
+
+        // function fetchItems(url) {
+        //     $.ajax({
+        //         url: url,
+        //         type: 'get',
+        //         success: function(response) {
+        //             console.log(response.html);
+        //             $('#items-container').html(response.html);
+        //         },
+        //         error: function(xhr) {
+        //             console.log('Error', xhr.statusText);
+        //         }
+        //     });
+        // }
+
         $(document).ready(function() {
             $('#form-filter').on('submit', function(event) {
                 event.preventDefault();
-                var url = "{{route('dashboardCharts.dashboardCharts')}}?" + $(this).serialize();
-                fetchItems(url);
-                window.history.pushState('', '', url);
+                $.ajax({
+                    url: "{{ route('dashboardCharts.dashboardCharts') }}",
+                    type: 'get',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        //console.log(response.items.datasets[0].values);
+                        $('#items-container').html(response.html);
+                        var labels = response.items.labels.map(function(e) {
+                            //console.log(e);
+                            return e;
+                        });
+
+                        var data = response.items.datasets[0].values.map(function(e) {
+                            //console.log(e);
+                            return e;
+                        });
+                        var itemDash = $('#myChart');
+                            itemDash.empty();
+
+                        var ctx = itemDash;
+                        var config = {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Transaksi Status',
+                                    data: data,
+                                    backgroundColor: 'rgba(75, 192, 192, 1)',
+
+                                }]
+                            }
+                        };
+                        var chart = new Chart(ctx, config);
+                    }
+                })
             });
         });
-
-        function fetchItems(url) {
-            $.ajax({
-                url: url,
-                type: 'get',
-                success: function(response) {
-                    console.log(response.html);
-                    $('#items-container').html(response.html);
-                },
-                error: function(xhr) {
-                    console.log('Error', xhr.statusText);
-                }
-            });
-        }
     </script>
 @endsection

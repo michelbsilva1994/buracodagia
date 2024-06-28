@@ -1,7 +1,4 @@
 <div class="row">
-    <div class="col-md-6 col-lg-6 col-sm-12">
-        {!! $dashboard->container() !!}
-    </div>
     <div class="col-md-6 col-lg-6 col-sm-12 text-secondary text-center">
         <div>
             <h3 class="mt-5 col-md-12 col-sm-12">Valores Recebidos</h3>
@@ -17,5 +14,4 @@
             <h5>Total à Receber: R$ {{number_format($total_received->balance_value, 2, ',', '.')}}</h5>
         </div>
     </div>
-    {!! $dashboard->script() !!}
 </div>
