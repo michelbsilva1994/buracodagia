@@ -19,11 +19,6 @@
             </form>
         </div>
         <div class="dashboard-data">
-            <div class="col-md-6 col-lg-6 col-sm-12">
-                <canvas id="myChart">
-
-                </canvas>
-            </div>
             <div id="items-container">
                 @include('dashboards.financial_dashboard.financial_dashboard_data')
             </div>
@@ -52,30 +47,32 @@
         //         }
         //     });
         // }
+            // $('#filter').click(function{
+            //     alert('teste');
+            // });
 
-        $(document).ready(function() {
-            $('#form-filter').on('submit', function(event) {
+            $('#form-filter').submit(function(event) {
                 event.preventDefault();
+                var itemDash = $('#teste');
+                    itemDash.empty();
                 $.ajax({
                     url: "{{ route('dashboardCharts.dashboardCharts') }}",
                     type: 'get',
                     data: $(this).serialize(),
                     success: function(response) {
-                        //console.log(response.items.datasets[0].values);
+                        console.log(response.items.datasets[0].values);
                         $('#items-container').html(response.html);
                         var labels = response.items.labels.map(function(e) {
-                            //console.log(e);
+                            console.log(e);
                             return e;
                         });
 
                         var data = response.items.datasets[0].values.map(function(e) {
-                            //console.log(e);
+                            console.log(e);
                             return e;
                         });
-                        var itemDash = $('#myChart');
-                            itemDash.empty();
 
-                        var ctx = itemDash;
+                        var ctx = $('#myChart');
                         var config = {
                             type: 'bar',
                             data: {
@@ -96,6 +93,5 @@
                     }
                 })
             });
-        });
     </script>
 @endsection

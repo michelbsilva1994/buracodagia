@@ -1,4 +1,8 @@
 <div class="row">
+    <div class="col-md-6 col-lg-6 col-sm-12">
+        <canvas id="myChart">
+        </canvas>
+    </div>
     <div class="col-md-6 col-lg-6 col-sm-12 text-secondary text-center">
         <div>
             <h3 class="mt-5 col-md-12 col-sm-12">Valores Recebidos</h3>
