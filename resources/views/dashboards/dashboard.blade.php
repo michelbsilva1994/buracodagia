@@ -25,43 +25,13 @@
         </div>
     </div>
     <script>
-        // $(document).ready(function() {
-        //     $('#form-filter').on('submit', function(event) {
-        //         event.preventDefault();
-        //         var url = "{{ route('dashboardCharts.dashboardCharts') }}?" + $(this).serialize();
-        //         fetchItems(url);
-        //         window.history.pushState('', '', url);
-        //     });
-        // });
-
-        // function fetchItems(url) {
-        //     $.ajax({
-        //         url: url,
-        //         type: 'get',
-        //         success: function(response) {
-        //             console.log(response.html);
-        //             $('#items-container').html(response.html);
-        //         },
-        //         error: function(xhr) {
-        //             console.log('Error', xhr.statusText);
-        //         }
-        //     });
-        // }
-            // $('#filter').click(function{
-            //     alert('teste');
-            // });
-
             $('#form-filter').submit(function(event) {
                 event.preventDefault();
-                var itemDash = $('#teste');
-                    itemDash.empty();
                 $.ajax({
                     url: "{{ route('dashboardCharts.dashboardCharts') }}",
                     type: 'get',
                     data: $(this).serialize(),
                     success: function(response) {
-                        console.log(response.items.datasets[0].values);
-                        $('#items-container').html(response.html);
                         var labels = response.items.labels.map(function(e) {
                             console.log(e);
                             return e;
@@ -92,6 +62,7 @@
                         var chart = new Chart(ctx, config);
                     }
                 })
+                $('#values').removeClass('d-none');
             });
     </script>
 @endsection
