@@ -25,14 +25,20 @@
         </div>
     </div>
     <script>
-            $('#form-filter').submit(function(event) {
+            $(document).ready(function(){
+                $('#items-container').empty();
+            });
+
+            $('#form-filter').on('submit',function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: "{{ route('dashboardCharts.dashboardCharts') }}",
                     type: 'get',
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#values').removeClass('d-none');
+                        // $('#values').removeClass('d-none');
+                        $('#items-container').empty();
+                        $('#items-container').html(response.html);
                         var labels = response.items.labels.map(function(e) {
                             console.log(e);
                             return e;

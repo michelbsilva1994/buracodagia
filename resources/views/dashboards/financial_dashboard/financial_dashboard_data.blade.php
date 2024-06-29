@@ -3,7 +3,7 @@
         <canvas id="myChart">
         </canvas>
     </div>
-    <div class="col-md-6 col-lg-6 col-sm-12 text-secondary text-center d-none" id="values">
+    <div class="col-md-6 col-lg-6 col-sm-12 text-secondary text-center" id="values">
             <div>
                 <h3 class="mt-5 col-md-12 col-sm-12">Valores Recebidos</h3>
                 <h5>PIX: R$ {{number_format($pix, 2, ',', '.')}}</h5>
