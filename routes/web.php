@@ -22,6 +22,7 @@ use App\Http\Controllers\Reports\ReportsController;
 use App\Http\Controllers\Services\HomeServiceDomainController;
 use App\Http\Controllers\Services\HomeServicesController;
 use App\Http\Controllers\Services\HomeServiceSecurityController;
+use App\Http\Controllers\Structure\EquipmentController;
 use App\Http\Controllers\Structure\PavementController;
 use App\Http\Controllers\Structure\StoreController;
 use App\Models\Contract\MonthlyPayment;
@@ -72,8 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::get('legalPerson/filter', [LegalPersonController::class, 'filter'])->name('legalPerson.filter');
     Route::resource('legalPerson', LegalPersonController::class);
 
+    /**Structure*/
     Route::resource('pavement', PavementController::class);
     Route::resource('store', StoreController::class);
+    Route::resource('equipment', EquipmentController::class);
+
 
     Route::delete('contract/{contractRemoveStore}/removeStore', [ContractController::class, 'contractRemoveStore'])->name('contract.removeStore');
     Route::put('contract/signContract/{contract}', [ContractController::class, 'signContract'])->name('contract.singContract');
@@ -113,7 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::get('domain/services/', [HomeServicesController::class, 'domainService'])->name('services.domainService');
     Route::get('people/services/', [HomeServicesController::class, 'peopleService'])->name('services.peopleService');
     Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
-    Route::get('Monthly/services/', [MonthlyPaymentController::class, 'monthlyService'])->name('services.monthly');
+    Route::get('monthly/services/', [MonthlyPaymentController::class, 'monthlyService'])->name('services.monthly');
 
     /**Reports */
 
