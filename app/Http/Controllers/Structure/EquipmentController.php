@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Structure;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Structure\Equipment\EquipmentRequest;
+use App\Http\Requests\Structure\Equipment\EquipmentUpdateRequest;
 use App\Models\Structure\Equipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +36,7 @@ class EquipmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EquipmentRequest $request)
     {
         try {
             $this->equipment->create([
@@ -73,7 +75,7 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EquipmentUpdateRequest $request, string $id)
     {
         try {
             $equipment = $this->equipment->where('id',$id)->first();
@@ -96,6 +98,12 @@ class EquipmentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $equipment = $this->equipment->where('id',$id)->first();
+            $equipment->delete();
+            return response()->json(['status' => 'Equipamento excluído com sucesso!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
+        }
     }
 }

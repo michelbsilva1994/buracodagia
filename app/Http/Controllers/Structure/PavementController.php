@@ -125,7 +125,7 @@ class PavementController extends Controller
             $pavement->delete();
             return response()->json(['status'=> 'Pavimento excluído com sucesso!']);
         } catch (\Throwable $th) {
-            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
+            return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }

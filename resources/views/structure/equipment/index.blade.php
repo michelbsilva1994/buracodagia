@@ -20,13 +20,13 @@
                 </thead>
                 <tbody>
                     @foreach ($equipments as $equipment)
-                        <tr>
+                        <tr id="equipment-{{$equipment->id}}">
                             <td>{{$equipment->id}}</td>
                             <td>{{$equipment->name}}</td>
                             <td>{{$equipment->status}}</td>
                             <td class="d-flex">
                                 <a class="mr-3 btn btn-sm btn-outline-success" href="{{route('equipment.edit', ['equipment'=>$equipment->id])}}">Editar</a>
-                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-pavement="{{$equipment->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
+                                <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-delete" data-id-equipment="{{$equipment->id}}" data-bs-toggle="modal" data-bs-target="#modal-delete">Excluir</a>
                             </td>
                         </tr>
                     @endforeach
@@ -38,14 +38,14 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir Equipamento</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Tem certeza que deseja excluir o Equipamento?
+              Tem certeza que deseja excluir o equipamento?
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="id_pavement" id="id_pavement">
+                <input type="hidden" name="id_equipment" id="id_equipment">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-danger" id="btn-destroy">Excluir</button>
             </div>
@@ -54,27 +54,42 @@
     </div>
       <script>
         $(document).delegate('#btn-delete', 'click', function(){
-            var id_pavement = $(this).attr('data-id-pavement');
-            $('#id_pavement').val(id_pavement);
+            var id_equipment = $(this).attr('data-id-equipment');
+            $('#id_equipment').val(id_equipment);
         });
 
         $(document).delegate('#btn-destroy', 'click', function(){
-            var id_pavement = $('#id_pavement').val();
+            var id_equipment = $('#id_equipment').val();
+
+            var url = "{{route('equipment.destroy', ['equipment' => ':equipment'])}}";
+            url = url.replace(':equipment', id_equipment);
+
             $.ajax({
-                url:"/public/pavement/"+id_pavement,
+                url: url,
                 type:'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    $('#message-delete').html(response.status);
-                    $('#modal-delete').modal('hide');
-                    $('#message-delete').addClass('alert alert-success').show();
-                    $('#pavement-'+id_pavement).remove();
-                    $('#message-delete').fadeOut(3000);
-                    setTimeout(function() {
-                        $('#message-delete').hide();
-                    }, 2000);
+                    if(response.status){
+                        $('#message-delete').html(response.status);
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-success').show();
+                        $('#equipment-'+id_equipment).remove();
+                        $('#message-delete').fadeOut(3000);
+                        setTimeout(function() {
+                            $('#message-delete').hide();
+                        }, 2000);
+                    }
+                    if(response.error){
+                        $('#message-delete').html(response.error);
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-danger').show();
+                        $('#message-delete').fadeOut(3000);
+                        setTimeout(function() {
+                            $('#message-delete').hide();
+                        }, 2000);
+                    }
                 },
                 error: function(data){
                     console.log(data);

@@ -46,7 +46,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel">Excluir</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -75,14 +75,25 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    $('#message-delete').html(response.status);
-                    $('#modal-delete').modal('hide');
-                    $('#message-delete').addClass('alert alert-success').show();
-                    $('#pavement-'+id_pavement).remove();
-                    $('#message-delete').fadeOut(3000);
-                    setTimeout(function() {
-                        $('#message-delete').hide();
-                    }, 2000);
+                    if(response.status){
+                        $('#message-delete').html(response.status);
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-success').show();
+                        $('#pavement-'+id_pavement).remove();
+                        $('#message-delete').fadeOut(3000);
+                        setTimeout(function() {
+                            $('#message-delete').hide();
+                        }, 2000);
+                    }
+                    if(response.error){
+                        $('#message-delete').html(response.error);
+                        $('#modal-delete').modal('hide');
+                        $('#message-delete').addClass('alert alert-success').show();
+                        $('#message-delete').fadeOut(3000);
+                        setTimeout(function() {
+                            $('#message-delete').hide();
+                        }, 2000);
+                    }
                 },
                 error: function(data){
                     console.log(data);
