@@ -1,12 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Service;
+namespace App\Http\Controllers\Services;
 
 use App\Http\Controllers\Controller;
+use App\Models\People\PhysicalPerson;
+use App\Models\Structure\Equipment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceOrderController extends Controller
 {
+    public function __construct(PhysicalPerson $physicalPerson, Equipment $equipment)
+    {
+        $this->physicalPerson = $physicalPerson;
+        $this->equipment = $equipment;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -20,7 +28,10 @@ class ServiceOrderController extends Controller
      */
     public function create()
     {
-        //
+        $requester = $this->physicalPerson->where('id', Auth::user()->id_physical_people)->first();
+        $equipments = $this->equipment->where('status', 'A')->get();
+
+        return view('service.service_order.create', compact(['requester', 'equipments']));
     }
 
     /**

@@ -22,6 +22,7 @@ use App\Http\Controllers\Reports\ReportsController;
 use App\Http\Controllers\Services\HomeServiceDomainController;
 use App\Http\Controllers\Services\HomeServicesController;
 use App\Http\Controllers\Services\HomeServiceSecurityController;
+use App\Http\Controllers\Services\ServiceOrderController;
 use App\Http\Controllers\Structure\EquipmentController;
 use App\Http\Controllers\Structure\PavementController;
 use App\Http\Controllers\Structure\StoreController;
@@ -78,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('store', StoreController::class);
     Route::resource('equipment', EquipmentController::class);
 
+    /**Services */
+    Route::resource('serviceOrders', ServiceOrderController::class);
 
     Route::delete('contract/{contractRemoveStore}/removeStore', [ContractController::class, 'contractRemoveStore'])->name('contract.removeStore');
     Route::put('contract/signContract/{contract}', [ContractController::class, 'signContract'])->name('contract.singContract');
