@@ -7,18 +7,23 @@
                 <h2 class="my-4 text-secondary text-center"> Ordem de Serviço</h2>
             </div>
             <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
-                <form action="" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
+                <form action="{{route('serviceOrders.store')}}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                     @csrf
                     <div class="col-sm-12 col-md-12">
                         <label for="requester" class="text-secondary">Solicitante</label>
-                        <input type="text" class="form-control @error('requester') is-invalid @enderror" id="requester"
-                            name="title" value="{{ $requester->name }}" readonly>
+                        <input type="text" class="form-control" id="requester"
+                            name="requester" value="{{ $requester->name }}" readonly>
+                        <input type="hidden" class="form-control" id="id_requester"
+                            name="id_requester" value="{{ $requester->id }}">
                         @error('requester')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-sm-12 col-md-12">
                         <label for="location" class="text-secondary">Localização</label>
                         <select name="location" id="location" class="form-select">
                             <option selected disabled>Selecione uma opção</option>
+                            @foreach ($locations as $location)
+                                <option value="{{$location->id_store}}">{{$location->store}} - {{$location->pavement}}</option>
+                            @endforeach
                         </select>
                         @error('location')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
@@ -43,16 +48,23 @@
                         <textarea class="form-control" name="description" id="description" cols="30" rows="10">{{old('description')}}</textarea>
                         @error('description')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </div>
-                    <div class="col-sm-12 col-md-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" id="statusA" value="A" checked>
-                            <label class="form-check-label" for="statusA">Ativo</label>
+                    <fieldset>
+                        <label for="status" class="form-check-label text-secondary">Status</label>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusA" value="A" checked disabled>
+                                <label class="form-check-label" for="statusA">Aberta</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusP" value="P" disabled>
+                                <label class="form-check-label" for="statusP">Processo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusF" value="F" disabled>
+                                <label class="form-check-label" for="statusF">Fechada</label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" id="statusI" value="I">
-                            <label class="form-check-label" for="statusI">Inativo</label>
-                        </div>
-                    </div>
+                    </fieldset>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
                         <button type="submit" class="btn btn-lg btn-success">Salvar</button>
                         <a href="" class="btn btn-lg btn-danger">Cancelar</a>

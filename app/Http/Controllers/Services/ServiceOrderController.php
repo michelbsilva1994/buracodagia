@@ -3,24 +3,32 @@
 namespace App\Http\Controllers\Services;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contract\Contract;
 use App\Models\People\PhysicalPerson;
+use App\Models\Service\ServiceOrder;
 use App\Models\Structure\Equipment;
+use App\Models\Structure\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ServiceOrderController extends Controller
 {
-    public function __construct(PhysicalPerson $physicalPerson, Equipment $equipment)
+    public function __construct(ServiceOrder $serviceOrder,PhysicalPerson $physicalPerson, Equipment $equipment, Contract $contract, Store $store)
     {
+        $this->serviceOrder = $serviceOrder;
         $this->physicalPerson = $physicalPerson;
         $this->equipment = $equipment;
+        $this->contract = $contract;
+        $this->store = $store;
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $serviceOrders = $this->serviceOrder->all();
+        return view('service.service_order.index', compact('serviceOrders'));
     }
 
     /**
@@ -31,7 +39,18 @@ class ServiceOrderController extends Controller
         $requester = $this->physicalPerson->where('id', Auth::user()->id_physical_people)->first();
         $equipments = $this->equipment->where('status', 'A')->get();
 
-        return view('service.service_order.create', compact(['requester', 'equipments']));
+        $locations = DB::table('contracts')
+                            ->selectRaw('stores.id id_store,
+                                         stores.name store,
+                                         pavements.id id_pavement,
+                                         pavements.name pavement')
+                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+                            ->join('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                            ->where('contracts.id_physical_person', '=', $requester->id)
+                            ->get();
+
+        return view('service.service_order.create', compact(['requester', 'equipments', 'locations']));
     }
 
     /**
@@ -39,7 +58,31 @@ class ServiceOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pavement_store = $this->store->where('id', $request->location)->first();
+        $physical_person_requester = $this->physicalPerson->where('id', $request->id_requester)->first();
+
+        try {
+            $serviceOrder = $this->serviceOrder->create([
+                'id_physical_person' => $request->id_requester,
+                'id_store' => $request->location,
+                'id_pavement' => $pavement_store->id_pavement,
+                'id_equipment' => $request->equipment,
+                'title' => $request->title,
+                'description' => $request->description,
+                'contact' => $physical_person_requester->telephone,
+                'dt_opening' => Date('Y/m/d'),
+                'dt_process' => null,
+                'dt_service' => null,
+                'id_status' => 'A',
+                'id_physcal_person_executor' => null,
+                'create_user' => Auth::user()->name,
+                'update_user' => null
+            ]);
+
+            return redirect()->route('serviceOrders.index')->with('status', 'Ordem de serviço '.$serviceOrder->id .' aberta com sucesso!');
+        } catch (\Throwable $th) {
+            return redirect()->route('serviceOrders.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**

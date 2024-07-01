@@ -19,13 +19,12 @@ return new class extends Migration
             $table->integer('id_equipment');
             $table->string('title');
             $table->longText('description');
-            $table->string('contact');
+            $table->string('contact')->nullable();
             $table->date('dt_opening');
-            $table->date('dt_process');
-            $table->date('dt_service');
-            $table->integer('id_status');
-            $table->string('ds_status');
-            $table->integer('id_physcal_person_executor');
+            $table->date('dt_process')->nullable();
+            $table->date('dt_service')->nullable();
+            $table->char('id_status',1);
+            $table->integer('id_physcal_person_executor')->nullable();
             $table->string('create_user')->nullable();
             $table->string('update_user')->nullable();
             $table->timestamps();

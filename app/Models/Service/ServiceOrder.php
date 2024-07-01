@@ -19,9 +19,8 @@ class ServiceOrder extends Model
         'contact',
         'dt_opening',
         'dt_process',
-        'dt_serivce',
+        'dt_service',
         'id_status',
-        'ds_status',
         'id_physcal_person_executor',
         'create_user',
         'update_user'
