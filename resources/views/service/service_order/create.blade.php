@@ -67,7 +67,7 @@
                     </fieldset>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
                         <button type="submit" class="btn btn-lg btn-success">Salvar</button>
-                        <a href="" class="btn btn-lg btn-danger">Cancelar</a>
+                        <a href="{{route('serviceOrders.index')}}" class="btn btn-lg btn-danger">Cancelar</a>
                     </div>
                 </form>
             </div>

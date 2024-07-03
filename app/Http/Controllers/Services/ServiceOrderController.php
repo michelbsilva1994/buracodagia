@@ -126,4 +126,8 @@ class ServiceOrderController extends Controller
     {
         //
     }
+
+    public function startWorkOrder(Request $request){
+        return response()->json(['status' => 'Ordem de serviço '.$request->id_service_order.'foi iniciada!']);
+    }
 }
