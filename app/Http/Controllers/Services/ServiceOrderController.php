@@ -27,7 +27,17 @@ class ServiceOrderController extends Controller
      */
     public function index()
     {
-        $serviceOrders = $this->serviceOrder->all();
+        $query = DB::table('service_orders');
+
+        if(Auth::user()->user_type_service_order == 'E'){
+            $query;
+        }
+        if(Auth::user()->user_type_service_order == 'S'){
+            $query->where('id_physical_person', '=' ,Auth::user()->id);
+        }
+
+        $serviceOrders = $query->get();
+
         return view('service.service_order.index', compact('serviceOrders'));
     }
 

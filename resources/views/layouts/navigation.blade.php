@@ -26,7 +26,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{{route('profile.edit')}}">{{ __('Perfil') }}</a></li>
-                        <li><a class="dropdown-item" href="{{route('serviceOrders.create')}}">Ordem de Serviço</a></li>
+                        <li><a class="dropdown-item" href="{{route('serviceOrders.index')}}">Ordem de Serviço</a></li>
                         @can('view_financial_dashboard')
                         <li><a class="dropdown-item" href="{{route('dashboardCharts.dashboardCharts')}}">Dashboard</a></li>
                         @endcan
@@ -100,7 +100,7 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Perfil') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('serviceOrders.create')">
+                <x-responsive-nav-link :href="route('serviceOrders.index')">
                     {{ __('Ordem de Serviço') }}
                 </x-responsive-nav-link>
                 @can('view_financial_dashboard')

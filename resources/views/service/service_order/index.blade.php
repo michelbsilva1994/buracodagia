@@ -20,6 +20,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($serviceOrders as $serviceOrder)
+                        <tr>
+                            <td>{{$serviceOrder->id}}</td>
+                            <td>{{$serviceOrder->title}}</td>
+                            <td>{{Date('d/m/Y', strtotime($serviceOrder->dt_opening))}}</td>
+                            <td>{{$serviceOrder->id_status}}</td>
+                            <td>Ações</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
