@@ -29,11 +29,11 @@ class ServiceOrderController extends Controller
     {
         $query = DB::table('service_orders');
 
+        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'C'){
+            $query->where('id_physical_person', '=' , Auth::user()->id_physical_people);
+        }
         if(Auth::user()->user_type_service_order == 'E'){
             $query;
-        }
-        if(Auth::user()->user_type_service_order == 'S'){
-            $query->where('id_physical_person', '=' ,Auth::user()->id);
         }
         if($request->dt_opening_initial && $request->dt_opening_final){
             $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
@@ -54,11 +54,11 @@ class ServiceOrderController extends Controller
     {
         $query = DB::table('service_orders');
 
+        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'C'){
+            $query->where('id_physical_person', '=' , Auth::user()->id_physical_people);
+        }
         if(Auth::user()->user_type_service_order == 'E'){
             $query;
-        }
-        if(Auth::user()->user_type_service_order == 'S'){
-            $query->where('id_physical_person', '=' ,Auth::user()->id);
         }
         if($request->dt_opening_initial && $request->dt_opening_final){
             $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
