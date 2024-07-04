@@ -128,6 +128,19 @@ class ServiceOrderController extends Controller
     }
 
     public function startWorkOrder(Request $request){
-        return response()->json(['status' => 'Ordem de serviço '.$request->id_service_order.'foi iniciada!']);
+            try {
+                $serviceOrder = $this->serviceOrder->where('id', $request->id_service_order)->first();
+
+                $serviceOrder->dt_process = Date('Y/m/d');
+                $serviceOrder->id_status = 'P';
+                $serviceOrder->id_physcal_person_executor = Auth::user()->id;
+                $serviceOrder->update_user = Auth::user()->name;
+                $serviceOrder->save();
+
+                return response()->json(['status' => 'Ordem de serviço '.$serviceOrder->id.' iniciada com sucesso!']);
+
+            } catch (\Throwable $th) {
+                return response()->json(['error' => $th]);
+            }
     }
 }

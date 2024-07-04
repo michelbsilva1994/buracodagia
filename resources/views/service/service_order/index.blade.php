@@ -25,18 +25,17 @@
                             <td>{{ $serviceOrder->id }}</td>
                             <td>{{ $serviceOrder->title }}</td>
                             <td>{{ Date('d/m/Y', strtotime($serviceOrder->dt_opening)) }}</td>
-                            @if ($serviceOrder->id_status == 'A')
+                            @if ($serviceOrder->id_status == 'A' && empty($serviceOrder->dt_proccess) && empty($serviceOrder->dt_serivce))
                                 <td>Aberta</td>
-                            @elseif ($serviceOrder->id_status == 'P')
+                            @elseif ($serviceOrder->id_status == 'P' && !empty($serviceOrder->dt_process) && empty($serviceOrder->dt_serivce))
                                 <td>Em processo</td>
-                            @elseif ($serviceOrder->id_status == 'F')
+                            @elseif ($serviceOrder->id_status == 'F' && isset($serviceOrder->dt_serivce))
                                 <td>Fechada</td>
                             @endif
                             <td class="d-flex">
                                 @if (Auth::user()->user_type_service_order == 'E')
                                     @if ($serviceOrder->id_status == 'A' && empty($serviceOrder->dt_proccess) && empty($serviceOrder->dt_serivce))
-                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-start"
-                                            data-id-service-order="{{ $serviceOrder->id }}" data-bs-toggle="modal"
+                                        <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-start" data-id-service-order="{{ $serviceOrder->id }}" data-bs-toggle="modal"
                                             data-bs-target="#modal-start">Iniciar</a>
                                     @elseif ($serviceOrder->id_status == 'P' && !empty($serviceOrder->dt_process) && empty($serviceOrder->dt_serivce))
                                         <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-close"
@@ -60,16 +59,19 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel">Iniciar atendimento</h5>
+                    <h5 class="modal-title" id="exampleModalToggleLabel">Tem certeza que deseja iniciar a ordem de serviço?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Tem certeza que deseja iniciar o atendimento da Ordem de Serviço?
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" name="id_service_order" id="id_service_order">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="btn-start-service_order">Iniciar</button>
+                    <form id="starServiceOrder">
+                        <div>
+                            <input type="hidden" name="id_service_order" id="id_service_order">
+                        </div>
+                        <div class="d-grid gap-2 my-3">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-success" id="btn-cancel-monthly">Iniciar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -78,34 +80,57 @@
         $(document).delegate('#btn-start', 'click', function() {
             var id_service_order = $(this).attr('data-id-service-order');
             $('#id_service_order').val(id_service_order);
-            //alert(id_service_order);
+            alert(id_service_order);
         });
 
-        $(document).delegate('#btn-start-service_order', 'click', function() {
-            var id_service_order = $('#id_service_order').val();
-            alert(id_service_order);
-            var url = "{{ route('serviceOrders.startWorkOrder') }}";
+        $('#starServiceOrder').submit(function(event) {
+            event.preventDefault();
             $.ajax({
-                url: url,
-                type: 'POST',
+                url: "{{ route('serviceOrders.startWorkOrder') }}",
+                type: 'post',
                 data: $(this).serialize(),
+                dataType: 'json',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                        console.log(response.status);
-                        $('#message-return').html(response.status);
-                        $('#modal-start').modal('hide');
-                        $('#message-return').addClass('alert alert-success').show();
-                        $('#message-return').fadeOut(3000);
-                        setTimeout(function() {
-                            $('#message-return').hide();
-                        }, 2000);
+                    console.log(response);
+                    $('#message-return').html(response.status);
+                    $('#modal-start').modal('hide');
+                    $('#message-return').addClass('alert alert-success').show();
+                    $('#message-return').fadeOut(3000);
+                    setInterval(() => {
+                        $('#message-return').hide();
+                    }, 2000);
                 },
-                error: function(data) {
-                    console.log(data);
-                }
-            })
+            });
+
         });
+
+        // $(document).delegate('#start-service-order', 'click', function(event) {
+        //     event.preventDefault();
+        //     var id_service_order =  $('#id_service_order').val();
+        //     $.ajax({
+        //         url: "{{ route('serviceOrders.startWorkOrder') }}",
+        //         type: 'post',
+        //         data: $(this).serialize(),
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         success: function(response) {
+        //                 console.log(response.status);
+        //                 $('#message-return').html(response.status);
+        //                 $('#modal-start').modal('hide');
+        //                 $('#message-return').addClass('alert alert-success').show();
+        //                 $('#message-return').fadeOut(3000);
+        //                 setTimeout(function() {
+        //                     $('#message-return').hide();
+        //                 }, 2000);
+        //         },
+        //         error: function(response) {
+        //             console.log(response);
+        //         }
+        //     })
+        // });
     </script>
 @endsection

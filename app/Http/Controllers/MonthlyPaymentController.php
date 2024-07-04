@@ -497,7 +497,7 @@ class MonthlyPaymentController extends Controller
 
             return response()->json(['status' => 'Mensalidade cancelada com sucesso!']);
         } catch (\Throwable $th) {
-            return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
+            return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 }
