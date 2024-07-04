@@ -25,7 +25,7 @@ class ServiceOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = DB::table('service_orders');
 
@@ -35,8 +35,42 @@ class ServiceOrderController extends Controller
         if(Auth::user()->user_type_service_order == 'S'){
             $query->where('id_physical_person', '=' ,Auth::user()->id);
         }
+        if($request->dt_opening_initial && $request->dt_opening_final){
+            $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
+        }
 
-        $serviceOrders = $query->get();
+        $serviceOrders = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('service.service_order.paginate.service_order_data', compact('serviceOrders'))->render();
+            $pagination = view('service.service_order.paginate.paginate', compact('serviceOrders'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
+
+        return view('service.service_order.index', compact('serviceOrders'));
+    }
+
+    public function serviceOrderindex(Request $request)
+    {
+        $query = DB::table('service_orders');
+
+        if(Auth::user()->user_type_service_order == 'E'){
+            $query;
+        }
+        if(Auth::user()->user_type_service_order == 'S'){
+            $query->where('id_physical_person', '=' ,Auth::user()->id);
+        }
+        if($request->dt_opening_initial && $request->dt_opening_final){
+            $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
+        }
+
+        $serviceOrders = $query->paginate(10)->appends($request->input());
+
+        if($request->ajax()){
+            $view = view('service.service_order.paginate.service_order_data', compact('serviceOrders'))->render();
+            $pagination = view('service.service_order.paginate.paginate', compact('serviceOrders'))->render();
+            return response()->json(['html' => $view, 'pagination' => $pagination]);
+        }
 
         return view('service.service_order.index', compact('serviceOrders'));
     }
@@ -142,5 +176,20 @@ class ServiceOrderController extends Controller
             } catch (\Throwable $th) {
                 return response()->json(['error' => $th]);
             }
+    }
+
+    public function closeWorkOrder(Request $request){
+        try {
+            $serviceOrder = $this->serviceOrder->where('id', $request->id_service_order)->first();
+
+            $serviceOrder->dt_service = Date('Y/m/d');
+            $serviceOrder->id_status = 'F';
+            $serviceOrder->update_user = Auth::user()->name;
+            $serviceOrder->save();
+
+            return response()->json(['status' => 'Ordem de serviço '.$serviceOrder->id.' encerrada com sucesso!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $serviceOrder]);
+        }
     }
 }

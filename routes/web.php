@@ -80,7 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('equipment', EquipmentController::class);
 
     /**Services */
+    Route::get('serviceOrderindex/', [ServiceOrderController::class, 'serviceOrderindex'])->name('serviceOrders.serviceOrderindex');
     Route::post('startWorkOrder/', [ServiceOrderController::class, 'startWorkOrder'])->name('serviceOrders.startWorkOrder');
+    Route::post('closeWorkOrder/', [ServiceOrderController::class, 'closeWorkOrder'])->name('serviceOrders.closeWorkOrder');
     Route::resource('serviceOrders', ServiceOrderController::class);
 
     Route::delete('contract/{contractRemoveStore}/removeStore', [ContractController::class, 'contractRemoveStore'])->name('contract.removeStore');
