@@ -34,10 +34,10 @@
                                     data-bs-target="#modal-close">Encerrar</a>
                             @elseif ($serviceOrder->id_status == 'F' && !empty($serviceOrder->dt_service))
                             @endif
-                            <a class="mr-3 btn btn-sm btn-outline-primary" href="">Histórico</a>
+                            <a class="mr-3 btn btn-sm btn-outline-primary" href="{{route('serviceOrders.show', ['serviceOrder' => $serviceOrder->id])}}">Histórico</a>
                         @endif
                         @if (Auth::user()->user_type_service_order == 'U')
-                            <a class="mr-3 btn btn-sm btn-outline-primary" href="">Histórico</a>
+                            <a class="mr-3 btn btn-sm btn-outline-primary" href="{{route('serviceOrders.show', ['serviceOrder' => $serviceOrder->id])}}">Histórico</a>
                         @endif
                     </td>
                 </tr>
