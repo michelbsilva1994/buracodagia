@@ -27,6 +27,10 @@ class ServiceOrderController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo('view_service_order')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $query = DB::table('service_orders');
 
         if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
@@ -52,6 +56,10 @@ class ServiceOrderController extends Controller
 
     public function serviceOrderindex(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo('view_service_order')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         $query = DB::table('service_orders');
 
         if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
@@ -80,6 +88,9 @@ class ServiceOrderController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('create_service_order')) {
+            return redirect()->route('serviceOrders.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $requester = $this->physicalPerson->where('id', Auth::user()->id_physical_people)->first();
         $equipments = $this->equipment->where('status', 'A')->get();
 
@@ -102,6 +113,9 @@ class ServiceOrderController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo('store_service_order')) {
+            return redirect()->route('serviceOrders.create')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $pavement_store = $this->store->where('id', $request->location)->first();
         $physical_person_requester = $this->physicalPerson->where('id', $request->id_requester)->first();
 
@@ -162,6 +176,10 @@ class ServiceOrderController extends Controller
     }
 
     public function startWorkOrder(Request $request){
+        if (!Auth::user()->hasPermissionTo('start_work_service_order')) {
+            return redirect()->route('serviceOrders.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
             try {
                 $serviceOrder = $this->serviceOrder->where('id', $request->id_service_order)->first();
 
@@ -179,6 +197,11 @@ class ServiceOrderController extends Controller
     }
 
     public function closeWorkOrder(Request $request){
+
+        if (!Auth::user()->hasPermissionTo('close_work_service_order')) {
+            return redirect()->route('serviceOrders.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
+
         try {
             $serviceOrder = $this->serviceOrder->where('id', $request->id_service_order)->first();
 

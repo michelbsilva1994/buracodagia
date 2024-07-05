@@ -2,16 +2,22 @@
 @section('content')
     <div class="container">
         <div class="col-12">
-            <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
+            @if (Auth::user()->user_type_service_order == 'U')
+                <h3 class="my-4 text-secondary text-center">Minhas Mensalidades</h3>
+            @else
+                <h3 class="my-4 text-secondary text-center">Mensalidades</h3>
+            @endif
         </div>
         <div id="message-return"></div>
         <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
             <form class="col-12" autocomplete="off" id="form-filter">
                 <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="contractor">Contrante</label>
-                        <input type="text" name="contractor" id="contractor" class="form-control">
-                    </div>
+                    @if (empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'E')
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <label for="contractor">Contrante</label>
+                            <input type="text" name="contractor" id="contractor" class="form-control">
+                        </div>
+                    @endif
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="due_date">Data Vencimento</label>
                         <input type="date" name="due_date" id="due_date" class="form-control">

@@ -38,18 +38,28 @@
                         </div>
                     @elseif($monthly->id_monthly_status === 'P')
                         <div class="d-flex">
-                            <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
-                            <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
+                            @if (Auth::user()->user_type_service_order === 'U')
+                                <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
+                            @endif
+                            @if (Auth::user()->user_type_service_order === 'E')
+                                <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
+                                <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
+                            @endif
                         </div>
                     @elseif($monthly->id_monthly_status === 'C')
                         <div class="d-flex text-white">
                             -
                         </div>
                     @else
+                        @if (Auth::user()->user_type_service_order === 'U')
+                            -
+                        @endif
+                        @if (Auth::user()->user_type_service_order === 'E')
                         <div class="d-flex">
                             <a href="" class="mr-3 btn btn-sm btn-outline-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
                             <a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-cancel" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-bs-target="#modal-cancel">Cancelar</a>
                         </div>
+                        @endif
                     @endif</td>
                 </tr>
             @endforeach

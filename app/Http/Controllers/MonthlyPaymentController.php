@@ -72,6 +72,9 @@ class MonthlyPaymentController extends Controller
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
+        if(Auth::user()->user_type_service_order === 'U'){
+            $query->where('id_physical_person', Auth::user()->id_physical_people);
+        }
         if($request->contractor){
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
@@ -127,6 +130,9 @@ class MonthlyPaymentController extends Controller
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
+        if(Auth::user()->user_type_service_order === 'U'){
+            $query->where('id_physical_person', Auth::user()->id_physical_people);
+        }
         if($request->contractor){
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
