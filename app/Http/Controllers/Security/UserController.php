@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Security\UserRequest;
 use App\Http\Requests\Security\UserUpdateRequest;
+use App\Models\People\PhysicalPerson;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
@@ -15,10 +16,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function __construct(User $user, Role $role)
+    public function __construct(User $user, Role $role, PhysicalPerson $physicalPerson)
     {
         $this->user = $user;
         $this->role = $role;
+        $this->physicalPerson = $physicalPerson;
     }
 
     /**
@@ -44,7 +46,8 @@ class UserController extends Controller
         }
 
         try {
-            return view('security.users.create');
+            $physicalPeople = $this->physicalPerson->all();
+            return view('security.users.create', compact('physicalPeople'));
         } catch (\Throwable $th) {
             return $th;
         }
@@ -63,6 +66,8 @@ class UserController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
+                    'id_physical_people' => $request->physical_person,
+                    'user_type_service_order' => $request->type_user
                 ]);
                 $user->save();
                 return redirect()->route('user.index')->with('status','Usuário cadastrado com sucesso!');
@@ -88,8 +93,9 @@ class UserController extends Controller
             return redirect()->route('user.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
         try {
+            $physicalPeople = $this->physicalPerson->all();
             $user = $this->user->where('id',$id)->first();
-            return view('security.users.edit', compact('user'));
+            return view('security.users.edit', compact('user', 'physicalPeople'));
         } catch (\Throwable $th) {
             return redirect()->route('user.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
@@ -111,6 +117,8 @@ class UserController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
+            $user->id_physical_people = $request->physical_person;
+            $user->user_type_service_order = $request->type_user;
 
             $user->save();
 

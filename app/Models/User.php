@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'id_physical_people',
+        'user_type_service_order'
     ];
 
     /**

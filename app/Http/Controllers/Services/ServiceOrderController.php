@@ -29,7 +29,7 @@ class ServiceOrderController extends Controller
     {
         $query = DB::table('service_orders');
 
-        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'C'){
+        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
             $query->where('id_physical_person', '=' , Auth::user()->id_physical_people);
         }
         if(Auth::user()->user_type_service_order == 'E'){
@@ -54,7 +54,7 @@ class ServiceOrderController extends Controller
     {
         $query = DB::table('service_orders');
 
-        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'C'){
+        if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
             $query->where('id_physical_person', '=' , Auth::user()->id_physical_people);
         }
         if(Auth::user()->user_type_service_order == 'E'){

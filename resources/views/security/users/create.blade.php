@@ -9,6 +9,29 @@
             <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
                 <form action="{{ route('user.store') }}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                     @csrf
+                    <div class="col-sm-12 col-md-12">
+                        <label for="physical_person" class="text-secondary">Pessoa Física</label>
+                        <select name="physical_person" id="physical_person" class="form-select">
+                            <option selected disabled>Selecione uma opção</option>
+                            @foreach ($physicalPeople as $physicalPerson)
+                                <option value="{{$physicalPerson->id}}">{{$physicalPerson->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('physical_person')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                    </div>
+                    <fieldset>
+                        <label for="type_user" class="form-check-label text-secondary">Tipo de Usuário</label>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type_user" id="typeUserU" value="U" checked>
+                                <label class="form-check-label" for="typeUserU">Usuário</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type_user" id="typeUserE" value="E">
+                                <label class="form-check-label" for="typeUserE">Executor</label>
+                            </div>
+                        </div>
+                    </fieldset>
                     <div class="col-md-12 col-md-12">
                         <label for="name" class="text-secondary">Usuário</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"

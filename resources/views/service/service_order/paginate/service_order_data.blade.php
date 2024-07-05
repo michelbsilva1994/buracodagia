@@ -36,7 +36,7 @@
                             @endif
                             <a class="mr-3 btn btn-sm btn-outline-primary" href="">Histórico</a>
                         @endif
-                        @if (Auth::user()->user_type_service_order == 'C')
+                        @if (Auth::user()->user_type_service_order == 'U')
                             <a class="mr-3 btn btn-sm btn-outline-primary" href="">Histórico</a>
                         @endif
                     </td>
