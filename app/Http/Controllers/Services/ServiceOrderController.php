@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Contract\Contract;
 use App\Models\People\PhysicalPerson;
 use App\Models\Service\ServiceOrder;
+use App\Models\Service\ServiceOrderHistory;
 use App\Models\Structure\Equipment;
 use App\Models\Structure\Store;
 use Illuminate\Http\Request;
@@ -14,9 +15,10 @@ use Illuminate\Support\Facades\DB;
 
 class ServiceOrderController extends Controller
 {
-    public function __construct(ServiceOrder $serviceOrder,PhysicalPerson $physicalPerson, Equipment $equipment, Contract $contract, Store $store)
+    public function __construct(ServiceOrder $serviceOrder,ServiceOrderHistory $serviceOrderHistory,PhysicalPerson $physicalPerson, Equipment $equipment, Contract $contract, Store $store)
     {
         $this->serviceOrder = $serviceOrder;
+        $this->serviceOrderHistory = $serviceOrderHistory;
         $this->physicalPerson = $physicalPerson;
         $this->equipment = $equipment;
         $this->contract = $contract;
@@ -148,7 +150,12 @@ class ServiceOrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $serviceOrder = $this->serviceOrder->where('id', $id)->first();
+        $user_requester = $this->physicalPerson->where('id', $serviceOrder->id_physical_person)->first();
+        $user_executor = $this->physicalPerson->where('id', $serviceOrder->id_physcal_person_executor)->first();
+        $serviceOrderHistory = $this->serviceOrderHistory->where('id_service_order', $serviceOrder->id)->get();
+
+        return view('service.service_order.show', compact(['serviceOrder', 'user_requester', 'user_executor', 'serviceOrderHistory']));
     }
 
     /**
@@ -214,5 +221,27 @@ class ServiceOrderController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $serviceOrder]);
         }
+    }
+
+    public function storeHistory(Request $request, $serviceOrder){
+
+        $serviceOrder = $this->serviceOrder->where('id', $serviceOrder)->first();
+
+        $serviceOrderHistory = $this->serviceOrderHistory;
+
+        $serviceOrderHistory->id_type_history = null;
+        $serviceOrderHistory->ds_type_history = null;
+        $serviceOrderHistory->history = $request->description;
+        $serviceOrderHistory->dt_creation = Date('Y/m/d');
+        $serviceOrderHistory->dt_release = Date('Y/m/d');
+        $serviceOrderHistory->id_physical_person = Auth::user()->id_physical_people;
+        $serviceOrderHistory->create_user = Auth::user()->name;
+        $serviceOrderHistory->update_user = null;
+        $serviceOrderHistory->id_service_order = $serviceOrder->id;
+
+        $serviceOrderHistory->save();
+
+        return redirect()->route('serviceOrders.show', $serviceOrder->id)->with('status', 'Histórico cadastrado com sucesso!');
+
     }
 }

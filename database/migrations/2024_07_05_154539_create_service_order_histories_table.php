@@ -19,8 +19,8 @@ return new class extends Migration
             $table->date('dt_creation');
             $table->date('dt_release');
             $table->integer('id_physical_person');
-            $table->string('create_user');
-            $table->string('update_user');
+            $table->string('create_user')->nullable();
+            $table->string('update_user')->nullable();
 
             $table->bigInteger('id_service_order')->unsigned();
             $table->foreign('id_service_order')->references('id')->on('service_orders');

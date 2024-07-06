@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('equipment', EquipmentController::class);
 
     /**Services */
+    Route::post('serviceOrder/history/{serviceOrder}', [ServiceOrderController::class, 'storeHistory'])->name('serviceOrders.storeHistory');
     Route::get('serviceOrderindex/', [ServiceOrderController::class, 'serviceOrderindex'])->name('serviceOrders.serviceOrderindex');
     Route::post('startWorkOrder/', [ServiceOrderController::class, 'startWorkOrder'])->name('serviceOrders.startWorkOrder');
     Route::post('closeWorkOrder/', [ServiceOrderController::class, 'closeWorkOrder'])->name('serviceOrders.closeWorkOrder');
