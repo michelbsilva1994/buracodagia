@@ -93,21 +93,35 @@ class ServiceOrderController extends Controller
         if (!Auth::user()->hasPermissionTo('create_service_order')) {
             return redirect()->route('serviceOrders.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        $requester = $this->physicalPerson->where('id', Auth::user()->id_physical_people)->first();
-        $equipments = $this->equipment->where('status', 'A')->get();
+        try {
+            $query = DB::table('contracts')
+                                ->selectRaw('stores.id id_store,
+                                                stores.name store,
+                                                pavements.id id_pavement,
+                                                pavements.name pavement')
+                                ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                                ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+                                ->join('pavements', 'stores.id_pavement', '=', 'pavements.id');
 
-        $locations = DB::table('contracts')
-                            ->selectRaw('stores.id id_store,
-                                         stores.name store,
-                                         pavements.id id_pavement,
-                                         pavements.name pavement')
-                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
-                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
-                            ->join('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                            ->where('contracts.id_physical_person', '=', $requester->id)
-                            ->get();
+            $requester = $this->physicalPerson->where('id', Auth::user()->id_physical_people)->first();
 
-        return view('service.service_order.create', compact(['requester', 'equipments', 'locations']));
+            if(is_null($requester)){
+                return redirect()->route('serviceOrders.index')->with('alert', 'Seu usuário não tem pessoa física vínculada, entre em contato com a administração do sistema!');
+            }else{
+                if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
+                    $equipments = $this->equipment->where('status', 'A')->get();
+                    $locations = $query->where('contracts.id_physical_person', '=', $requester->id)->get();
+                }
+                if(Auth::user()->user_type_service_order == 'E'){
+                    $equipments = $this->equipment->where('status', 'A')->get();
+                    $locations = $query->get();
+                }
+
+                return view('service.service_order.create', compact(['requester', 'equipments', 'locations']));
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('serviceOrders.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+        }
     }
 
     /**

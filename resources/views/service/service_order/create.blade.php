@@ -9,14 +9,14 @@
             <div class="col-sm-12 d-md-flex justify-content-md-center col-md-12">
                 <form action="{{route('serviceOrders.store')}}" method="post" class="col-sm-12 col-md-10 col-lg-6" autocomplete="off">
                     @csrf
-                    <div class="col-sm-12 col-md-12">
-                        <label for="requester" class="text-secondary">Solicitante</label>
-                        <input type="text" class="form-control" id="requester"
-                            name="requester" value="{{ $requester->name }}" readonly>
-                        <input type="hidden" class="form-control" id="id_requester"
-                            name="id_requester" value="{{ $requester->id }}">
-                        @error('requester')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
-                    </div>
+                        <div class="col-sm-12 col-md-12">
+                            <label for="requester" class="text-secondary">Solicitante</label>
+                            <input type="text" class="form-control" id="requester"
+                                name="requester" value="{{ $requester->name }}" readonly>
+                            <input type="hidden" class="form-control" id="id_requester"
+                                name="id_requester" value="{{ $requester->id }}">
+                            @error('requester')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                        </div>
                     <div class="col-sm-12 col-md-12">
                         <label for="location" class="text-secondary">Localização</label>
                         <select name="location" id="location" class="form-select">
