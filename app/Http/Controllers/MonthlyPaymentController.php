@@ -506,4 +506,13 @@ class MonthlyPaymentController extends Controller
             return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
+
+    public function view_lower_monthly_fees($id_monthly){
+        $lowerMonthlyFees = $this->lowerMonthlyFee->where('id_monthly_payment', $id_monthly)->get();
+        return view('monthlyPayment.lowerMonthly_free.monthly_fee_reductions', compact('lowerMonthlyFees'));
+    }
+
+    public function reverse_monthly_payment($id_lowerMonthlyFee){
+        dd($id_lowerMonthlyFee);
+    }
 }

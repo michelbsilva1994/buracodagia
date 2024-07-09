@@ -35,6 +35,7 @@
                     @if($monthly->id_monthly_status === 'F')
                         <div class="d-flex">
                             <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
+                            <a href="{{route('monthly.lowerMonthlyFeeIndex', ['id_monthly' => $monthly->id])}}" class="btn btn-sm btn-light">Baixas</a>
                         </div>
                     @elseif($monthly->id_monthly_status === 'P')
                         <div class="d-flex">
@@ -44,6 +45,7 @@
                             @if (Auth::user()->user_type_service_order === 'E')
                                 <a href="{{route('pdfReports.partialReceipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
                                 <a href="" class="mr-3 btn btn-sm btn-success" id="btn-low" data-id-monthly="{{$monthly->id}}" data-bs-toggle="modal" data-balance-value="{{number_format($monthly->balance_value, 2, ',', '.')}}" data-bs-target="#modal-low">Baixar</a>
+                                <a href="" class="btn btn-sm btn-light">Baixas</a>
                             @endif
                         </div>
                     @elseif($monthly->id_monthly_status === 'C')
