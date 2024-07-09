@@ -164,6 +164,9 @@ class ServiceOrderController extends Controller
      */
     public function show(string $id)
     {
+        if (!Auth::user()->hasPermissionTo('show_service_order')) {
+            return redirect()->route('serviceOrders.create')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $serviceOrder = $this->serviceOrder->where('id', $id)->first();
         $user_requester = $this->physicalPerson->where('id', $serviceOrder->id_physical_person)->first();
         $user_executor = $this->physicalPerson->where('id', $serviceOrder->id_physcal_person_executor)->first();

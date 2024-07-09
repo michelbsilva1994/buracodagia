@@ -78,7 +78,7 @@
                         <div class="mt-1">
                             <div class="form-check">
                                 <label class="form-check-label" for="contract_create">Criar contrato ao salvar</label>
-                                <input type="checkbox" class="form-check-input" id="contract_create" name="contract_create" value="{{ old('state') }}" checked>
+                                <input type="checkbox" class="form-check-input" id="contract_create" name="contract_create" checked>
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-4">
