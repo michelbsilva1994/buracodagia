@@ -134,49 +134,75 @@ class PhysicalPersonController extends Controller
         }
 
         try {
-            $cpf = str_replace('.','', $request->cpf);
-            $cpf = str_replace('-','', $cpf);
-            $cep = str_replace('-','', $request->cep);
+            if(is_null($request->contract_create)){
+                $cpf = str_replace('.','', $request->cpf);
+                $cpf = str_replace('-','', $cpf);
+                $cep = str_replace('-','', $request->cep);
 
-            $physicalPerson = $this->physicalPerson;
+                $physicalPerson = $this->physicalPerson;
 
-            $physicalPerson->name = $request->name;
-            $physicalPerson->birth_date = $request->birth_date;
-            $physicalPerson->email = $request->email;
-            $physicalPerson->cpf = $request->cpf;
-            $physicalPerson->rg = $request->rg;
-            $physicalPerson->telephone = $request->telephone;
-            $physicalPerson->cep = $request->cep;
-            $physicalPerson->public_place = $request->public_place;
-            $physicalPerson->city = $request->city;
-            $physicalPerson->state = $request->state;
-            $physicalPerson->create_user = Auth::user()->name;
-            $physicalPerson->update_user = null;
+                $physicalPerson->name = $request->name;
+                $physicalPerson->birth_date = $request->birth_date;
+                $physicalPerson->email = $request->email;
+                $physicalPerson->cpf = $request->cpf;
+                $physicalPerson->rg = $request->rg;
+                $physicalPerson->telephone = $request->telephone;
+                $physicalPerson->cep = $request->cep;
+                $physicalPerson->public_place = $request->public_place;
+                $physicalPerson->city = $request->city;
+                $physicalPerson->state = $request->state;
+                $physicalPerson->create_user = Auth::user()->name;
+                $physicalPerson->update_user = null;
 
-            $physicalPerson->save();
+                $physicalPerson->save();
+                return redirect()->route('physicalPerson.index')->with('status','Pessoa cadastrada com sucesso!');
+            }
+            if(!is_null($request->contract_create)){
+
+                $cpf = str_replace('.','', $request->cpf);
+                $cpf = str_replace('-','', $cpf);
+                $cep = str_replace('-','', $request->cep);
+
+                $physicalPerson = $this->physicalPerson;
+
+                $physicalPerson->name = $request->name;
+                $physicalPerson->birth_date = $request->birth_date;
+                $physicalPerson->email = $request->email;
+                $physicalPerson->cpf = $request->cpf;
+                $physicalPerson->rg = $request->rg;
+                $physicalPerson->telephone = $request->telephone;
+                $physicalPerson->cep = $request->cep;
+                $physicalPerson->public_place = $request->public_place;
+                $physicalPerson->city = $request->city;
+                $physicalPerson->state = $request->state;
+                $physicalPerson->create_user = Auth::user()->name;
+                $physicalPerson->update_user = null;
+
+                $physicalPerson->save();
 
 
-            $contract = $this->contract;
+                $contract = $this->contract;
 
-            $contract->type_person = 'PF';
-            $contract->type_contract = 'M';
-            $contract->cpf = $physicalPerson->cpf;
-            $contract->name_contractor = $physicalPerson->name;
-            $contract->dt_contraction = date('Y/m/d');
-            $contract->dt_renovation = null;
-            $contract->dt_finalization = null;
-            $contract->dt_cancellation = null;
-            $contract->dt_signature = null;
-            $contract->id_physical_person = $physicalPerson->id;
-            $contract->id_legal_person = null;
-            $contract->create_user = Auth::user()->name;
-            $contract->update_user = null;
+                $contract->type_person = 'PF';
+                $contract->type_contract = 'M';
+                $contract->cpf = $physicalPerson->cpf;
+                $contract->name_contractor = $physicalPerson->name;
+                $contract->dt_contraction = date('Y/m/d');
+                $contract->dt_renovation = null;
+                $contract->dt_finalization = null;
+                $contract->dt_cancellation = null;
+                $contract->dt_signature = null;
+                $contract->id_physical_person = $physicalPerson->id;
+                $contract->id_legal_person = null;
+                $contract->create_user = Auth::user()->name;
+                $contract->update_user = null;
 
-            $contract->save();
+                $contract->save();
 
-            return redirect()->route('contract.show', $contract->id)->with('status','Pessoa cadastrada com sucesso!');
+                return redirect()->route('contract.show', $contract->id)->with('status','Pessoa cadastrada com sucesso!');
+            }
         } catch (\Throwable $th) {
-            return redirect()->route('physicalPerson.index')->with('error','Ops, ocorreu um erro inesperado!'.$th);
+            return redirect()->route('physicalPerson.create')->with('error','Ops, ocorreu um erro inesperado!'.$th);
         }
     }
 

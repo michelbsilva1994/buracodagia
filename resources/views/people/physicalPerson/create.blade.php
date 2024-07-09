@@ -75,6 +75,12 @@
                                 placeholder="Ex: Ceará" name="state" value="{{ old('state') }}">
                             @error('state')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mt-1">
+                            <div class="form-check">
+                                <label class="form-check-label" for="contract_create">Criar contrato ao salvar</label>
+                                <input type="checkbox" class="form-check-input" id="contract_create" name="contract_create" value="{{ old('state') }}" checked>
+                            </div>
+                        </div>
                         <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-4">
                             <button type="submit" class="btn btn-lg btn-success">Salvar</button>
                             <a href="{{route('physicalPerson.index')}}" class="btn btn-lg btn-danger">Cancelar</a>
