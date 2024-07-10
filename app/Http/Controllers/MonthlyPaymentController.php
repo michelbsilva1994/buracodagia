@@ -447,7 +447,11 @@ class MonthlyPaymentController extends Controller
                         'chargeback_user' => null,
                         'id_monthly_payment' => $monthlyPayment->id,
                         'create_user' => Auth::user()->name,
-                        'update_user' => null
+                        'update_user' => null,
+                        'operation_type' => 'B',
+                        'id_lower_monthly_fees_reverse' => null,
+                        'id_lower_monthly_fees_origin' => null,
+                        'description' => null
                     ]);
 
                     $balance = $monthlyPayment->balance_value - $amount_paid;
@@ -516,7 +520,9 @@ class MonthlyPaymentController extends Controller
         $lowerMonthlyPayment = $this->lowerMonthlyFee->where('id', $request->id_lowerMonthlyFee)->first();
         $monthlyPayment = $this->monthlyPayment->where('id', $lowerMonthlyPayment->id_monthly_payment)->first();
 
-        $this->lowerMonthlyFee->create([
+        $lowerMonthlyFee = $this->lowerMonthlyFee;
+
+        $lowerMonthlyFee->create([
             'amount_paid' => -($lowerMonthlyPayment->amount_paid),
             'id_type_payment' => null,
             'type_payment' => null,
@@ -528,10 +534,19 @@ class MonthlyPaymentController extends Controller
             'chargeback_user' => Auth()->user()->name,
             'id_monthly_payment' => $monthlyPayment->id,
             'create_user' => Auth::user()->name,
-            'update_user' => null
+            'update_user' => null,
+            'operation_type' => 'E',
+            'id_lower_monthly_fees_reverse' => null,
+            'id_lower_monthly_fees_origin' => $lowerMonthlyPayment->id,
+            'description' => null
         ]);
 
+        dd($lowerMonthlyFee);
+
         $balance = $monthlyPayment->balance_value + $lowerMonthlyPayment->amount_paid;
+
+        $lowerMonthlyPayment->id_lower_monthly_fees_reverse = $lowerMonthlyFee->id;
+        $lowerMonthlyPayment->save();
 
         if($balance > 0 && $balance < $monthlyPayment->total_payable){
             $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;

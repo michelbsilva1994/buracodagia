@@ -22,7 +22,7 @@ class EquipmentController extends Controller
     {
         $equipments = $this->equipment->all();
 
-        return view('structure.Equipment.index', compact('equipments'));
+        return view('structure.equipment.index', compact('equipments'));
     }
 
     /**
