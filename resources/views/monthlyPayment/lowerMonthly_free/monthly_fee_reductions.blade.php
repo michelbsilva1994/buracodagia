@@ -19,7 +19,11 @@
                             <td>{{$lowerMonthlyFee->id}}</td>
                             <td>{{$lowerMonthlyFee->type_payment}}</td>
                             <td>{{number_format($lowerMonthlyFee->amount_paid, 2, ',', '.')}}</td>
-                            <td>{{Date('d/m/Y', strtotime($lowerMonthlyFee->dt_payday))}}</td>
+                            <td>@if ($lowerMonthlyFee->dt_payday)
+                                {{Date('d/m/Y', strtotime($lowerMonthlyFee->dt_payday))}}
+                            @elseif ($lowerMonthlyFee->dt_chargeback)
+                                {{Date('d/m/Y', strtotime($lowerMonthlyFee->dt_chargeback))}}
+                            @endif</td>
                             <td>{{$lowerMonthlyFee->download_user}}</td>
                             <td><a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
                         </tr>
@@ -37,13 +41,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="reverseLowerMonthlyFee">
+                        <form id="reverseLowerMonthlyFee" action="{{route('monthly.reverseMonthlyPayment')}}" method="POST">
+                            @csrf
                             <div>
                                 <input type="hidden" name="id_lowerMonthlyFee" id="id_lowerMonthlyFee">
                             </div>
                             <div class="d-grid gap-2 my-3">
-                                <button type="submit" class="btn btn-success" id="btn-low-monthly">Baixar</button>
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                <button type="submit" class="btn btn-danger" id="btn-reverse-low-monthly">Estornar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                                     id="teste">Fechar</button>
                             </div>
                         </form>
