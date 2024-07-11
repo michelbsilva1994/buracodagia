@@ -1,11 +1,15 @@
 @extends('layout.app')
 @section('content')
     <div class="container">
+        <div class="col-12">
+                <h3 class="my-4 text-secondary text-center">Baixas</h3>
+        </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle text-center">
                 <thead>
                     <tr>
-                        <td>id</td>
+                        <td>ID</td>
+                        <td>ID Estorno</td>
                         <td>Tipo de Pagamento</td>
                         <td>Valor Pago</td>
                         <td>Data de pagamento</td>
@@ -15,8 +19,13 @@
                 </thead>
                 <tbody id="body-table">
                     @foreach ($lowerMonthlyFees as $lowerMonthlyFee)
-                        <tr>
+                        @if ($lowerMonthlyFee->operation_type === 'B')
+                            <tr class="bg-success text-white">
+                        @elseif ($lowerMonthlyFee->operation_type === 'E')
+                            <tr class="bg-danger text-white">
+                        @endif
                             <td>{{$lowerMonthlyFee->id}}</td>
+                            <td>{{$lowerMonthlyFee->id_lower_monthly_fees_reverse}}</td>
                             <td>{{$lowerMonthlyFee->type_payment}}</td>
                             <td>{{number_format($lowerMonthlyFee->amount_paid, 2, ',', '.')}}</td>
                             <td>@if ($lowerMonthlyFee->dt_payday)
@@ -25,7 +34,11 @@
                                 {{Date('d/m/Y', strtotime($lowerMonthlyFee->dt_chargeback))}}
                             @endif</td>
                             <td>{{$lowerMonthlyFee->download_user}}</td>
-                            <td><a href="" class="mr-3 btn btn-sm btn-outline-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                            @if (!empty($lowerMonthlyFee->id_lower_monthly_fees_reverse))
+                                <td> - </td>
+                            @elseif(empty($lowerMonthlyFee->id_lower_monthly_fees_reverse))
+                                <td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

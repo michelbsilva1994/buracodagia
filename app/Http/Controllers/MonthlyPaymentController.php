@@ -161,7 +161,7 @@ class MonthlyPaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function monthlyService(){
+    public function monthlyServices(){
         return view('monthlyPayment.homeMonthlyPayment');
     }
 
@@ -520,9 +520,8 @@ class MonthlyPaymentController extends Controller
         $lowerMonthlyPayment = $this->lowerMonthlyFee->where('id', $request->id_lowerMonthlyFee)->first();
         $monthlyPayment = $this->monthlyPayment->where('id', $lowerMonthlyPayment->id_monthly_payment)->first();
 
-        $lowerMonthlyFee = $this->lowerMonthlyFee;
-
-        $lowerMonthlyFee->create([
+        // criando baixa de estorno
+        $lowerMonthlyFee = LowerMonthlyFee::create([
             'amount_paid' => -($lowerMonthlyPayment->amount_paid),
             'id_type_payment' => null,
             'type_payment' => null,
@@ -540,14 +539,16 @@ class MonthlyPaymentController extends Controller
             'id_lower_monthly_fees_origin' => $lowerMonthlyPayment->id,
             'description' => null
         ]);
+        $lowerMonthlyFee->save;
 
-        dd($lowerMonthlyFee);
-
+        //calculando saldo da mensalidade
         $balance = $monthlyPayment->balance_value + $lowerMonthlyPayment->amount_paid;
 
+        //vinculando baixa de estorno a baixa de origem
         $lowerMonthlyPayment->id_lower_monthly_fees_reverse = $lowerMonthlyFee->id;
         $lowerMonthlyPayment->save();
 
+        //atualizando valores e status da mensalidade
         if($balance > 0 && $balance < $monthlyPayment->total_payable){
             $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
             $monthlyPayment->balance_value = $balance;
