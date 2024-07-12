@@ -26,4 +26,8 @@ class HomeServicesController extends Controller
     public function structureService(){
         return view('structure.homeStructure');
     }
+
+    public function generationTuitions(){
+       return view('monthlyPayment.homeMonthlyPayment');
+    }
 }

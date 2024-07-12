@@ -161,9 +161,6 @@ class MonthlyPaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function monthlyServices(){
-        return view('monthlyPayment.homeMonthlyPayment');
-    }
 
     public function createGenerateRetroactiveMonthlyPayment(){
         if (!Auth::user()->hasPermissionTo('generate_retroactive_monthly_payment')) {

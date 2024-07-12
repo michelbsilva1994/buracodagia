@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::get('domain/services/', [HomeServicesController::class, 'domainService'])->name('services.domainService');
     Route::get('people/services/', [HomeServicesController::class, 'peopleService'])->name('services.peopleService');
     Route::get('structure/services/', [HomeServicesController::class, 'structureService'])->name('services.structureService');
-    Route::get('monthly/services/', [MonthlyPaymentController::class, 'monthlyService'])->name('services.monthly');
+    Route::get('generationTuitions/services/', [HomeServicesController::class, 'generationTuitions'])->name('services.generationTuitions');
 
     /**Reports */
 

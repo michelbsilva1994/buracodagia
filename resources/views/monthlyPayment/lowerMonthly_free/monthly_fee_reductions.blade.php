@@ -4,6 +4,9 @@
         <div class="col-12">
                 <h3 class="my-4 text-secondary text-center">Baixas</h3>
         </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start my-5">
+            <a href="{{route('monthly.tuition')}}" class="btn btn-lg btn-danger">Voltar</a>
+        </div>
         <div class="col-12 table-responsive">
             <table class="table align-middle text-center">
                 <thead>
@@ -19,7 +22,9 @@
                 </thead>
                 <tbody id="body-table">
                     @foreach ($lowerMonthlyFees as $lowerMonthlyFee)
-                        @if ($lowerMonthlyFee->operation_type === 'B')
+                        @if(!empty($lowerMonthlyFee->id_lower_monthly_fees_reverse) && $lowerMonthlyFee->operation_type === 'B')
+                            <tr class="bg-secondary text-white">
+                        @elseif ($lowerMonthlyFee->operation_type === 'B')
                             <tr class="bg-success text-white">
                         @elseif ($lowerMonthlyFee->operation_type === 'E')
                             <tr class="bg-danger text-white">
@@ -33,11 +38,21 @@
                             @elseif ($lowerMonthlyFee->dt_chargeback)
                                 {{Date('d/m/Y', strtotime($lowerMonthlyFee->dt_chargeback))}}
                             @endif</td>
-                            <td>{{$lowerMonthlyFee->download_user}}</td>
+                            <td>
+                                @if ($lowerMonthlyFee->operation_type === 'B')
+                                    {{$lowerMonthlyFee->download_user}}
+                                @elseif($lowerMonthlyFee->operation_type === 'E')
+                                    {{$lowerMonthlyFee->chargeback_user}}
+                                @endif
+                            </td>
                             @if (!empty($lowerMonthlyFee->id_lower_monthly_fees_reverse))
                                 <td> - </td>
                             @elseif(empty($lowerMonthlyFee->id_lower_monthly_fees_reverse))
-                                <td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                                @if ($lowerMonthlyFee->operation_type === 'B')
+                                    <td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                                @elseif($lowerMonthlyFee->operation_type === 'E')
+                                    <td> - </td>
+                                @endif
                             @endif
                         </tr>
                     @endforeach

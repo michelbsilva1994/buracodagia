@@ -9,7 +9,7 @@
                         <input type="date" name="due_date_initial" id="due_date_initial" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="due_date_final">Data Vencimento Inicial</label>
+                        <label for="due_date_final">Data Vencimento Final</label>
                         <input type="date" name="due_date_final" id="due_date_final" class="form-control">
                     </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
