@@ -64,6 +64,7 @@
                                 <label class="form-check-label" for="statusF">Fechada</label>
                             </div>
                         </div>
+                        @error('status')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
                     </fieldset>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
                         <button type="submit" class="btn btn-lg btn-success">Salvar</button>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Services;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Service\ServiceOrder\ServiceOrderRequest;
 use App\Models\Contract\Contract;
 use App\Models\People\PhysicalPerson;
 use App\Models\Service\ServiceOrder;
@@ -127,7 +128,7 @@ class ServiceOrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ServiceOrderRequest $request)
     {
         if (!Auth::user()->hasPermissionTo('store_service_order')) {
             return redirect()->route('serviceOrders.create')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
