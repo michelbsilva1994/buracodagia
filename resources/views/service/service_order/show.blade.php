@@ -1,15 +1,18 @@
 @extends('layout.app')
 @section('content')
     <div class="container">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start my-5">
+            <a href="{{route('serviceOrders.index')}}" class="btn btn-lg btn-danger">Voltar</a>
+        </div>
         <div class="card">
             <div class="card-body">
               <h6>Nº Ordem de Serviço: {{$serviceOrder->id}}</h6>
-              <h6>Solicitante: {{$user_requester->name}}</h6>
-              <h6>Executor: {{$user_executor->name}}</h6>
+              <h6>Solicitante: {{$serviceOrder->name_solicitante}}</h6>
+               <h6>Localização: {{$serviceOrder->store}} - {{$serviceOrder->pavement}}</h6>
               <h6>Data Abertura: {{Date('d/m/Y', strtotime($serviceOrder->dt_opening))}}</h6>
               <h6>Data Processo: {{Date('d/m/Y', strtotime($serviceOrder->dt_process))}}</h6>
-              <h6>Data Encerramento: {{Date('d/m/Y', strtotime($serviceOrder->dt_service))}}</h6>
-              <h6>Executor: {{$user_executor->name}}</h6>
+              <h6>Data Encerramento: @if ($serviceOrder->dt_service) {{Date('d/m/Y', strtotime($serviceOrder->dt_service))}} @else - @endif</h6>
+              <h6>Executor: {{$serviceOrder->name_executor}}</h6>
               @if ($serviceOrder->id_status == 'A' && empty($serviceOrder->dt_proccess) && empty($serviceOrder->dt_serivce))
                         <h6>Status: Aberta</h6>
                     @elseif ($serviceOrder->id_status == 'P' && !empty($serviceOrder->dt_process) && empty($serviceOrder->dt_serivce))

@@ -168,12 +168,19 @@ class ServiceOrderController extends Controller
         if (!Auth::user()->hasPermissionTo('show_service_order')) {
             return redirect()->route('serviceOrders.create')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
-        $serviceOrder = $this->serviceOrder->where('id', $id)->first();
-        $user_requester = $this->physicalPerson->where('id', $serviceOrder->id_physical_person)->first();
-        $user_executor = $this->physicalPerson->where('id', $serviceOrder->id_physcal_person_executor)->first();
-        $serviceOrderHistory = $this->serviceOrderHistory->where('id_service_order', $serviceOrder->id)->get();
+        $order = $this->serviceOrder->where('id', $id)->first();
+        $serviceOrderHistory = $this->serviceOrderHistory->where('id_service_order', $order->id)->get();
 
-        return view('service.service_order.show', compact(['serviceOrder', 'user_requester', 'user_executor', 'serviceOrderHistory']));
+        $serviceOrder = ServiceOrder::query()
+                        ->select('service_orders.*')
+                        ->addSelect(DB::raw('(SELECT name FROM physical_people WHERE physical_people.id = service_orders.id_physcal_person_executor LIMIT 1) as name_executor'))
+                        ->addSelect(DB::raw('(SELECT name FROM physical_people WHERE physical_people.id = service_orders.id_physical_person LIMIT 1) as name_solicitante'))
+                        ->addSelect(DB::raw('(SELECT name FROM stores WHERE stores.id = service_orders.id_store LIMIT 1) as store'))
+                        ->addSelect(DB::raw('(SELECT name FROM pavements WHERE pavements.id = service_orders.id_pavement LIMIT 1) as pavement'))
+                        ->where('service_orders.id',$order->id)
+                        ->first();
+
+        return view('service.service_order.show', compact(['serviceOrder','serviceOrderHistory']));
     }
 
     /**
@@ -210,12 +217,11 @@ class ServiceOrderController extends Controller
 
                 $serviceOrder->dt_process = Date('Y/m/d');
                 $serviceOrder->id_status = 'P';
-                $serviceOrder->id_physcal_person_executor = Auth::user()->id;
+                $serviceOrder->id_physcal_person_executor = Auth::user()->id_physical_people;
                 $serviceOrder->update_user = Auth::user()->name;
                 $serviceOrder->save();
 
                 return response()->json(['status' => 'Ordem de serviço '.$serviceOrder->id.' iniciada com sucesso!']);
-
             } catch (\Throwable $th) {
                 return response()->json(['error' => $th]);
             }
