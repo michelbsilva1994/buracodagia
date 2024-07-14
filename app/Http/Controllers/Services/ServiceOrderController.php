@@ -34,7 +34,7 @@ class ServiceOrderController extends Controller
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
-        $query = DB::table('service_orders');
+        $query = DB::table('service_orders')->whereIn('id_status', ['A', 'P']);
 
         if(empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'U'){
             $query->where('id_physical_person', '=' , Auth::user()->id_physical_people);
@@ -44,6 +44,17 @@ class ServiceOrderController extends Controller
         }
         if($request->dt_opening_initial && $request->dt_opening_final){
             $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
+        }
+        if($request->status){
+            if($request->status === 'A'){
+                $query->where('id_status', 'A');
+            }
+            if($request->status === 'P'){
+                $query->where('id_status', 'P');
+            }
+            if($request->status === 'F'){
+                $query->where('id_status', 'F');
+            }
         }
 
         $serviceOrders = $query->paginate(10)->appends($request->input());
@@ -73,6 +84,17 @@ class ServiceOrderController extends Controller
         }
         if($request->dt_opening_initial && $request->dt_opening_final){
             $query->where('dt_opening', '>=' ,$request->dt_opening_initial)->where('dt_opening', '<=' ,$request->dt_opening_final);
+        }
+        if($request->status){
+            if($request->status === 'A'){
+                $query->where('id_status', 'A');
+            }
+            if($request->status === 'P'){
+                $query->where('id_status', 'P');
+            }
+            if($request->status === 'F'){
+                $query->where('id_status', 'F');
+            }
         }
 
         $serviceOrders = $query->paginate(10)->appends($request->input());

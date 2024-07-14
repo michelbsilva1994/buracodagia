@@ -16,6 +16,24 @@
                         <label for="dt_opening_final">Data Vencimento Inicial</label>
                         <input type="date" name="dt_opening_final" id="dt_opening_final" class="form-control">
                     </div>
+                    <fieldset>
+                        <label for="status" class="form-check-label text-secondary">Status</label>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusA" value="A">
+                                <label class="form-check-label" for="statusA">Aberta</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusP" value="P">
+                                <label class="form-check-label" for="statusP">Processo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="statusF" value="F">
+                                <label class="form-check-label" for="statusF">Fechada</label>
+                            </div>
+                        </div>
+                        @error('status')<div class="alert alert-danger p-1">{{ $message }}</div> @enderror
+                    </fieldset>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
                         <button type="submit" class="btn btn-lg btn-success" id="filter">Filtrar</button>
                     </div>
