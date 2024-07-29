@@ -53,8 +53,8 @@ class MonthlyPaymentController extends Controller
         $pavements = $this->pavement->where('status', 'A')->get();
 
         $query = DB::table('contracts')
-                    ->selectRaw('contracts.name_contractor,
-                    monthly_payments.id,
+                    ->selectRaw('monthly_payments.id,
+                    contracts.name_contractor,
                     monthly_payments.due_date,
                     monthly_payments.total_payable,
                     monthly_payments.amount_paid,
@@ -62,13 +62,13 @@ class MonthlyPaymentController extends Controller
                     monthly_payments.id_monthly_status,
                     GROUP_CONCAT(stores.name) as stores,
                     GROUP_CONCAT(stores.id) as id_stores,
-                    pavements.name as pavements'
+                    GROUP_CONCAT(distinct pavements.name) as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->groupByRaw('monthly_payments.id, pavements.name')
+                    ->groupByRaw('monthly_payments.id')
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
@@ -111,8 +111,8 @@ class MonthlyPaymentController extends Controller
         $pavements = $this->pavement->where('status', 'A')->get();
 
         $query = DB::table('contracts')
-                    ->selectRaw('contracts.name_contractor,
-                    monthly_payments.id,
+                    ->selectRaw('monthly_payments.id,
+                    contracts.name_contractor,
                     monthly_payments.due_date,
                     monthly_payments.total_payable,
                     monthly_payments.amount_paid,
@@ -120,13 +120,13 @@ class MonthlyPaymentController extends Controller
                     monthly_payments.id_monthly_status,
                     GROUP_CONCAT(stores.name) as stores,
                     GROUP_CONCAT(stores.id) as id_stores,
-                    pavements.name as pavements'
+                    GROUP_CONCAT(distinct pavements.name) as pavements'
                     )
                     ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->groupByRaw('monthly_payments.id, pavements.name')
+                    ->Join('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->groupByRaw('monthly_payments.id')
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 

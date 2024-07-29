@@ -29,8 +29,6 @@ class DashboardsController extends Controller
         $query_debit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as debit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CD')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
         $query_credit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as credit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CC')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
 
-
-
         if($request->due_date_initial && $request->due_date_final){
             $query_total_receivable->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
             $query_total_paid->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
@@ -62,11 +60,47 @@ class DashboardsController extends Controller
 
         $dashboard->dataset('Valores Recebidos', 'bar', [$pix,$money,$debit_card,$credit_card])->backgroundColor(['#227093','#218c74','#84817a','#2c2c54']);
 
+        $tuitionPavementOne = DB::table('monthly_payments')
+                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
+                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
+                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 1)->where('monthly_payments.id_monthly_status', '<>', 'C')
+                                ->orderBy('monthly_payments.id')->get();
+        $tuitionPavementTwo = DB::table('monthly_payments')
+                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
+                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
+                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 2)->where('monthly_payments.id_monthly_status', '<>', 'C')
+                                ->orderBy('monthly_payments.id')->get();
+        $tuitionPavementThree = DB::table('monthly_payments')
+                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
+                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
+                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 3)->where('monthly_payments.id_monthly_status', '<>', 'C')
+                                ->orderBy('monthly_payments.id')->get();
+
+        var_dump($tuitionPavementOne);
+        var_dump('---------------------------------------------');
+        var_dump($tuitionPavementTwo);
+        var_dump('---------------------------------------------');
+        var_dump($tuitionPavementThree);
+
+        $totalTuitionPavementOne = 0;
+        foreach($tuitionPavementOne as $tuitionPavement){$totalTuitionPavementOne += $tuitionPavement->total_payable;}
+        $totalTuitionPavementTwo = 0;
+        foreach($tuitionPavementTwo as $tuitionPavement){$totalTuitionPavementTwo += $tuitionPavement->total_payable;}
+        $totalTuitionPavementThree = 0;
+        foreach($tuitionPavementThree as $tuitionPavement){$totalTuitionPavementThree += $tuitionPavement->total_payable;}
+
         if($request->ajax()){
-            $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(['pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received']))->render();
+            $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(
+                        ['pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
+                        'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree'
+                        ]))->render();
             return response()->json(['items' => $dashboard, 'html' => $view]);
         }
 
-        return view('dashboards.dashboard', compact(['dashboard', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received']));
+        return view('dashboards.dashboard', compact(
+            ['dashboard', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
+             'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree'
+            ]
+        ));
     }
 }

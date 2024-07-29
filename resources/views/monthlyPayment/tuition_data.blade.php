@@ -2,6 +2,7 @@
     <table class="table align-middle text-center">
         <thead>
             <tr>
+                <td>ID</td>
                 <td>Pavimentos</td>
                 <td>Lojas</td>
                 <td>Data de vencimento</td>
@@ -24,6 +25,7 @@
                         class=""
                     @endif
                     >
+                    <td>{{$monthly->id}}</td>
                     <td>{{$monthly->pavements}}</td>
                     <td>{{$monthly->stores}}</td>
                     <td>{{date('d/m/Y', strtotime($monthly->due_date))}}</td>
