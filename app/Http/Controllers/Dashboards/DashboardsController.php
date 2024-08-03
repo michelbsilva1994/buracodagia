@@ -76,12 +76,6 @@ class DashboardsController extends Controller
                                 ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 3)->where('monthly_payments.id_monthly_status', '<>', 'C')
                                 ->orderBy('monthly_payments.id')->get();
 
-        var_dump($tuitionPavementOne);
-        var_dump('---------------------------------------------');
-        var_dump($tuitionPavementTwo);
-        var_dump('---------------------------------------------');
-        var_dump($tuitionPavementThree);
-
         $totalTuitionPavementOne = 0;
         foreach($tuitionPavementOne as $tuitionPavement){$totalTuitionPavementOne += $tuitionPavement->total_payable;}
         $totalTuitionPavementTwo = 0;

@@ -18,7 +18,7 @@
                 <h5>Total à Receber: R$ {{number_format($total_received->balance_value, 2, ',', '.')}}</h5>
             </div>
     </div>
-    <hr/>
+    {{-- <hr/>
     <div>
         <h3 class="mt-5 col-md-12 col-sm-12">Shopping Chão</h3>
         <h5>Valor Total: R$ {{number_format($totalTuitionPavementOne, 2 , ',', '.')}}</h5>
@@ -26,5 +26,5 @@
         <h5>Valor Total: R$ {{number_format($totalTuitionPavementTwo, 2 , ',', '.')}}</h5>
         <h3 class="mt-5 col-md-12 col-sm-12">Sub-Solo</h3>
         <h5>Valor Total: R$ {{number_format($totalTuitionPavementThree, 2 , ',', '.')}}</h5>
-    </div>
+    </div> --}}
 </div>

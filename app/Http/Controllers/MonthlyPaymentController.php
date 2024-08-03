@@ -68,6 +68,7 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
                     ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->where('id_monthly_status', '<>', 'C')
                     ->groupByRaw('monthly_payments.id')
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
@@ -514,6 +515,9 @@ class MonthlyPaymentController extends Controller
     }
 
     public function reverse_monthly_payment(Request $request){
+        if (!Auth::user()->hasPermissionTo('reverse_monthly_payment')) {
+            return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
+        }
         $lowerMonthlyPayment = $this->lowerMonthlyFee->where('id', $request->id_lowerMonthlyFee)->first();
         $monthlyPayment = $this->monthlyPayment->where('id', $lowerMonthlyPayment->id_monthly_payment)->first();
 

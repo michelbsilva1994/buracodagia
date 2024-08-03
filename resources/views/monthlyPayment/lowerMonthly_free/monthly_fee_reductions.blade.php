@@ -49,7 +49,11 @@
                                 <td> - </td>
                             @elseif(empty($lowerMonthlyFee->id_lower_monthly_fees_reverse))
                                 @if ($lowerMonthlyFee->operation_type === 'B')
-                                    <td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                                    @if(Auth::user()->user_type_service_order === 'E')
+                                        <td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="{{$lowerMonthlyFee->id}}" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>
+                                    @else
+                                        <td> - </td>
+                                    @endif
                                 @elseif($lowerMonthlyFee->operation_type === 'E')
                                     <td> - </td>
                                 @endif
