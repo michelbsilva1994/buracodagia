@@ -1,4 +1,4 @@
-<div class="row">
+<div class="">
     <div class="row col-12 text-secondary text-center my-5">
         <div class="col-8">
             <canvas id="myChart">
@@ -20,18 +20,24 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-lg-6 col-sm-12 text-secondary text-center my-3" id="values">
-            <div class="mt-5 col-md-12 col-sm-12">
-                <h3>Totais por Pavimento</h3>
-                <h5>Shopping Chão: R$ {{number_format($totalTuitionPavementOne, 2 , ',', '.')}}</h5>
-                <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementTwo, 2 , ',', '.')}}</h5>
-                <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementThree, 2 , ',', '.')}}</h5>
+    <div class="row col-12 text-secondary text-center my-5" id="values">
+            <div class="col-8">
+                <canvas id="myChartLowers">
+                </canvas>
             </div>
-            <div class="mt-5 col-md-12 col-sm-12">
-                <h3>Baixas por Pavimento</h3>
-                <h5>Shopping Chão: R$ {{number_format($lowerTuitionPavementOne->total, 2 , ',', '.')}}</h5>
-                <h5>Sub-Solo: R$ {{number_format($lowerTuitionPavementTwo->total, 2 , ',', '.')}}</h5>
-                <h5>Sub-Solo: R$ {{number_format($lowerTuitionPavementThree->total, 2 , ',', '.')}}</h5>
+            <div class="col-4 my-5">
+                <div>
+                    <h3>Totais por Pavimento</h3>
+                    <h5>Shopping Chão: R$ {{number_format($totalTuitionPavementOne, 2 , ',', '.')}}</h5>
+                    <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementTwo, 2 , ',', '.')}}</h5>
+                    <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementThree, 2 , ',', '.')}}</h5>
+                </div>
+                <div class="mt-5">
+                    <h3>Baixas por Pavimento</h3>
+                    <h5>Shopping Chão: R$ {{number_format($lowerTuitionPavementOne->total, 2 , ',', '.')}}</h5>
+                    <h5>Sub-Solo: R$ {{number_format($lowerTuitionPavementTwo->total, 2 , ',', '.')}}</h5>
+                    <h5>Expansão: R$ {{number_format($lowerTuitionPavementThree->total, 2 , ',', '.')}}</h5>
+                </div>
             </div>
     </div>
 </div>

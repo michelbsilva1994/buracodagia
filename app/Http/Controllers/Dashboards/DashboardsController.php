@@ -131,10 +131,12 @@ class DashboardsController extends Controller
         foreach($tuitionPavementThree as $tuitionPavement){$totalTuitionPavementThree += $tuitionPavement->total_payable;}
 
         $dashboard = new Dashboard;
-
         $dashboard->labels(['Pix', 'Dinheiro', 'Cartão Débito','Cartão Crédito' ]);
-
         $dashboard->dataset('Valores Recebidos', 'bar', [$pix,$money,$debit_card,$credit_card])->backgroundColor(['#227093','#218c74','#84817a','#2c2c54']);
+
+        $dashboardLowers = new Dashboard;
+        $dashboardLowers->labels($queryTeste);
+        $dashboardLowers->dataset('Valores de Baixa','bar',$queryTeste);
 
         if($request->ajax()){
             $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(
@@ -142,11 +144,11 @@ class DashboardsController extends Controller
                         'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
                         'lowerTuitionPavementOne','lowerTuitionPavementTwo','lowerTuitionPavementThree'
                         ]))->render();
-            return response()->json(['items' => $dashboard, 'html' => $view]);
+            return response()->json(['items' => $dashboard, 'lowers' => $dashboardLowers ,'html' => $view]);
         }
 
         return view('dashboards.dashboard', compact(
-            ['dashboard', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
+            ['dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
              'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
              'lowerTuitionPavementOne','lowerTuitionPavementTwo','lowerTuitionPavementThree'
             ]

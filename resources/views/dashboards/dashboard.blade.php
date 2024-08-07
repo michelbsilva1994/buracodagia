@@ -67,6 +67,37 @@
                             }
                         };
                         var chart = new Chart(ctx, config);
+
+                        console.log(response.lowers);
+
+                        var labelsLowers = response.lowers.labels.map(function(e) {
+                            console.log(e.name);
+                            return e.name;
+                        });
+
+                        var dataLowers = response.lowers.datasets[0].values.map(function(e) {
+                            console.log(e.total);
+                            return e.total;
+                        });
+
+                        var ctx = $('#myChartLowers');
+                        var config = {
+                            type: 'pie',
+                            data: {
+                                labels: labelsLowers,
+                                datasets: [{
+                                    label: 'Valores Baixas',
+                                    data: dataLowers,
+                                    backgroundColor: [
+                                        '#227093',
+                                        '#218c74',
+                                        '#84817a',
+                                        '#2c2c54'
+                                    ]
+                                }]
+                            }
+                        };
+                        var chart = new Chart(ctx, config);
                     }
                 })
             });
