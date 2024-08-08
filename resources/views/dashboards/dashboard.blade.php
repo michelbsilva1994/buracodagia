@@ -82,7 +82,7 @@
 
                         var ctx = $('#myChartLowers');
                         var config = {
-                            type: 'pie',
+                            type: 'bar',
                             data: {
                                 labels: labelsLowers,
                                 datasets: [{
