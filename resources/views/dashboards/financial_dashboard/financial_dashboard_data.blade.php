@@ -30,7 +30,7 @@
                     <h3>Totais por Pavimento</h3>
                     <h5>Shopping Chão: R$ {{number_format($totalTuitionPavementOne, 2 , ',', '.')}}</h5>
                     <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementTwo, 2 , ',', '.')}}</h5>
-                    <h5>Sub-Solo: R$ {{number_format($totalTuitionPavementThree, 2 , ',', '.')}}</h5>
+                    <h5>Expansão: R$ {{number_format($totalTuitionPavementThree, 2 , ',', '.')}}</h5>
                 </div>
                 <div class="mt-5">
                     <h3>Baixas por Pavimento</h3>

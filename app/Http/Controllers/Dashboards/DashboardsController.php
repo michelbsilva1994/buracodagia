@@ -66,14 +66,27 @@ class DashboardsController extends Controller
                                 ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 3)->where('monthly_payments.id_monthly_status', '<>', 'C')
                                 ->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment');
 
-        $queryLowersPavements = DB::table('monthly_payments')
-                    ->selectRaw('sum(lower_monthly_fees.amount_paid) as total, pavements.name')
-                    ->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')
-                    ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')
-                    ->Join('stores','contract_stores.id_store','stores.id')
-                    ->Join('pavements','stores.id_pavement','pavements.id')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C')
-                    ->groupByRaw('pavements.name');
+        // $queryLowersPavements = DB::table('monthly_payments')
+        //             ->selectRaw('sum(lower_monthly_fees.amount_paid) as total , pavements.name')
+        //             ->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')
+        //             ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')
+        //             ->Join('stores','contract_stores.id_store','stores.id')
+        //             ->Join('pavements','stores.id_pavement','pavements.id')
+        //             ->where('monthly_payments.id_monthly_status', '<>', 'C')
+        //             ->groupByRaw('pavements.name');
+
+        $queryLowersPavements = DB::table('lower_monthly_fees')
+                            ->selectRaw('distinct pavements.name')
+                            ->selectRaw('(select sum(lower_monthly_fees.amount_paid) from lower_monthly_fees where lower_monthly_fees.id_monthly_payment = monthly_payments.id) as total')
+                            ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
+                            ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
+                            ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
+                            ->Join('stores','contract_stores.id_store','stores.id')
+                            ->Join('pavements','stores.id_pavement','pavements.id')
+                            //->groupBy('pavements.name')
+                            ->get();
+
+        dd($queryLowersPavements);
 
         //Filtrando as queries por data de vencimento da mensalidade
         if($request->due_date_initial && $request->due_date_final){
