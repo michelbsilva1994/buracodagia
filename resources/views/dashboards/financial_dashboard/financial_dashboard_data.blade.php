@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="row col-12 text-secondary text-center my-5" id="values">
+    {{-- <div class="row col-12 text-secondary text-center my-5" id="values">
             <div class="col-8">
                 <canvas id="myChartLowers">
                 </canvas>
@@ -39,5 +39,5 @@
                     <h5>Expansão: R$ {{number_format($lowerTuitionPavementThree->total, 2 , ',', '.')}}</h5>
                 </div>
             </div>
-    </div>
+    </div> --}}
 </div>

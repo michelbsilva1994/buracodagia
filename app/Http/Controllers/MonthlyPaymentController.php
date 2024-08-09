@@ -289,7 +289,7 @@ class MonthlyPaymentController extends Controller
 
         try {
             $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
-            $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->first();
+            $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->where('id_monthly_status','<>','C')->first();
             $monthlyPayment = $this->monthlyPayment;
 
             if(empty($tution)){
@@ -330,8 +330,11 @@ class MonthlyPaymentController extends Controller
                     'create_user' => Auth::user()->name,
                     'update_user' => null
                 ]);
+                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('status', 'Mensalidade do vencimento '.date('d/m/Y', strtotime($request->due_date)).' do contrato - '. $contract->id .' gerada com sucesso!');
             }
-            return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('status', 'Mensalidade do vencimento '.date('d/m/Y', strtotime($request->due_date)).' do contrato - '. $contract->id .' gerada com sucesso!');
+            if(($tution)){
+                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('alert', 'Já existe mensalidade com o vencimento '.date('d/m/Y', strtotime($request->due_date)).' para o contrato - '. $contract->id .', por gentileza verificar!');
+            }
         } catch (\Throwable $th) {
             return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
         }

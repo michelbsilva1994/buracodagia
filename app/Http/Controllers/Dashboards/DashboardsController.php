@@ -82,11 +82,10 @@ class DashboardsController extends Controller
                             ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
                             ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
                             ->Join('stores','contract_stores.id_store','stores.id')
-                            ->Join('pavements','stores.id_pavement','pavements.id')
-                            //->groupBy('pavements.name')
-                            ->get();
+                            ->Join('pavements','stores.id_pavement','pavements.id');
+                            //->groupBy('pavements.name');
 
-        dd($queryLowersPavements);
+        //dd($queryLowersPavements);
 
         //Filtrando as queries por data de vencimento da mensalidade
         if($request->due_date_initial && $request->due_date_final){
