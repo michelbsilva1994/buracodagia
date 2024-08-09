@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="row col-12 text-secondary text-center my-5" id="values">
+    <div class="row col-12 text-secondary text-center my-5" id="values">
             <div class="col-8">
                 <canvas id="myChartLowers">
                 </canvas>
@@ -34,10 +34,10 @@
                 </div>
                 <div class="mt-5">
                     <h3>Baixas por Pavimento</h3>
-                    <h5>Shopping Chão: R$ {{number_format($lowerTuitionPavementOne->total, 2 , ',', '.')}}</h5>
-                    <h5>Sub-Solo: R$ {{number_format($lowerTuitionPavementTwo->total, 2 , ',', '.')}}</h5>
-                    <h5>Expansão: R$ {{number_format($lowerTuitionPavementThree->total, 2 , ',', '.')}}</h5>
+                    <h5>Shopping Chão: R$ {{number_format($totalLowerTuitionPavementOne, 2 , ',', '.')}}</h5>
+                    <h5>Sub-Solo: R$ {{number_format($totalLowerTuitionPavementTwo, 2 , ',', '.')}}</h5>
+                    <h5>Expansão: R$ {{number_format($totalLowerTuitionPavementThree, 2 , ',', '.')}}</h5>
                 </div>
             </div>
-    </div> --}}
+    </div>
 </div>

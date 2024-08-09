@@ -71,18 +71,18 @@
                         console.log(response.lowers);
 
                         var labelsLowers = response.lowers.labels.map(function(e) {
-                            console.log(e.name);
-                            return e.name;
+                            console.log(e);
+                            return e;
                         });
 
                         var dataLowers = response.lowers.datasets[0].values.map(function(e) {
-                            console.log(e.total);
-                            return e.total;
+                            console.log(e);
+                            return e;
                         });
 
                         var ctx = $('#myChartLowers');
                         var config = {
-                            type: 'bar',
+                            type: 'pie',
                             data: {
                                 labels: labelsLowers,
                                 datasets: [{
