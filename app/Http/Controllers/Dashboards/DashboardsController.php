@@ -31,36 +31,23 @@ class DashboardsController extends Controller
         $query_debit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as debit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CD')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
         $query_credit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as credit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CC')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
 
-        $queryTuitionPavementOne = DB::table('monthly_payments')
-                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
+        $queryTuitionPavement = DB::table('monthly_payments')
+                                ->selectRaw('distinct monthly_payments.id, pavements.id, monthly_payments.total_payable')
                                 ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
-                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 1)->where('monthly_payments.id_monthly_status', '<>', 'C')
-                                ->orderBy('monthly_payments.id');
-        $queryTuitionPavementTwo = DB::table('monthly_payments')
-                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
-                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
-                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 2)->where('monthly_payments.id_monthly_status', '<>', 'C')
-                                ->orderBy('monthly_payments.id');
-        $queryTuitionPavementThree = DB::table('monthly_payments')
-                                ->selectRaw('distinct monthly_payments.id, pavements.name, monthly_payments.total_payable')
-                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
-                                ->Join('pavements','stores.id_pavement','pavements.id')->where('pavements.id', 3)->where('monthly_payments.id_monthly_status', '<>', 'C')
+                                ->Join('pavements','stores.id_pavement','pavements.id')
+                                ->where('monthly_payments.id_monthly_status', '<>', 'C')
                                 ->orderBy('monthly_payments.id');
 
         // Valores totais baixa por pavimento por data de vencimento da mensalidade
 
-        $queryLowerTuitionPavementTeste = DB::table('lower_monthly_fees')
+        $queryLowerTuitionPavement = DB::table('lower_monthly_fees')
                             ->selectRaw('lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid')
                             ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
                             ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
                             ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
                             ->Join('stores','contract_stores.id_store','stores.id')
                             ->Join('pavements','stores.id_pavement','pavements.id')
-                            //->where('pavements.id', 3)
-                            ->groupByRaw('lower_monthly_fees.id, pavements.id')
-                            ->get();
-
-        //dd($queryLowerTuitionPavementTeste);
+                            ->groupByRaw('lower_monthly_fees.id, pavements.id');
 
         //Filtrando as queries por data de vencimento da mensalidade
         if($request->due_date_initial && $request->due_date_final){
@@ -73,15 +60,9 @@ class DashboardsController extends Controller
             $query_debit_card->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
             $query_credit_card->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
 
-            $queryTuitionPavementOne->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $queryTuitionPavementTwo->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $queryTuitionPavementThree->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
+            $queryTuitionPavement->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
 
-            // $queryLowerTuitionPavementOne->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            // $queryLowerTuitionPavementTwo->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            // $queryLowerTuitionPavementThree->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-
-            $queryLowerTuitionPavementTeste->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
+            $queryLowerTuitionPavement->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
         }
 
         //obtendo valores das querys
@@ -102,31 +83,46 @@ class DashboardsController extends Controller
         $credit_card =  $credit_card->credit_card_value;
 
          //queries valores totais a receber por pavimento por data de vencimento da mensalidade
-        $tuitionPavementOne = $queryTuitionPavementOne->get();
-        $tuitionPavementTwo = $queryTuitionPavementTwo->get();
-        $tuitionPavementThree = $queryTuitionPavementThree->get();
+        $tuitionPavement = $queryTuitionPavement->get();
 
         $totalTuitionPavementOne = 0;
-        foreach($tuitionPavementOne as $tuitionPavement){$totalTuitionPavementOne += $tuitionPavement->total_payable;}
         $totalTuitionPavementTwo = 0;
-        foreach($tuitionPavementTwo as $tuitionPavement){$totalTuitionPavementTwo += $tuitionPavement->total_payable;}
         $totalTuitionPavementThree = 0;
-        foreach($tuitionPavementThree as $tuitionPavement){$totalTuitionPavementThree += $tuitionPavement->total_payable;}
+
+        foreach($tuitionPavement as $monthly){
+                if($monthly->id === 1){
+                    $totalTuitionPavementOne += $monthly->total_payable;
+                }
+                if($monthly->id === 2){
+                    $totalTuitionPavementTwo += $monthly->total_payable;
+                }
+                if($monthly->id === 3){
+                    $totalTuitionPavementThree += $monthly->total_payable;
+                }
+            }
+
+            $dataTotalTuition = [
+                $totalTuitionPavementOne,
+                $totalTuitionPavementTwo,
+                $totalTuitionPavementThree
+            ];
 
         //query baixa por pavimento e data de vencimento
+        $LowerTuitionPavement = $queryLowerTuitionPavement->get();
+
         $totalLowerTuitionPavementOne = 0;
         $totalLowerTuitionPavementTwo = 0;
         $totalLowerTuitionPavementThree = 0;
 
-        foreach($queryLowerTuitionPavementTeste as $lowerPavement){
-                    if($lowerPavement->pavement === 1){
-                        $totalLowerTuitionPavementOne += $lowerPavement->amount_paid;
+        foreach($LowerTuitionPavement as $lowerMonthlyPavement){
+                    if($lowerMonthlyPavement->pavement === 1){
+                        $totalLowerTuitionPavementOne += $lowerMonthlyPavement->amount_paid;
                     }
-                    if($lowerPavement->pavement === 2){
-                        $totalLowerTuitionPavementTwo += $lowerPavement->amount_paid;
+                    if($lowerMonthlyPavement->pavement === 2){
+                        $totalLowerTuitionPavementTwo += $lowerMonthlyPavement->amount_paid;
                     }
-                    if($lowerPavement->pavement === 3){
-                        $totalLowerTuitionPavementThree += $lowerPavement->amount_paid;
+                    if($lowerMonthlyPavement->pavement === 3){
+                        $totalLowerTuitionPavementThree += $lowerMonthlyPavement->amount_paid;
                     }
                 }
 
@@ -147,7 +143,8 @@ class DashboardsController extends Controller
         if($request->ajax()){
             $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(
                         ['pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
-                        'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
+                        'dataTotalTuition',
+                        // 'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
                         'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
                         ]))->render();
             return response()->json(['items' => $dashboard, 'lowers' => $dashboardLowers ,'html' => $view]);
@@ -155,7 +152,8 @@ class DashboardsController extends Controller
 
         return view('dashboards.dashboard', compact(
             ['dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
-             'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
+            'dataTotalTuition',
+            //  'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
              'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
             ]
         ));
