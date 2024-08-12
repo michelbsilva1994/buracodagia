@@ -22,9 +22,12 @@ class DashboardsController extends Controller
 
         //Valores totais das mensalidades por data de vencimento da mensalidade
 
-        $query_total_receivable = DB::table('monthly_payments')->selectRaw('sum(total_payable) as total_payable')->where('id_monthly_status', '<>', 'C');
-        $query_total_paid = DB::table('monthly_payments')->selectRaw('sum(amount_paid) as total_paid')->where('id_monthly_status', '<>', 'C');
-        $query_total_received = DB::table('monthly_payments')->selectRaw('sum(balance_value) as balance_value')->where('id_monthly_status', '<>', 'C');
+        $queryTotalTuition = DB::table('monthly_payments')
+                                ->selectRaw('distinct monthly_payments.id, monthly_payments.total_payable, monthly_payments.amount_paid, monthly_payments.balance_value')
+                                ->Join('contract_stores','monthly_payments.id_contract', 'contract_stores.id_contract')->Join('stores','contract_stores.id_store','stores.id')
+                                ->Join('pavements','stores.id_pavement','pavements.id')
+                                ->where('monthly_payments.id_monthly_status', '<>', 'C')
+                                ->orderBy('monthly_payments.id');
 
         $query_money = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as money_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'D')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
         $query_pix = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as pix_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'P')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
@@ -51,9 +54,7 @@ class DashboardsController extends Controller
 
         //Filtrando as queries por data de vencimento da mensalidade
         if($request->due_date_initial && $request->due_date_final){
-            $query_total_receivable->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $query_total_paid->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $query_total_received->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
+            $queryTotalTuition->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
 
             $query_money->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
             $query_pix->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
@@ -68,9 +69,25 @@ class DashboardsController extends Controller
         //obtendo valores das querys
 
         //Valores das queries totais das mensalidades
-        $total_receivable = $query_total_receivable->first();
-        $total_paid = $query_total_paid->first();
-        $total_received = $query_total_received->first();
+        $totalTuition = $queryTotalTuition->get();
+
+        $total_receivable_t = 0;
+        $total_paid_t = 0;
+        $total_received_t = 0;
+
+        foreach($totalTuition as $valueTotalTuition){
+            $total_receivable_t += $valueTotalTuition->total_payable;
+            $total_paid_t += $valueTotalTuition->amount_paid;
+            $total_received_t += $valueTotalTuition->balance_value;
+        }
+
+        $dataTotalTuition_t = [
+            $total_receivable_t,
+            $total_paid_t,
+            $total_received_t
+        ];
+
+        //dd($dataTotalTuition);
 
         $money = $query_money->first();
         $pix = $query_pix->first();
@@ -142,8 +159,7 @@ class DashboardsController extends Controller
 
         if($request->ajax()){
             $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(
-                        ['pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
-                        'dataTotalTuition',
+                        ['pix', 'money','debit_card','credit_card','dataTotalTuition','dataTotalTuition_t',
                         // 'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
                         'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
                         ]))->render();
@@ -151,8 +167,7 @@ class DashboardsController extends Controller
         }
 
         return view('dashboards.dashboard', compact(
-            ['dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','total_receivable', 'total_paid', 'total_received',
-            'dataTotalTuition',
+            ['dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','dataTotalTuition', 'dataTotalTuition_t',
             //  'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
              'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
             ]

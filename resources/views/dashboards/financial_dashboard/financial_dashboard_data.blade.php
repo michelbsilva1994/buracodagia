@@ -7,9 +7,9 @@
         <div class="col-4 my-5">
             <div>
                 <h3>Totais</h3>
-                <h5>Valor Total: R$ {{number_format($total_receivable->total_payable, 2, ',', '.')}}</h5>
-                <h5>Total Recebido: R$ {{number_format($total_paid->total_paid, 2, ',', '.')}}</h5>
-                <h5>Total à Receber: R$ {{number_format($total_received->balance_value, 2, ',', '.')}}</h5>
+                <h5>Valor Total: R$ {{number_format($dataTotalTuition_t[0], 2, ',', '.')}}</h5>
+                <h5>Total Recebido: R$ {{number_format($dataTotalTuition_t[1], 2, ',', '.')}}</h5>
+                <h5>Total à Receber: R$ {{number_format($dataTotalTuition_t[2], 2, ',', '.')}}</h5>
             </div>
             <div class="mt-5">
                 <h3>Valores Recebidos</h3>
