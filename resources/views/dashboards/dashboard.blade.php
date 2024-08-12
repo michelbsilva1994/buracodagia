@@ -12,6 +12,15 @@
                         <label for="due_date_final">Data Vencimento Final</label>
                         <input type="date" name="due_date_final" id="due_date_final" class="form-control">
                     </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="pavement">Pavimento</label>
+                        <select name="pavement" id="pavement" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            @foreach ($pavements as $pavement)
+                                <option value="{{ $pavement->id }}">{{ $pavement->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="d-grid gap-2 d-lg-flex justify-content-lg-end my-3">
                         <button type="submit" class="btn btn-lg btn-success" id="filter">Filtrar</button>
                     </div>

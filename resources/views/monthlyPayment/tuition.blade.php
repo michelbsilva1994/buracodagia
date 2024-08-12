@@ -14,7 +14,7 @@
                 <div class="row">
                     @if (empty(Auth::user()->user_type_service_order) or Auth::user()->user_type_service_order == 'E')
                         <div class="col-sm-12 col-md-12 col-lg-6">
-                            <label for="contractor">Contrante</label>
+                            <label for="contractor">Contratante</label>
                             <input type="text" name="contractor" id="contractor" class="form-control">
                         </div>
                     @endif

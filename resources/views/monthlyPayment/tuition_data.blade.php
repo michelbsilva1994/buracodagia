@@ -6,7 +6,7 @@
                 <td>Pavimentos</td>
                 <td>Lojas</td>
                 <td>Data de vencimento</td>
-                <td>Contrante</td>
+                <td>Contratante</td>
                 <td>Valor a pagar</td>
                 <td>Valor Pago</td>
                 <td>Saldo</td>

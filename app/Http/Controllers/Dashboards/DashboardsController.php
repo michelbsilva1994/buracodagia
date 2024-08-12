@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboards;
 use App\Charts\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Contract\MonthlyPayment;
+use App\Models\Structure\Pavement;
 use App\Models\Tution\LowerMonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class DashboardsController extends Controller
 
     public function financialDashboard(Request $request){
 
+        $pavements = Pavement::where('status','A')->get();
         //Valores totais das mensalidades por data de vencimento da mensalidade
 
         $queryTotalTuition = DB::table('monthly_payments')
@@ -29,10 +31,13 @@ class DashboardsController extends Controller
                                 ->where('monthly_payments.id_monthly_status', '<>', 'C')
                                 ->orderBy('monthly_payments.id');
 
-        $query_money = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as money_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'D')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
-        $query_pix = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as pix_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'P')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
-        $query_debit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as debit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CD')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
-        $query_credit_card = DB::table('monthly_payments')->selectRaw('sum(lower_monthly_fees.amount_paid) as credit_card_value')->Join('lower_monthly_fees','monthly_payments.id','=','lower_monthly_fees.id_monthly_payment')->where('lower_monthly_fees.id_type_payment', '=', 'CC')->whereNull('lower_monthly_fees.id_lower_monthly_fees_reverse');
+        $queryTotalLowerByPaymentType = DB::table('lower_monthly_fees')
+                                        ->selectRaw('distinct lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid, lower_monthly_fees.id_type_payment')
+                                        ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
+                                        ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
+                                        ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
+                                        ->Join('stores','contract_stores.id_store','stores.id')
+                                        ->Join('pavements','stores.id_pavement','pavements.id');
 
         $queryTuitionPavement = DB::table('monthly_payments')
                                 ->selectRaw('distinct monthly_payments.id, pavements.id, monthly_payments.total_payable')
@@ -55,15 +60,18 @@ class DashboardsController extends Controller
         //Filtrando as queries por data de vencimento da mensalidade
         if($request->due_date_initial && $request->due_date_final){
             $queryTotalTuition->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-
-            $query_money->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $query_pix->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $query_debit_card->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-            $query_credit_card->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-
+            $queryTotalLowerByPaymentType->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
             $queryTuitionPavement->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
-
             $queryLowerTuitionPavement->where('monthly_payments.due_date', '>=' ,$request->due_date_initial)->where('monthly_payments.due_date', '<=' ,$request->due_date_final);
+        }
+
+        //Filtrando queries por pavimento
+
+        if($request->pavement){
+            $queryTotalTuition->where('pavements.id', $request->pavement);
+            $queryTotalLowerByPaymentType->where('pavements.id', $request->pavement);
+            $queryTuitionPavement->where('pavements.id', $request->pavement);
+            $queryLowerTuitionPavement->where('pavements.id', $request->pavement);
         }
 
         //obtendo valores das querys
@@ -88,16 +96,27 @@ class DashboardsController extends Controller
         ];
 
         //dd($dataTotalTuition);
+        $money = 0;
+        $pix = 0;
+        $debit_card = 0;
+        $credit_card = 0;
 
-        $money = $query_money->first();
-        $pix = $query_pix->first();
-        $debit_card = $query_debit_card->first();
-        $credit_card = $query_credit_card->first();
+        $totalLowerByPaymentType = $queryTotalLowerByPaymentType->get();
 
-        $money = $money->money_value;
-        $pix = $pix->pix_value;
-        $debit_card =  $debit_card->debit_card_value;
-        $credit_card =  $credit_card->credit_card_value;
+        foreach($totalLowerByPaymentType as $valueLowerByPaymentType){
+            if($valueLowerByPaymentType->id_type_payment === 'D'){
+                $money += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'P'){
+                $pix += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'CD'){
+                $debit_card += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'CC'){
+                $credit_card += $valueLowerByPaymentType->amount_paid;
+            }
+        }
 
          //queries valores totais a receber por pavimento por data de vencimento da mensalidade
         $tuitionPavement = $queryTuitionPavement->get();
@@ -159,16 +178,14 @@ class DashboardsController extends Controller
 
         if($request->ajax()){
             $view = view('dashboards.financial_dashboard.financial_dashboard_data', compact(
-                        ['pix', 'money','debit_card','credit_card','dataTotalTuition','dataTotalTuition_t',
-                        // 'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
+                        ['pavements', 'pix', 'money','debit_card','credit_card','dataTotalTuition','dataTotalTuition_t',
                         'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
                         ]))->render();
             return response()->json(['items' => $dashboard, 'lowers' => $dashboardLowers ,'html' => $view]);
         }
 
         return view('dashboards.dashboard', compact(
-            ['dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','dataTotalTuition', 'dataTotalTuition_t',
-            //  'totalTuitionPavementOne','totalTuitionPavementTwo','totalTuitionPavementThree',
+            ['pavements','dashboard','dashboardLowers', 'pix', 'money','debit_card','credit_card','dataTotalTuition', 'dataTotalTuition_t',
              'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
             ]
         ));

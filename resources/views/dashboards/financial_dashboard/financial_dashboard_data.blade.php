@@ -1,10 +1,10 @@
 <div class="">
-    <div class="row col-12 text-secondary text-center my-5">
+    <div class="row col-12 text-secondary text-center mt-3">
         <div class="col-8">
             <canvas id="myChart">
             </canvas>
         </div>
-        <div class="col-4 my-5">
+        <div class="col-4 mb-5">
             <div>
                 <h3>Totais</h3>
                 <h5>Valor Total: R$ {{number_format($dataTotalTuition_t[0], 2, ',', '.')}}</h5>
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="row col-12 text-secondary text-center my-5" id="values">
+    <div class="row col-12 text-secondary text-center pt-5" id="values">
             <div class="col-8">
                 <canvas id="myChartLowers">
                 </canvas>
