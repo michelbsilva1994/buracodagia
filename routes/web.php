@@ -137,10 +137,12 @@ Route::middleware('auth')->group(function () {
     /** Reports Views */
     Route::get('reports/contractStores/index', [ReportsController::class, 'reportContractStoresIndex'])->name('reports.contractStoresIndex');
     Route::get('reports/Stores/index', [ReportsController::class, 'reportStoresIndex'])->name('reports.storesIndex');
+    Route::get('reports/lowersTuition/index', [ReportsController::class, 'reportLowersTuition'])->name('reports.lowersTuition');
 
     /** Generation Reports */
     Route::post('reports/contractStores/', [ReportsController::class, 'reportContractStores'])->name('reports.reportContractStores');
     Route::post('reports/Stores/', [ReportsController::class, 'reportStores'])->name('reports.reportStores');
+    Route::post('reports/lowersTuition/', [ReportsController::class, 'lowersTuition'])->name('reports.lowersTuition');
 
     /** PDF Reports */
     Route::get('pdfReports/receipt/{id_receipt}', [PdfReportsController::class, 'receipt'])->name('pdfReports.receipt');

@@ -94,4 +94,37 @@ class ReportsController extends Controller
 
         return $stores->downloadExcel('lojas_sem_contratos.xlsx', ExcelReport::XLSX, true);
     }
+
+    public function reportLowersTuition(){
+        $pavements = $this->pavement->where('status','A')->get();
+        return view('reports.lowerTuition', compact('pavements'));
+    }
+    public function LowersTuition(Request $request){
+        $queryLowersByPaymentType = DB::table('lower_monthly_fees')
+                        ->selectRaw('distinct   lower_monthly_fees.Id,
+                                                contracts.name_contractor as Contratante,
+                                                pavements.name Pavimento,
+                                                GROUP_CONCAT(stores.name) as Lojas,
+                                                lower_monthly_fees.amount_paid as Valor_pago,
+                                                lower_monthly_fees.type_payment as Tipo_pagamento,
+                                                lower_monthly_fees.download_user as Usuario_baixa')
+                        ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
+                        ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
+                        ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
+                        ->Join('stores','contract_stores.id_store','stores.id')
+                        ->Join('pavements','stores.id_pavement','pavements.id')
+                        ->groupByRaw('lower_monthly_fees.Id,contracts.name_contractor,pavements.name,
+                                     lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user');
+
+        if($request->due_date_initial && $request->due_date_final){
+            $queryLowersByPaymentType->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('monthly_payments.dt_payday', '<=' ,$request->due_date_final);
+        }
+        if($request->pavement){
+            $queryLowersByPaymentType->where('pavements.id', $request->pavement);
+        }
+
+        $lowersByPaymentType = $queryLowersByPaymentType->get();
+        return $lowersByPaymentType->downloadExcel('relatório_baixas.xlsx', ExcelReport::XLSX, true);
+    }
+
 }
