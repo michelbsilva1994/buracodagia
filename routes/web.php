@@ -149,7 +149,9 @@ Route::middleware('auth')->group(function () {
     Route::get('pdfReports/partialReceipt/{id_receipt}', [PdfReportsController::class, 'partialReceipt'])->name('pdfReports.partialReceipt');
 
     /** Dashboards */
+    Route::get('/dashboard/index', [DashboardsController::class, 'dashboardIndex'])->name('dashboardCharts.dashboardChartsIndex');
     Route::get('/dashboardCharts/charts', [DashboardsController::class, 'financialDashboard'])->name('dashboardCharts.dashboardCharts');
+    Route::get('/financialLowersDashboard/charts', [DashboardsController::class, 'financialLowersDashboard' ])->name('dashboardCharts.financialLowersDashboard');
 });
 
 require __DIR__.'/auth.php';

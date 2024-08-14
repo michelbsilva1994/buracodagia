@@ -19,6 +19,10 @@ class DashboardsController extends Controller
         $this->MonthlyPayment = $MonthlyPayment;
     }
 
+    public function dashboardIndex(){
+        return view('dashboards.dashboardIndex');
+    }
+
     public function financialDashboard(Request $request){
 
         $pavements = Pavement::where('status','A')->get();
@@ -189,5 +193,53 @@ class DashboardsController extends Controller
              'totalLowerTuitionPavementOne','totalLowerTuitionPavementTwo','totalLowerTuitionPavementThree'
             ]
         ));
+    }
+
+    public function financialLowersDashboard(Request $request){
+        $pavements = Pavement::where('status','A')->get();
+
+        $queryLowers = DB::table('lower_monthly_fees')
+                                    ->selectRaw('distinct lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid, lower_monthly_fees.id_type_payment')
+                                    ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
+                                    ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
+                                    ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
+                                    ->Join('stores','contract_stores.id_store','stores.id')
+                                    ->Join('pavements','stores.id_pavement','pavements.id');
+
+        if($request->due_date_initial && $request->due_date_final){
+            $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->due_date_final);
+        }
+        if($request->pavement){
+            $queryLowers->where('pavements.id', $request->pavement);
+        }
+
+        $lowers = $queryLowers->get();
+
+        $totalLowers = 0;
+        foreach($lowers as $lower){
+            $totalLowers += $lower->amount_paid;
+        }
+
+        $money = 0;
+        $pix = 0;
+        $debit_card = 0;
+        $credit_card = 0;
+
+        foreach($lowers as $valueLowerByPaymentType){
+            if($valueLowerByPaymentType->id_type_payment === 'D'){
+                $money += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'P'){
+                $pix += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'CD'){
+                $debit_card += $valueLowerByPaymentType->amount_paid;
+            }
+            if($valueLowerByPaymentType->id_type_payment === 'CC'){
+                $credit_card += $valueLowerByPaymentType->amount_paid;
+            }
+        }
+
+        return view('dashboards.dashboardIndex', compact('queryLowers'));
     }
 }
