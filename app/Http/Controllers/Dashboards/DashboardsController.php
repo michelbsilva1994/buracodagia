@@ -215,10 +215,14 @@ class DashboardsController extends Controller
 
         $lowers = $queryLowers->get();
 
+        //Total geral
+
         $totalLowers = 0;
         foreach($lowers as $lower){
             $totalLowers += $lower->amount_paid;
         }
+
+        //Por tipo de baixa
 
         $money = 0;
         $pix = 0;
@@ -240,6 +244,33 @@ class DashboardsController extends Controller
             }
         }
 
-        return view('dashboards.dashboardIndex', compact('queryLowers'));
+        //Por pavimento
+
+        $totalLowerTuitionPavementOne = 0;
+        $totalLowerTuitionPavementTwo = 0;
+        $totalLowerTuitionPavementThree = 0;
+
+        foreach($lowers as $lowerMonthlyPavement){
+                    if($lowerMonthlyPavement->pavement === 1){
+                        $totalLowerTuitionPavementOne += $lowerMonthlyPavement->amount_paid;
+                    }
+                    if($lowerMonthlyPavement->pavement === 2){
+                        $totalLowerTuitionPavementTwo += $lowerMonthlyPavement->amount_paid;
+                    }
+                    if($lowerMonthlyPavement->pavement === 3){
+                        $totalLowerTuitionPavementThree += $lowerMonthlyPavement->amount_paid;
+                    }
+                }
+        $totalLowerTuitionPavement = [
+                $totalLowerTuitionPavementOne,
+                $totalLowerTuitionPavementTwo,
+                $totalLowerTuitionPavementThree
+            ];
+
+        return  view('dashboards.dashboardLowers',
+                compact(['pavements','totalLowers',
+                         'money', 'pix', 'debit_card', 'credit_card',
+                         'totalLowerTuitionPavement'
+                        ]));
     }
 }
