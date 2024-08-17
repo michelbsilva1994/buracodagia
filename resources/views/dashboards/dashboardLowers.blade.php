@@ -6,11 +6,11 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="due_date_initial">Data Vencimento Inicial</label>
-                        <input type="date" name="due_date_initial" id="due_date_initial" class="form-control">
+                        <input type="date" name="ddate_initial" id="due_date_initial" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="due_date_final">Data Vencimento Final</label>
-                        <input type="date" name="due_date_final" id="due_date_final" class="form-control">
+                        <input type="date" name="date_final" id="due_date_final" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="pavement">Pavimento</label>
@@ -27,13 +27,11 @@
                 </div>
             </form>
         </div>
-        <div class="dashboard-data">
             <div id="items-container">
                 @include('dashboards.financial_dashboard.financial_dashboard_lowers_data')
             </div>
-        </div>
     </div>
-    {{-- <script>
+    <script>
             $(document).ready(function(){
                 $('#items-container').empty();
             });
@@ -41,74 +39,15 @@
             $('#form-filter').on('submit',function(event) {
                 event.preventDefault();
                 $.ajax({
-                    url: "{{ route('dashboardCharts.dashboardCharts') }}",
+                    url: "{{ route('dashboardCharts.financialLowersDashboard') }}",
                     type: 'get',
                     data: $(this).serialize(),
                     success: function(response) {
-                        // $('#values').removeClass('d-none');
+                        //$('#values').removeClass('d-none');
                         $('#items-container').empty();
                         $('#items-container').html(response.html);
-                        var labels = response.items.labels.map(function(e) {
-                            console.log(e);
-                            return e;
-                        });
-
-                        var data = response.items.datasets[0].values.map(function(e) {
-                            console.log(e);
-                            return e;
-                        });
-
-                        var ctx = $('#myChart');
-                        var config = {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Valores Recebidos',
-                                    data: data,
-                                    backgroundColor: [
-                                        '#227093',
-                                        '#218c74',
-                                        '#84817a',
-                                        '#2c2c54'
-                                    ]
-                                }]
-                            }
-                        };
-                        var chart = new Chart(ctx, config);
-
-                        console.log(response.lowers);
-
-                        var labelsLowers = response.lowers.labels.map(function(e) {
-                            console.log(e);
-                            return e;
-                        });
-
-                        var dataLowers = response.lowers.datasets[0].values.map(function(e) {
-                            console.log(e);
-                            return e;
-                        });
-
-                        var ctx = $('#myChartLowers');
-                        var config = {
-                            type: 'pie',
-                            data: {
-                                labels: labelsLowers,
-                                datasets: [{
-                                    label: 'Valores Baixas',
-                                    data: dataLowers,
-                                    backgroundColor: [
-                                        '#227093',
-                                        '#218c74',
-                                        '#84817a',
-                                        '#2c2c54'
-                                    ]
-                                }]
-                            }
-                        };
-                        var chart = new Chart(ctx, config);
                     }
                 })
             });
-    </script> --}}
+    </script>
 @endsection

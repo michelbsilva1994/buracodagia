@@ -206,7 +206,7 @@ class DashboardsController extends Controller
                                     ->Join('stores','contract_stores.id_store','stores.id')
                                     ->Join('pavements','stores.id_pavement','pavements.id');
 
-        if($request->due_date_initial && $request->due_date_final){
+        if($request->date_initial && $request->date_final){
             $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->due_date_final);
         }
         if($request->pavement){
@@ -266,6 +266,15 @@ class DashboardsController extends Controller
                 $totalLowerTuitionPavementTwo,
                 $totalLowerTuitionPavementThree
             ];
+
+            if($request->ajax()){
+                $view = view('dashboards.financial_dashboard.financial_dashboard_lowers_data', compact(
+                            ['pavements','totalLowers',
+                             'money', 'pix', 'debit_card', 'credit_card',
+                             'totalLowerTuitionPavement'
+                            ]))->render();
+                return response()->json(['html' => $view]);
+            }
 
         return  view('dashboards.dashboardLowers',
                 compact(['pavements','totalLowers',
