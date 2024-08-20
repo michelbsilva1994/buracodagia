@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
     /** Reports Views */
     Route::get('reports/contractStores/index', [ReportsController::class, 'reportContractStoresIndex'])->name('reports.contractStoresIndex');
     Route::get('reports/Stores/index', [ReportsController::class, 'reportStoresIndex'])->name('reports.storesIndex');
-    Route::get('reports/lowersTuition/index', [ReportsController::class, 'reportLowersTuition'])->name('reports.lowersTuition');
+    Route::get('reports/lowersTuition/index', [ReportsController::class, 'reportLowersTuition'])->name('reports.lowersTuitionIndex');
 
     /** Generation Reports */
     Route::post('reports/contractStores/', [ReportsController::class, 'reportContractStores'])->name('reports.reportContractStores');

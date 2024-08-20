@@ -11,7 +11,7 @@
             <a class="btn btn-lg btn-success" type="button" href="{{route('reports.storesIndex')}}">Lojas</a>
         </div>
         <div class="d-grid gap-2 col-sm-12 col-md-8 my-4 mx-auto">
-            <a class="btn btn-lg btn-success" type="button" href="{{route('reports.lowersTuition')}}">Relatório de baixas</a>
+            <a class="btn btn-lg btn-success" type="button" href="{{route('reports.lowersTuitionIndex')}}">Relatório de baixas</a>
         </div>
     </div>
 @endsection

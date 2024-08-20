@@ -101,7 +101,7 @@ class ReportsController extends Controller
     }
     public function LowersTuition(Request $request){
         $queryLowersByPaymentType = DB::table('lower_monthly_fees')
-                        ->selectRaw('distinct   lower_monthly_fees.Id,
+                        ->selectRaw('distinct   lower_monthly_fees.id,
                                                 contracts.name_contractor as Contratante,
                                                 pavements.name Pavimento,
                                                 GROUP_CONCAT(stores.name) as Lojas,
