@@ -207,7 +207,7 @@ class DashboardsController extends Controller
                                     ->Join('pavements','stores.id_pavement','pavements.id');
 
         if($request->date_initial && $request->date_final){
-            $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->due_date_final);
+            $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->date_final);
         }
         if($request->pavement){
             $queryLowers->where('pavements.id', $request->pavement);
