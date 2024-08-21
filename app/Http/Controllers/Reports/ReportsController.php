@@ -102,6 +102,8 @@ class ReportsController extends Controller
     public function LowersTuition(Request $request){
         $queryLowersByPaymentType = DB::table('lower_monthly_fees')
                         ->selectRaw('distinct   lower_monthly_fees.id,
+                                                lower_monthly_fees.id_monthly_payment as Mensalidade,
+                                                monthly_payments.due_date as Vencimento,
                                                 contracts.name_contractor as Contratante,
                                                 pavements.name Pavimento,
                                                 GROUP_CONCAT(stores.name) as Lojas,
@@ -114,7 +116,8 @@ class ReportsController extends Controller
                         ->Join('stores','contract_stores.id_store','stores.id')
                         ->Join('pavements','stores.id_pavement','pavements.id')
                         ->groupByRaw('lower_monthly_fees.Id,contracts.name_contractor,pavements.name,
-                                     lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user');
+                                     lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user,
+                                      lower_monthly_fees.id_monthly_payment, monthly_payments.due_date');
 
         if($request->due_date_initial && $request->due_date_final){
             $queryLowersByPaymentType->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('monthly_payments.dt_payday', '<=' ,$request->due_date_final);
