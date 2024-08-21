@@ -5,12 +5,12 @@
             <form class="col-12" id="form-filter">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="due_date_initial">Data Vencimento Inicial</label>
-                        <input type="date" name="ddate_initial" id="due_date_initial" class="form-control">
+                        <label for="due_date_initial">Data Baixa Inicial</label>
+                        <input type="date" name="date_initial" id="date_initial" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
-                        <label for="due_date_final">Data Vencimento Final</label>
-                        <input type="date" name="date_final" id="due_date_final" class="form-control">
+                        <label for="due_date_final">Data Baixa Final</label>
+                        <input type="date" name="date_final" id="date_final" class="form-control">
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <label for="pavement">Pavimento</label>
