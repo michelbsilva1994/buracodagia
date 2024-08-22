@@ -115,7 +115,7 @@ class ReportsController extends Controller
                         ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
                         ->Join('stores','contract_stores.id_store','stores.id')
                         ->Join('pavements','stores.id_pavement','pavements.id')
-                        ->groupByRaw('lower_monthly_fees.Id,contracts.name_contractor,pavements.name,
+                        ->groupByRaw('lower_monthly_fees.id,contracts.name_contractor,pavements.name,
                                      lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user,
                                       lower_monthly_fees.id_monthly_payment, monthly_payments.due_date');
 

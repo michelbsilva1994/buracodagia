@@ -199,12 +199,14 @@ class DashboardsController extends Controller
         $pavements = Pavement::where('status','A')->get();
 
         $queryLowers = DB::table('lower_monthly_fees')
-                                    ->selectRaw('distinct lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid, lower_monthly_fees.id_type_payment')
+                                    ->selectRaw('distinct lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid, lower_monthly_fees.id_type_payment, lower_monthly_fees.id_lower_monthly_fees_reverse, lower_monthly_fees.id_lower_monthly_fees_origin')
                                     ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
                                     ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
                                     ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
                                     ->Join('stores','contract_stores.id_store','stores.id')
-                                    ->Join('pavements','stores.id_pavement','pavements.id');
+                                    ->Join('pavements','stores.id_pavement','pavements.id')
+                                    ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_reverse is null')
+                                    ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_origin is null');
 
         if($request->date_initial && $request->date_final){
             $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->date_final);
