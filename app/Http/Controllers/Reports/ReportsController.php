@@ -115,12 +115,14 @@ class ReportsController extends Controller
                         ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
                         ->Join('stores','contract_stores.id_store','stores.id')
                         ->Join('pavements','stores.id_pavement','pavements.id')
+                        ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_reverse is null')
+                        ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_origin is null')
                         ->groupByRaw('lower_monthly_fees.id,contracts.name_contractor,pavements.name,
                                      lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user,
                                       lower_monthly_fees.id_monthly_payment, monthly_payments.due_date');
 
         if($request->due_date_initial && $request->due_date_final){
-            $queryLowersByPaymentType->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('monthly_payments.dt_payday', '<=' ,$request->due_date_final);
+            $queryLowersByPaymentType->where('lower_monthly_fees.dt_payday', '>=' ,$request->due_date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->due_date_final);
         }
         if($request->pavement){
             $queryLowersByPaymentType->where('pavements.id', $request->pavement);
