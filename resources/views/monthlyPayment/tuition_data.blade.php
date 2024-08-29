@@ -15,7 +15,7 @@
         </thead>
         <tbody id="body-table">
             @foreach ($tuition as $monthly)
-                <tr @if($monthly->id_monthly_status === 'F')
+                <tr @if ($monthly->id_monthly_status === 'F')
                         class="bg-success"
                     @elseif($monthly->id_monthly_status === 'P')
                         class="bg-secondary"
@@ -34,7 +34,7 @@
                     <td>R$ {{number_format($monthly->amount_paid, 2, ',', '.')}}</td>
                     <td>R$ {{number_format($monthly->balance_value, 2, ',', '.')}}</td>
                     <td>
-                    @if($monthly->id_monthly_status === 'F')
+                    @if ($monthly->id_monthly_status === 'F')
                         <div class="d-flex">
                             <a href="{{route('pdfReports.receipt', ['id_receipt' => $monthly->id])}}" class="mr-3 btn btn-sm btn-primary" target="_blank">Recibo</a>
                             <a href="{{route('monthly.lowerMonthlyFeeIndex', ['id_monthly' => $monthly->id])}}" class="btn btn-sm btn-light">Baixas</a>
