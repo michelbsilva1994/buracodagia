@@ -132,10 +132,29 @@
         </div>
     </div>
 
+        <!-- modal baixas -->
+        {{-- <div class="modal fade" id="modal-lowers" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Baixas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="content">
+
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
     <script>
         // $(document).on('submit', '#form-filter', function(event){
         //     event.preventDefault();
         //     fetchItems("{{ route('monthly.tuitionAjax') }}?" + $(this).serialize());
+        // });
+        // $(document).delegate('#btn-lowers', 'click', function() {
+        //     event.preventDefault();
+        //     $('#content').html('teste de html');
         // });
 
         $(document).ready(function() {
