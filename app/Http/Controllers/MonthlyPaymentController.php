@@ -74,31 +74,47 @@ class MonthlyPaymentController extends Controller
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
+        $queryTotals = DB::table('contracts')
+                    ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
+                                 sum(monthly_payments.amount_paid) as amount_paid,
+                                 sum(monthly_payments.balance_value) as balance_value')
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->where('monthly_payments.id_monthly_status', '<>', 'C');
+
         if(Auth::user()->user_type_service_order === 'U'){
             $query->where('id_physical_person', Auth::user()->id_physical_people);
+            $queryTotals->where('id_physical_person', Auth::user()->id_physical_people);
         }
         if($request->contractor){
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
+            $queryTotals->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
         if($request->due_date){
             $query->where('monthly_payments.due_date', $request->due_date);
+            $queryTotals->where('monthly_payments.due_date', $request->due_date);
         }
         if($request->store){
             $query->where('stores.name', 'like', "%$request->store%");
+            $queryTotals->where('stores.name', 'like', "%$request->store%");
         }
         if($request->pavement){
             $query->where('pavements.id',$request->pavement);
+            $queryTotals->where('pavements.id',$request->pavement);
         }
 
         $tuition = $query->paginate(10)->appends($request->input());
+        $tuitionTotals = $queryTotals->first();
 
         if($request->ajax()){
-            $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
+            $view = view('monthlyPayment.tuition_data', compact(['tuition', 'tuitionTotals']))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
             return response()->json(['html' => $view, 'pagination' => $pagination]);
         }
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements']));
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements', 'tuitionTotals']));
     }
 
     public function tuitionAjax(Request $request){
@@ -134,31 +150,47 @@ class MonthlyPaymentController extends Controller
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
+        $queryTotals = DB::table('contracts')
+                    ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
+                                 sum(monthly_payments.amount_paid) as amount_paid,
+                                 sum(monthly_payments.balance_value) as balance_value')
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->where('monthly_payments.id_monthly_status', '<>', 'C');
+
         if(Auth::user()->user_type_service_order === 'U'){
             $query->where('id_physical_person', Auth::user()->id_physical_people);
+            $queryTotals->where('id_physical_person', Auth::user()->id_physical_people);
         }
         if($request->contractor){
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
+            $queryTotals->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
         if($request->due_date){
             $query->where('monthly_payments.due_date', $request->due_date);
+            $queryTotals->where('monthly_payments.due_date', $request->due_date);
         }
         if($request->store){
             $query->where('stores.name', 'like', "%$request->store%");
+            $queryTotals->where('stores.name', 'like', "%$request->store%");
         }
         if($request->pavement){
             $query->where('pavements.id',$request->pavement);
+            $queryTotals->where('pavements.id',$request->pavement);
         }
 
         $tuition = $query->paginate(10)->appends($request->input());
+        $tuitionTotals = $queryTotals->first();
 
         if($request->ajax()){
-            $view = view('monthlyPayment.tuition_data', compact('tuition'))->render();
+            $view = view('monthlyPayment.tuition_data', compact(['tuition', 'tuitionTotals']))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
             return response()->json(['html' => $view, 'pagination' => $pagination]);
         }
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements']));
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements','tuitionTotals']));
 
     }
 
