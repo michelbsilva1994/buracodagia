@@ -195,11 +195,27 @@
         $(document).delegate('#btn-cancel', 'click', function() {
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly_cancel').val(id_monthly);
+            console.log(id_monthly);
         });
 
         $(document).delegate('#btn-low', 'click', function() {
             var balance_value = $(this).attr('data-balance-value');
             $('#amount_paid').val(balance_value);
+        });
+
+        $(document).delegate('.accordion', 'click', function() {
+            var id_monthly_lower = $(this).attr('data-id-lower');
+            var url = "{{route('monthly.lowerMonthlyFeeIndex', ['id_monthly' => ':id'])}}"
+            url = url.replace(':id', id_monthly_lower)
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                success: function(response){
+                    console.log(response)
+                }
+            });
+            // $('#accordion-body-'+id_monthly_lower).html('<p>'+ id_monthly_lower +'</p>')
         });
 
         $('#cancelTuition').submit(function(event) {

@@ -151,6 +151,18 @@
                     @endif
                 </div>
             </div>
+            <div class="accordion accordion-flush" id="accordionFlush{{ $monthly->id }}" data-id-lower="{{ $monthly->id }}">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-heading{{ $monthly->id }}">
+                    <button class="accordion-button collapsed" type="button" id="button-accordion" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ $monthly->id }}" aria-expanded="false" aria-controls="flush-collapse{{ $monthly->id }}">
+                      Baixas
+                    </button>
+                  </h2>
+                  <div id="flush-collapse{{ $monthly->id }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ $monthly->id }}" data-bs-parent="#accordionFlush{{ $monthly->id }}">
+                    <div class="accordion-body" id="accordion-body-{{$monthly->id}}">Teste</div>
+                  </div>
+                </div>
+              </div>
         </div>
     @endforeach --}}
 </div>
