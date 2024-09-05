@@ -1,4 +1,4 @@
-{{-- <div class="col-12">
+<div class="col-12">
         <div class="justify-content-md-between d-md-flex justify-content-md-between d-lg-flex justify-content-lg-between">
             <div class="alert alert-success col-sm-12 col-md-3 col-lg-3 text-center" role="alert">
                 Valor Total: {{ number_format($tuitionTotals->total_payable, 2, ',', '.') }}
@@ -9,8 +9,8 @@
             <div class="alert alert-danger col-sm-12 col-md-3 col-lg-3 text-center" role="alert">
                 Valor à receber: {{ number_format($tuitionTotals->balance_value, 2, ',', '.') }}
             </div>
-        </div> --}}
-    <div class="col-12 table-responsive">
+        </div>
+    {{-- <div class="col-12 table-responsive">
     <table class="table align-middle text-center">
         <thead>
             <tr>
@@ -80,9 +80,9 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
+    </table> --}}
 
-    {{-- @foreach ($tuition as $monthly)
+    @foreach ($tuition as $monthly)
         <div class="card mb-3">
             <div class="card-header bg-blue-azraq text-white">
                 <h5 class="card-title">Mensalidade #{{ $monthly->id }}</h5>
@@ -159,10 +159,15 @@
                     </button>
                   </h2>
                   <div id="flush-collapse{{ $monthly->id }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ $monthly->id }}" data-bs-parent="#accordionFlush{{ $monthly->id }}">
-                    <div class="accordion-body" id="accordion-body-{{$monthly->id}}">Teste</div>
+                    <div class="accordion-body" id="accordion-body-{{$monthly->id}}">
+                        <table class="table align-middle text-center">
+                            <tbody id="body-table{{$monthly->id}}">
+                            </tbody>
+                        </table>
+                    </div>
                   </div>
                 </div>
               </div>
         </div>
-    @endforeach --}}
+    @endforeach
 </div>

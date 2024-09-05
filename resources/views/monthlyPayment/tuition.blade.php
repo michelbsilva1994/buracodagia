@@ -212,7 +212,21 @@
                 type: 'get',
                 dataType: 'json',
                 success: function(response){
-                    console.log(response)
+                    console.log(response.lowers)
+                    var dataList = $('#body-table'+id_monthly_lower);
+
+                    var formatter = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    });
+
+                    response.lowers.forEach(function(item){
+                        dataList.append('<tr>'+
+                            '<td>'+ item.id +'</td>'+
+                            '<td>'+ item.type_payment +'</td>'+
+                            '<td>'+ formatter.format(item.amount_paid) + '</td>'+
+                            '<tr>');
+                    });
                 }
             });
             // $('#accordion-body-'+id_monthly_lower).html('<p>'+ id_monthly_lower +'</p>')
