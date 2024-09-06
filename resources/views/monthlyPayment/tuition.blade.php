@@ -213,6 +213,8 @@
                 dataType: 'json',
                 success: function(response){
                     console.log(response.lowers)
+                    $('#body-table'+id_monthly_lower).empty();
+
                     var dataList = $('#body-table'+id_monthly_lower);
 
                     var formatter = new Intl.NumberFormat('pt-BR', {
@@ -221,11 +223,18 @@
                     });
 
                     response.lowers.forEach(function(item){
+                        if(item.dt_payday){
+                        var dt_baixa = '<td>'+ (item.dt_payday) + '</td>';
+                        }
+                        if(item.dt_chargeback){
+                        var dt_baixa = '<td>'+ (item.dt_chargeback) + '</td>';
+                        }
                         dataList.append('<tr>'+
                             '<td>'+ item.id +'</td>'+
                             '<td>'+ item.type_payment +'</td>'+
                             '<td>'+ formatter.format(item.amount_paid) + '</td>'+
-                            '<tr>');
+                            dt_baixa
+                            +'<tr>');
                     });
                 }
             });
