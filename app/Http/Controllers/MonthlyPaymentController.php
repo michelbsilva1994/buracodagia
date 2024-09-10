@@ -563,52 +563,56 @@ class MonthlyPaymentController extends Controller
         $monthlyPayment = $this->monthlyPayment->where('id', $lowerMonthlyPayment->id_monthly_payment)->first();
 
         // criando baixa de estorno
-        $lowerMonthlyFee = LowerMonthlyFee::create([
-            'amount_paid' => -($lowerMonthlyPayment->amount_paid),
-            'id_type_payment' => null,
-            'type_payment' => null,
-            'id_chargeback_low' => null,
-            'chargeback_low' => null,
-            'dt_payday' => null,
-            'dt_chargeback' => Date('Y/m/d'),
-            'download_user' => null,
-            'chargeback_user' => Auth()->user()->name,
-            'id_monthly_payment' => $monthlyPayment->id,
-            'create_user' => Auth::user()->name,
-            'update_user' => null,
-            'operation_type' => 'E',
-            'id_lower_monthly_fees_reverse' => null,
-            'id_lower_monthly_fees_origin' => $lowerMonthlyPayment->id,
-            'description' => null
-        ]);
-        $lowerMonthlyFee->save;
+        try {
+            $lowerMonthlyFee = LowerMonthlyFee::create([
+                'amount_paid' => -($lowerMonthlyPayment->amount_paid),
+                'id_type_payment' => null,
+                'type_payment' => null,
+                'id_chargeback_low' => null,
+                'chargeback_low' => null,
+                'dt_payday' => null,
+                'dt_chargeback' => Date('Y/m/d'),
+                'download_user' => null,
+                'chargeback_user' => Auth()->user()->name,
+                'id_monthly_payment' => $monthlyPayment->id,
+                'create_user' => Auth::user()->name,
+                'update_user' => null,
+                'operation_type' => 'E',
+                'id_lower_monthly_fees_reverse' => null,
+                'id_lower_monthly_fees_origin' => $lowerMonthlyPayment->id,
+                'description' => null
+            ]);
+            $lowerMonthlyFee->save;
 
-        //calculando saldo da mensalidade
-        $balance = $monthlyPayment->balance_value + $lowerMonthlyPayment->amount_paid;
+            //calculando saldo da mensalidade
+            $balance = $monthlyPayment->balance_value + $lowerMonthlyPayment->amount_paid;
 
-        //vinculando baixa de estorno a baixa de origem
-        $lowerMonthlyPayment->id_lower_monthly_fees_reverse = $lowerMonthlyFee->id;
-        $lowerMonthlyPayment->save();
+            //vinculando baixa de estorno a baixa de origem
+            $lowerMonthlyPayment->id_lower_monthly_fees_reverse = $lowerMonthlyFee->id;
+            $lowerMonthlyPayment->save();
 
-        //atualizando valores e status da mensalidade
-        if($balance > 0 && $balance < $monthlyPayment->total_payable){
-            $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
-            $monthlyPayment->balance_value = $balance;
-            $monthlyPayment->id_monthly_status = 'P';
-            $monthlyPayment->monthly_status = 'Parcial';
-            $monthlyPayment->update_user = Auth::user()->name;
-            $monthlyPayment->save();
+            //atualizando valores e status da mensalidade
+            if($balance > 0 && $balance < $monthlyPayment->total_payable){
+                $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
+                $monthlyPayment->balance_value = $balance;
+                $monthlyPayment->id_monthly_status = 'P';
+                $monthlyPayment->monthly_status = 'Parcial';
+                $monthlyPayment->update_user = Auth::user()->name;
+                $monthlyPayment->save();
+            }
+            if($balance === $monthlyPayment->total_payable){
+                $monthlyPayment->dt_payday = $request->dt_payday;
+                $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
+                $monthlyPayment->balance_value = $balance;
+                $monthlyPayment->id_monthly_status = 'A';
+                $monthlyPayment->monthly_status = 'Aberto';
+                $monthlyPayment->update_user = Auth::user()->name;
+                $monthlyPayment->save();
+            }
+            return response()->json(['status' => 'Baixa estornada com sucesso!']);
+            //return redirect()->route('monthly.lowerMonthlyFeeIndex', $monthlyPayment->id)->with('status', 'Baixa estornada com sucesso!');
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
         }
-        if($balance === $monthlyPayment->total_payable){
-            $monthlyPayment->dt_payday = $request->dt_payday;
-            $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
-            $monthlyPayment->balance_value = $balance;
-            $monthlyPayment->id_monthly_status = 'A';
-            $monthlyPayment->monthly_status = 'Aberto';
-            $monthlyPayment->update_user = Auth::user()->name;
-            $monthlyPayment->save();
-        }
-
-        return redirect()->route('monthly.lowerMonthlyFeeIndex', $monthlyPayment->id)->with('status', 'Baixa estornada com sucesso!');
     }
 }

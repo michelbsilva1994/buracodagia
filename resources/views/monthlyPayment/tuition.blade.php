@@ -131,6 +131,29 @@
             </div>
         </div>
     </div>
+            <!-- modal baixar mensalidade -->
+            <div class="modal fade" id="modal-reverse-low" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel">Estornar baixa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="reverseLowerMonthlyFee">
+                                <div>
+                                    <input type="hidden" name="id_lowerMonthlyFee" id="id_lowerMonthlyFee">
+                                </div>
+                                <div class="d-grid gap-2 my-3">
+                                    <button type="submit" class="btn btn-danger" id="btn-reverse-low-monthly">Estornar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        id="teste">Fechar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <!-- modal baixas -->
         {{-- <div class="modal fade" id="modal-lowers" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -156,7 +179,6 @@
         //     event.preventDefault();
         //     $('#content').html('teste de html');
         // });
-
         $(document).ready(function() {
             $('#form-filter').on('submit', function(event) {
                 event.preventDefault();
@@ -186,7 +208,6 @@
                 }
             });
         }
-
         $(document).delegate('#btn-low', 'click', function() {
             var id_monthly = $(this).attr('data-id-monthly');
             $('#id_monthly').val(id_monthly);
@@ -202,6 +223,10 @@
             var balance_value = $(this).attr('data-balance-value');
             $('#amount_paid').val(balance_value);
         });
+        $(document).delegate('#btn-reverse', 'click', function(){
+            var id_lowerMonthlyFee = $(this).attr('data-id-lowerMonthlyFee');
+            $('#id_lowerMonthlyFee').val(id_lowerMonthlyFee);
+        })
 
         $(document).delegate('.accordion', 'click', function() {
             var id_monthly_lower = $(this).attr('data-id-lower');
@@ -215,6 +240,7 @@
                     console.log(response.lowers)
                     $('#body-table'+id_monthly_lower).empty();
 
+                    var type_user = '{{Auth::user()->user_type_service_order}}';
                     var dataList = $('#body-table'+id_monthly_lower);
 
                     var formatter = new Intl.NumberFormat('pt-BR', {
@@ -222,20 +248,59 @@
                         currency: 'BRL'
                     });
 
+                    if(response.lowers.length == 0){
+                            dataList.append('<tr>'+
+                                '<td> Sem Baixas realizadas!</td>'
+                            +'<tr>')
+                    }
+                    if(response.lowers.length > 0){
                     response.lowers.forEach(function(item){
+                        if(item.id_lower_monthly_fees_reverse == null){
+                                var id_lower_monthly_fees_reverse =  '<td> - </td>';
+                        }else{
+                            var id_lower_monthly_fees_reverse = '<td>' +  item.id_lower_monthly_fees_reverse +'</td>';
+                        }
                         if(item.dt_payday){
-                        var dt_baixa = '<td>'+ (item.dt_payday) + '</td>';
+                            var dt_baixa = '<td>'+ (item.dt_payday) + '</td>';
                         }
                         if(item.dt_chargeback){
-                        var dt_baixa = '<td>'+ (item.dt_chargeback) + '</td>';
+                            var dt_baixa = '<td>'+ (item.dt_chargeback) + '</td>';
                         }
-                        dataList.append('<tr>'+
-                            '<td>'+ item.id +'</td>'+
+
+                        if(item.operation_type == 'B'){
+                            var download_user = '<td>'+ item.download_user + '</td>';
+                        }
+                        if(item.operation_type == 'E'){
+                            var download_user = '<td>'+ item.chargeback_user + '</td>';
+                        }
+
+                        if(item.id_lower_monthly_fees_reverse != null)
+                               var lower =  '<td> - </td>'
+                        if(item.id_lower_monthly_fees_reverse == null){
+                            if(item.operation_type == 'B'){
+                                if( type_user == 'E'){
+                                    var lower = '<td><a href="" class="mr-3 btn btn-sm btn-danger" id="btn-reverse" data-id-lowerMonthlyFee="'+ item.id +'" data-bs-toggle="modal" data-bs-target="#modal-reverse-low">Estornar</a></td>'
+                                }
+                                else{
+                                    var lower = '<td> - </td>'
+                                }
+                            }
+                            else if(item.operation_type == 'E'){
+                                var lower = '<td> - </td>'
+                            }
+                        }
+                            dataList.append('<tr>'+
+                            '<td>' + item.id +'</td>'+
+                            id_lower_monthly_fees_reverse+
                             '<td>'+ item.type_payment +'</td>'+
                             '<td>'+ formatter.format(item.amount_paid) + '</td>'+
-                            dt_baixa
+                            dt_baixa+
+                            download_user+
+                            lower
                             +'<tr>');
+
                     });
+                }
                 }
             });
             // $('#accordion-body-'+id_monthly_lower).html('<p>'+ id_monthly_lower +'</p>')
@@ -296,7 +361,46 @@
             });
         });
 
+        $('#reverseLowerMonthlyFee').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{{route('monthly.reverseMonthlyPayment')}}",
+                type: 'post',
+                data: $(this).serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.alert) {
+                        $('#message-return').html(response.alert);
+                        $('#modal-reverse-low').modal('hide');
+                        $('#message-return').addClass('alert alert-warning').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message-return').hide();
+                        }, 5000);
+                    } else {
+                        $('#message-return').html(response.status);
+                        $('#modal-reverse-low').modal('hide');
+                        $('#message-return').addClass('alert alert-success').show();
+                        $('#message-return').fadeOut(5000);
+                        setInterval(() => {
+                            $('#message.return').hide();
+                        }, 5000);
+                    }
+                }
+            });
+        });
+
         $('#modal-low').on('hidden.bs.modal', function(event) {
+            event.preventDefault();
+            var url = window.location.href;
+            fetchItems(url);
+            window.history.pushState("", "", url);
+        });
+
+        $('#modal-reverse-low').on('hidden.bs.modal', function(event) {
             event.preventDefault();
             var url = window.location.href;
             fetchItems(url);
