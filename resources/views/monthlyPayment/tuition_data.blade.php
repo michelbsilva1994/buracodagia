@@ -94,7 +94,9 @@
                     bg-secondary
                 @elseif($monthly->id_monthly_status === 'C')
                     bg-danger
-                @else @endif">
+                @elseif($monthly->due_date < date('Y/m/d') && $monthly->id_monthly_status === 'A')
+                    bg-warning
+                @endif">
                 <div class="col-sm-12 col-md-4 col-lg-4">
                     <h5 class="card-title"> Pavimento: {{ $monthly->pavements }}</h5>
                     <h5 class="card-title"> Lojas: {{ $monthly->stores }}</h5>
