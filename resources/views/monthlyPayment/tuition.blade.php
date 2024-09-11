@@ -255,6 +255,16 @@
                     }
                     if(response.lowers.length > 0){
                     response.lowers.forEach(function(item){
+                        if(item.id_lower_monthly_fees_reverse == null && item.operation_type == 'B'){
+                            var tr = '<tr class="bg-success text-white">';
+                        }
+                        else if (item.operation_type == 'B'){
+                            var tr = '<tr class="bg-secondary text-white">';
+                        }
+                        else if(item.operation_type == 'E'){
+                            var tr = '<tr class="bg-danger text-white">';
+                        }
+
                         if(item.id_lower_monthly_fees_reverse == null){
                                 var id_lower_monthly_fees_reverse =  '<td> - </td>';
                         }else{
@@ -269,9 +279,11 @@
 
                         if(item.operation_type == 'B'){
                             var download_user = '<td>'+ item.download_user + '</td>';
+                            var type_payment = '<td>'+ item.type_payment + '</td>';
                         }
                         if(item.operation_type == 'E'){
                             var download_user = '<td>'+ item.chargeback_user + '</td>';
+                            var type_payment = '<td> Estorno </td>';
                         }
 
                         if(item.id_lower_monthly_fees_reverse != null)
@@ -289,12 +301,12 @@
                                 var lower = '<td> - </td>'
                             }
                         }
-                            dataList.append('<tr>'+
+                            dataList.append(tr+
                             '<td>' + item.id +'</td>'+
                             id_lower_monthly_fees_reverse+
-                            '<td>'+ item.type_payment +'</td>'+
+                            type_payment+
                             '<td>'+ formatter.format(item.amount_paid) + '</td>'+
-                            dt_baixa+
+                            dt_baixa.replace(/(\d*)-(\d*)-(\d*).*/, '$3/$2/$1')+
                             download_user+
                             lower
                             +'<tr>');
