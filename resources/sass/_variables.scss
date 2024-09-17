@@ -26,3 +26,7 @@ $line-height-base: 1.6;
     visibility: visible;
 }
 
+.table-overflow {
+    max-height:400px;
+    overflow-y:auto;
+}

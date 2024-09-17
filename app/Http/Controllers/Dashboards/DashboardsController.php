@@ -198,6 +198,29 @@ class DashboardsController extends Controller
     public function financialLowersDashboard(Request $request){
         $pavements = Pavement::where('status','A')->get();
 
+        $queryLowersByPaymentType = DB::table('lower_monthly_fees')
+                        ->selectRaw('distinct   lower_monthly_fees.id,
+                                                lower_monthly_fees.id_monthly_payment as monthly_fee,
+                                                monthly_payments.due_date as due_date,
+                                                lower_monthly_fees.dt_payday as dt_payday,
+                                                contracts.name_contractor as contractor,
+                                                pavements.name as pavement,
+                                                GROUP_CONCAT(stores.name) as stores,
+                                                lower_monthly_fees.amount_paid as amount_paid,
+                                                lower_monthly_fees.type_payment as type_payment,
+                                                lower_monthly_fees.download_user as download_user')
+                        ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
+                        ->Join('contracts','monthly_payments.id_contract', 'contracts.id')
+                        ->Join('contract_stores','contracts.id', 'contract_stores.id_contract')
+                        ->Join('stores','contract_stores.id_store','stores.id')
+                        ->Join('pavements','stores.id_pavement','pavements.id')
+                        ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_reverse is null')
+                        ->whereRaw('lower_monthly_fees.id_lower_monthly_fees_origin is null')
+                        ->groupByRaw('lower_monthly_fees.id,contracts.name_contractor,pavements.name,
+                                     lower_monthly_fees.amount_paid,lower_monthly_fees.type_payment,lower_monthly_fees.download_user,
+                                      lower_monthly_fees.id_monthly_payment, monthly_payments.due_date');
+
+
         $queryLowers = DB::table('lower_monthly_fees')
                                     ->selectRaw('distinct lower_monthly_fees.id, pavements.id pavement, lower_monthly_fees.amount_paid, lower_monthly_fees.id_type_payment, lower_monthly_fees.id_lower_monthly_fees_reverse, lower_monthly_fees.id_lower_monthly_fees_origin')
                                     ->Join('monthly_payments', 'lower_monthly_fees.id_monthly_payment','monthly_payments.id')
@@ -210,12 +233,15 @@ class DashboardsController extends Controller
 
         if($request->date_initial && $request->date_final){
             $queryLowers->where('lower_monthly_fees.dt_payday', '>=' ,$request->date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->date_final);
+            $queryLowersByPaymentType->where('lower_monthly_fees.dt_payday', '>=' ,$request->date_initial)->where('lower_monthly_fees.dt_payday', '<=' ,$request->date_final);
         }
         if($request->pavement){
             $queryLowers->where('pavements.id', $request->pavement);
+            $queryLowersByPaymentType->where('pavements.id', $request->pavement);
         }
 
         $lowers = $queryLowers->get();
+        $lowersByPaymentType = $queryLowersByPaymentType->get();
 
         //Total geral
 
@@ -273,7 +299,7 @@ class DashboardsController extends Controller
                 $view = view('dashboards.financial_dashboard.financial_dashboard_lowers_data', compact(
                             ['pavements','totalLowers',
                              'money', 'pix', 'debit_card', 'credit_card',
-                             'totalLowerTuitionPavement'
+                             'totalLowerTuitionPavement','lowersByPaymentType'
                             ]))->render();
                 return response()->json(['html' => $view]);
             }
@@ -281,7 +307,7 @@ class DashboardsController extends Controller
         return  view('dashboards.dashboardLowers',
                 compact(['pavements','totalLowers',
                          'money', 'pix', 'debit_card', 'credit_card',
-                         'totalLowerTuitionPavement'
+                         'totalLowerTuitionPavement','lowersByPaymentType'
                         ]));
     }
 }
