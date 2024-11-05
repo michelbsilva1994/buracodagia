@@ -99,6 +99,9 @@ class MonthlyPaymentController extends Controller
         if($request->store){
             $query->where('stores.name', 'like', "%$request->store%");
             $queryTotals->where('stores.name', 'like', "%$request->store%");
+
+            // $query->where('stores.name', '=', "$request->store");
+            // $queryTotals->where('stores.name', '=', "$request->store");
         }
         if($request->pavement){
             $query->where('pavements.id',$request->pavement);
@@ -175,6 +178,9 @@ class MonthlyPaymentController extends Controller
         if($request->store){
             $query->where('stores.name', 'like', "%$request->store%");
             $queryTotals->where('stores.name', 'like', "%$request->store%");
+
+            // $query->where('stores.name', '=', "$request->store");
+            // $queryTotals->where('stores.name', '=', "$request->store");
         }
         if($request->pavement){
             $query->where('pavements.id',$request->pavement);
