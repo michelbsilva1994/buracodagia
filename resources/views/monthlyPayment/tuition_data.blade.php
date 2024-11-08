@@ -1,4 +1,5 @@
-<div class="col-12">
+@if (Auth::user()->user_type_service_order === 'E')
+    <div class="col-12">
         <div class="justify-content-md-between d-md-flex justify-content-md-between d-lg-flex justify-content-lg-between">
             <div class="alert alert-success col-sm-12 col-md-3 col-lg-3 text-center" role="alert">
                 Valor Total: {{ number_format($tuitionTotals->total_payable, 2, ',', '.') }}
@@ -9,7 +10,8 @@
             <div class="alert alert-danger col-sm-12 col-md-3 col-lg-3 text-center" role="alert">
                 Valor à receber: {{ number_format($tuitionTotals->balance_value, 2, ',', '.') }}
             </div>
-        </div>
+    </div>
+@endif
     {{-- <div class="col-12 table-responsive">
     <table class="table align-middle text-center">
         <thead>
