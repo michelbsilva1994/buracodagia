@@ -1,25 +1,139 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="d-flex justify-between h-16">
             <div class="flex">
+                <div class="d-flex align-items-center">
+                    <nav class="navbar bg-body-tertiary">
+                        <div class="container-fluid">
+                          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                          </button>
+                          <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                            <div class="offcanvas-header">
+                              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" aria-current="page" href="#">Ordem de Serviço</a>
+                                </li>
+                                <li class="nav-item dropdown"></li>
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Dashboards
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Mensalidades por data de vencimento</a></li>
+                                      <li><a class="dropdown-item" href="#">Valores de recebimento por data de baixa</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Cadastro de Pessoas
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Pessoa Física</a></li>
+                                      <li><a class="dropdown-item" href="#">Pessoa Jurídica</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown"></li>
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Geração de Mensalidades
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Gerar Mensalidades em lote</a></li>
+                                      <li><a class="dropdown-item" href="#">Gerar Mensalidade Retroativa</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" href="#">Mensalidades</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Gestão de Usuários</a>
+                                </li>
+                                <li class="nav-item dropdown"></li>
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Gestão de Segurança
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Perfis</a></li>
+                                      <li><a class="dropdown-item" href="#">Permissões</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown"></li>
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Estrutura
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Pavimentos</a></li>
+                                      <li><a class="dropdown-item" href="#">Lojas</a></li>
+                                      <li><a class="dropdown-item" href="#">Equipamentos</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown"></li>
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Domínios
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Status da loja</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de loja</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de contrato</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de pagamento</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de cobrança</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de cancelamento</a></li>
+                                      <li><a class="dropdown-item" href="#">Tipo de de cancelamento do contrato</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Relatórios
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Contratos</a></li>
+                                    <li><a class="dropdown-item" href="#">Lojas</a></li>
+                                    <li><a class="dropdown-item" href="#">Relatório de baixas</a></li>
+                                  </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Sair</a>
+                                  </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </nav>
+                </div>
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="d-flex align-items-center">
                     <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Início') }}
                     </x-nav-link>
+                </div> --}}
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="mr-3">
+                    <a class="dropdown-item" href="{{route('profile.edit')}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </a>
+                </div>
+                <div>
+                    <form action="{{route('logout')}}" method="POST">
+                        @csrf
+                        <button class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                        </button>
+                    </form>
                 </div>
             </div>
-
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
+            {{-- <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <div class="dropdown">
                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->name }}
@@ -77,7 +191,7 @@
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-            </div>
+            </div> --}}
         </div>
     </div>
 
