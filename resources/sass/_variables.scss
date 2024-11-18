@@ -34,3 +34,9 @@ $line-height-base: 1.6;
 .navbar-toggler{
     border: none !important;
 }
+
+.navbar-toggler:focus{
+    text-decoration: none !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+}
