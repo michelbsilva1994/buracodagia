@@ -241,7 +241,7 @@ class DashboardsController extends Controller
         }
 
         $lowers = $queryLowers->get();
-        $lowersByPaymentType = $queryLowersByPaymentType->get();
+        $lowersByPaymentType = $queryLowersByPaymentType->paginate(10);
 
         //Total geral
 

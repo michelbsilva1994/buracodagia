@@ -27,27 +27,57 @@
                 </div>
             </form>
         </div>
-            <div id="items-container">
-                @include('dashboards.financial_dashboard.financial_dashboard_lowers_data')
-            </div>
+        <div id="items-container">
+            @include('dashboards.financial_dashboard.financial_dashboard_lowers_data')
+        </div>
     </div>
     <script>
-            $(document).ready(function(){
-                $('#items-container').empty();
-            });
-
-            $('#form-filter').on('submit',function(event) {
+        $(document).ready(function() {
+            $('#form-filter').on('submit', function(event) {
                 event.preventDefault();
-                $.ajax({
-                    url: "{{ route('dashboardCharts.financialLowersDashboard') }}",
-                    type: 'get',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        //$('#values').removeClass('d-none');
-                        $('#items-container').empty();
-                        $('#items-container').html(response.html);
-                    }
-                })
+                var url = "{{ route('dashboardCharts.financialLowersDashboard') }}?" + $(this).serialize();
+                fetchItems(url);
+                window.history.pushState("", "", url);
             });
+        });
+
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            fetchItems(url);
+            window.history.pushState("", "", url);
+        });
+
+        function fetchItems(url) {
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function(response) {
+                    $('#items-container').html(response.html);
+                    $('#pagination-container').html(response.pagination);
+                },
+                error: function(xhr) {
+                    console.log('Error', xhr.statusText);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#items-container').empty();
+        });
+
+        $('#form-filter').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{{ route('dashboardCharts.financialLowersDashboard') }}",
+                type: 'get',
+                data: $(this).serialize(),
+                success: function(response) {
+                    //$('#values').removeClass('d-none');
+                    $('#items-container').empty();
+                    $('#items-container').html(response.html);
+                }
+            })
+        });
     </script>
 @endsection
