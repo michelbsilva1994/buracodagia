@@ -22,6 +22,24 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="due_date_final">Loja</label>
+                        <select name="store" id="store" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            @foreach ($stores as $store )
+                                <option value="{{$store->id}}">{{$store->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label for="due_date_final">Tipo de Pagamento</label>
+                        <select name="type_payment" id="type_payment" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            @foreach ($type_payments as $type_payment)
+                                <option value="{{$type_payment->value}}">{{$type_payment->description}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 @csrf
                 <div class="row">

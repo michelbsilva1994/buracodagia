@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports;
 
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
+use App\Models\Domain\TypePayment;
 use App\Models\Structure\Pavement;
 use App\Models\Structure\Store;
 use App\Models\User;
@@ -15,8 +16,10 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReportsController extends Controller
 {
 
-    public function __construct(Pavement $pavement){
+    public function __construct(Pavement $pavement, Store $store, TypePayment $type_payment){
         $this->pavement = $pavement;
+        $this->store = $store;
+        $this->type_payment = $type_payment;
     }
 
     public function reportsIndex(){
@@ -97,7 +100,10 @@ class ReportsController extends Controller
 
     public function reportLowersTuition(){
         $pavements = $this->pavement->where('status','A')->get();
-        return view('reports.lowerTuition', compact('pavements'));
+        $stores = $this->store->get();
+        $type_payments = $this->type_payment->where('status','A')->get();
+
+        return view('reports.lowerTuition', compact('pavements', 'stores', 'type_payments'));
     }
     public function LowersTuition(Request $request){
         $queryLowersByPaymentType = DB::table('lower_monthly_fees')
@@ -127,6 +133,13 @@ class ReportsController extends Controller
         if($request->pavement){
             $queryLowersByPaymentType->where('pavements.id', $request->pavement);
         }
+        if($request->store){
+            $queryLowersByPaymentType->where('stores.id', $request->store);
+        }
+        if($request->type_payment){
+            $queryLowersByPaymentType->where('lower_monthly_fees.id_type_payment', $request->type_payment);
+        }
+
 
         $lowersByPaymentType = $queryLowersByPaymentType->get();
         return $lowersByPaymentType->downloadExcel('relatório_baixas.xlsx', ExcelReport::XLSX, true);
