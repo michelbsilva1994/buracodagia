@@ -145,4 +145,13 @@ class ReportsController extends Controller
         return $lowersByPaymentType->downloadExcel('relatório_baixas.xlsx', ExcelReport::XLSX, true);
     }
 
+    public function getStoreByPavement($pavement_id = null){
+        if($pavement_id){
+            $stores = $this->store->where('id_pavement', $pavement_id)->get();
+        }else{
+            $stores = $this->store->get();
+        }
+
+        return response()->json($stores);
+    }
 }

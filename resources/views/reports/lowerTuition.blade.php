@@ -50,4 +50,25 @@
             </form>
         </div>
     </div>
+
+<script>
+$(document).ready(function() {
+    $('#pavement').on('change', function() {
+        let pavementId = $(this).val();
+        let url = '/reports/stores/by-pavement/' + (pavementId ? pavementId : '');
+
+        $.get(url, function(data) {
+            let $storeSelect = $('#store');
+            $storeSelect.empty(); // limpa as opções
+
+            $storeSelect.append('<option value="">Selecione uma opção</option>');
+
+            $.each(data, function(key, store) {
+                $storeSelect.append('<option value="' + store.id + '">' + store.name + '</option>');
+            });
+        });
+    });
+});
+</script>
+
 @endsection

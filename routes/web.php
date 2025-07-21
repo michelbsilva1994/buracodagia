@@ -139,6 +139,9 @@ Route::middleware('auth')->group(function () {
     Route::get('reports/Stores/index', [ReportsController::class, 'reportStoresIndex'])->name('reports.storesIndex');
     Route::get('reports/lowersTuition/index', [ReportsController::class, 'reportLowersTuition'])->name('reports.lowersTuitionIndex');
 
+    /**Rota para pegar lojas por pavimento */
+    Route::get('/reports/stores/by-pavement/{pavement_id?}', [ReportsController::class, 'getStoreByPavement'])->name('reports.storesByPavement');
+
     /** Generation Reports */
     Route::post('reports/contractStores/', [ReportsController::class, 'reportContractStores'])->name('reports.reportContractStores');
     Route::post('reports/Stores/', [ReportsController::class, 'reportStores'])->name('reports.reportStores');
