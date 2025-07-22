@@ -55,7 +55,6 @@
 $(document).ready(function() {
     $('#pavement').on('change', function() {
         let pavementId = $(this).val();
-        //let url = 'public/reports/stores/by-pavement/' + (pavementId ? pavementId : '');
         let url = "{{route('reports.storesByPavement', ['pavement_id' => ':id'])}}";
         url = url.replace(':id', pavementId);
 
