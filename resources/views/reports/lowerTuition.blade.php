@@ -55,7 +55,7 @@
 $(document).ready(function() {
     $('#pavement').on('change', function() {
         let pavementId = $(this).val();
-        let url = '/reports/stores/by-pavement/' + (pavementId ? pavementId : '');
+        let url = 'public/reports/stores/by-pavement/' + (pavementId ? pavementId : '');
 
         $.get(url, function(data) {
             let $storeSelect = $('#store');
