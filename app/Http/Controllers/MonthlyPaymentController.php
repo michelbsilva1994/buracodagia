@@ -577,7 +577,7 @@ class MonthlyPaymentController extends Controller
                 'id_chargeback_low' => null,
                 'chargeback_low' => null,
                 'dt_payday' => null,
-                'dt_chargeback' => Date('Y/m/d'),
+                'dt_chargeback' => Date('d/m/Y H:i:s'),
                 'download_user' => null,
                 'chargeback_user' => Auth()->user()->name,
                 'id_monthly_payment' => $monthlyPayment->id,

@@ -28,7 +28,7 @@
         <h4>Tipo de Pagamento: {{$monthlyPayment->ds_type_payment}}</h4>
         <h4>Total Pago: R${{number_format($monthlyPayment->amount_paid, 2, ',', '.')}}</h4>
         <h4>Data do vencimento: {{date('d/m/Y', strtotime($monthlyPayment->due_date))}}</h4>
-        <h4>Data da Baixa: {{date('d/m/Y', strtotime($monthlyPayment->dt_payday))}}</h4>
+        <h4>Data da Baixa: {{date('d/m/Y H:i:s', strtotime($monthlyPayment->dt_payday))}}</h4>
         <h4>Usuário: {{$monthlyPayment->download_user}}</h4>
         <h4>-----------------------------------------------</h4>
     </div>

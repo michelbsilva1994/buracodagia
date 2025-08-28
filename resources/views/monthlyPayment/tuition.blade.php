@@ -68,7 +68,7 @@
                         </div>
                         <div>
                             <label for="dt_payday">Data da baixa</label>
-                            <input type="date" name="dt_payday" id="dt_payday" class="form-control" required>
+                            <input type="datetime-local" name="dt_payday" id="dt_payday" class="form-control" required>
                         </div>
                         <div>
                             <label for="id_payment">Forma de pagamento</label>
@@ -109,7 +109,7 @@
                         </div>
                         <div>
                             <label for="dt_cancellation">Data da Cancelamento</label>
-                            <input type="date" name="dt_cancellation" id="dt_cancellation" class="form-control"
+                            <input type="datetime-local" name="dt_cancellation" id="dt_cancellation" class="form-control"
                                 required>
                         </div>
                         <div>
