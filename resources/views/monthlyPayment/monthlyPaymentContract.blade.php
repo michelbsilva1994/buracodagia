@@ -24,7 +24,7 @@
         </div>
         <div class="table-data">
             <div id="items-container">
-                @include('monthlyPayment.tuition_data')
+                @include('monthlyPayment.monthlyPaymentContract.tuition_contract')
             </div>
 
             <div id="pagination-container">
