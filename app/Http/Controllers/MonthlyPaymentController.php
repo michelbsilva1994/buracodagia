@@ -70,7 +70,7 @@ class MonthlyPaymentController extends Controller
                     ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
                     ->where('monthly_payments.id_monthly_status', '<>', 'C')
                     ->groupByRaw('monthly_payments.id')
-                    ->orderBy('monthly_payments.due_date', 'desc')
+                    ->orderBy('monthly_payments.due_date', 'asc')
                     ->orderBy('pavements', 'asc')
                     ->orderBy('stores', 'asc');
 
