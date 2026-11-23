@@ -68,6 +68,9 @@
                                                                 href="{{ route('monthly.createGenerateRetroactiveMonthlyPayment') }}">Gerar
                                                                 Mensalidade Retroativa</a></li>
                                                     @endcan
+                                                    @can('generate_fine')
+                                                        <li><a class="dropdown-item" href="{{ route('monthly.updateFineAmount') }}">Gerar Multa Mensalidade</a></li>
+                                                    @endcan
                                                 </ul>
                                             </li>
                                         @endcan

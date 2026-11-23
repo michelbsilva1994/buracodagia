@@ -621,4 +621,58 @@ class MonthlyPaymentController extends Controller
             return response()->json(['error' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
+
+    public function UpdateFineAmount(){
+
+        try {
+            DB::beginTransaction();
+
+            $tutions = DB::table('contracts')
+                    ->selectRaw('monthly_payments.id as id_mensaly,
+                                 monthly_payments.fine_value as fine_value,
+                                 monthly_payments.balance_value as balance_value,
+                                 monthly_payments.total_payable as total_payable,
+                                 stores.type as type,
+                                 monthly_payments.due_date as due_date'
+                                )
+                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
+                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                    ->distinct()
+                    ->where('monthly_payments.due_date', '<', now()->toDateString())
+                    ->where('monthly_payments.id_monthly_status', '=', 'A')
+                    ->where('monthly_payments.id_monthly_status', '<>', 'C')
+                    ->where('monthly_payments.fine_value', '=', 0)
+                    ->get();
+
+            foreach($tutions as $mensaly){
+                if($mensaly->type == 1 && $mensaly->fine_value == 0){
+                    DB::table('monthly_payments')->where('id', '=', $mensaly->id_mensaly)
+                    ->update([
+                        'fine_value' => 20,
+                        'total_payable' => $mensaly->total_payable + 20,
+                        'balance_value' => $mensaly->balance_value + 20
+                    ]);
+                }
+                if($mensaly->type == 2 && $mensaly->fine_value == 0){
+                    DB::table('monthly_payments')->where('id', '=', $mensaly->id_mensaly)
+                    ->update([
+                        'fine_value' => 10,
+                        'total_payable' => $mensaly->total_payable + 10,
+                        'balance_value' => $mensaly->balance_value + 10
+                    ]);
+                }
+
+                DB::commit();
+            }
+
+            return redirect()->route('dashboard')->with('status', 'Multas geradas com sucesso!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('dashboard')->with('error', $th->getMessage());
+        }
+
+        //dd($tutions->toArray());
+    }
 }
