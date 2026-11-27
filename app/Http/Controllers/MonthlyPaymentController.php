@@ -659,7 +659,6 @@ class MonthlyPaymentController extends Controller
                 ->where('monthly_payments.due_date', '<', now()->toDateString())
                 ->where('monthly_payments.id_monthly_status', '=', 'A')
                 ->where('monthly_payments.fine_value', '=', 0)
-                ->where('monthly_payments.id', '=', 5006)
                 ->get();
 
             DB::transaction(function () use ($tuitions) {
