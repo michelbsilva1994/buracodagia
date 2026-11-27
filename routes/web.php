@@ -109,6 +109,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tuition/filter',[MonthlyPaymentController::class, 'filter'])->name('monthly.filter');
     Route::resource('monthly', MonthlyPaymentController::class);
     Route::get('updateFineAmount',  [MonthlyPaymentController::class, 'UpdateFineAmount'])->name('monthly.updateFineAmount');
+    Route::get('updateFineAmountReverse',  [MonthlyPaymentController::class, 'updateFineAmountReverse'])->name('monthly.updateFineAmountReverse');
 
 
     /**Domain */

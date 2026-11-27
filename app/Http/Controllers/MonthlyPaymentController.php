@@ -18,9 +18,15 @@ use Illuminate\Support\Facades\DB;
 class MonthlyPaymentController extends Controller
 {
 
-    public function __construct(MonthlyPayment $monthlyPayment, Contract $contract, ContractStore $contractStore,
-    TypePayment $typePayment, TypeCancellation $typeCancellation, LowerMonthlyFee $lowerMonthlyFee, Pavement $pavement)
-    {
+    public function __construct(
+        MonthlyPayment $monthlyPayment,
+        Contract $contract,
+        ContractStore $contractStore,
+        TypePayment $typePayment,
+        TypeCancellation $typeCancellation,
+        LowerMonthlyFee $lowerMonthlyFee,
+        Pavement $pavement
+    ) {
         $this->monthlyPayment = $monthlyPayment;
         $this->contract = $contract;
         $this->contractStore = $contractStore;
@@ -42,7 +48,8 @@ class MonthlyPaymentController extends Controller
         return view('monthlyPayment.index', compact(['pavements']));
     }
 
-    public function tuition(Request $request){
+    public function tuition(Request $request)
+    {
 
         if (!Auth::user()->hasPermissionTo('view_tution')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -53,7 +60,8 @@ class MonthlyPaymentController extends Controller
         $pavements = $this->pavement->where('status', 'A')->get();
 
         $query = DB::table('contracts')
-                    ->selectRaw('monthly_payments.id,
+            ->selectRaw(
+                'monthly_payments.id,
                     contracts.name_contractor,
                     monthly_payments.due_date,
                     monthly_payments.total_payable,
@@ -63,64 +71,65 @@ class MonthlyPaymentController extends Controller
                     GROUP_CONCAT(stores.name) as stores,
                     GROUP_CONCAT(stores.id) as id_stores,
                     GROUP_CONCAT(distinct pavements.name) as pavements'
-                    )
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C')
-                    ->groupByRaw('monthly_payments.id')
-                    ->orderBy('monthly_payments.due_date', 'asc')
-                    ->orderBy('pavements', 'asc')
-                    ->orderBy('stores', 'asc');
+            )
+            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+            ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+            ->where('monthly_payments.id_monthly_status', '<>', 'C')
+            ->groupByRaw('monthly_payments.id')
+            ->orderBy('monthly_payments.due_date', 'asc')
+            ->orderBy('pavements', 'asc')
+            ->orderBy('stores', 'asc');
 
         $queryTotals = DB::table('contracts')
-                    ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
+            ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
                                  sum(monthly_payments.amount_paid) as amount_paid,
                                  sum(monthly_payments.balance_value) as balance_value')
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C');
+            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+            ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+            ->where('monthly_payments.id_monthly_status', '<>', 'C');
 
-        if(Auth::user()->user_type_service_order === 'U'){
+        if (Auth::user()->user_type_service_order === 'U') {
             $query->where('id_physical_person', Auth::user()->id_physical_people);
             $queryTotals->where('id_physical_person', Auth::user()->id_physical_people);
         }
-        if($request->contractor){
+        if ($request->contractor) {
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
             $queryTotals->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
-        if($request->due_date){
+        if ($request->due_date) {
             $query->where('monthly_payments.due_date', $request->due_date);
             $queryTotals->where('monthly_payments.due_date', $request->due_date);
         }
-        if($request->store){
+        if ($request->store) {
             $query->where('stores.name', 'like', "%$request->store%");
             $queryTotals->where('stores.name', 'like', "%$request->store%");
 
             // $query->where('stores.name', '=', "$request->store");
             // $queryTotals->where('stores.name', '=', "$request->store");
         }
-        if($request->pavement){
-            $query->where('pavements.id',$request->pavement);
-            $queryTotals->where('pavements.id',$request->pavement);
+        if ($request->pavement) {
+            $query->where('pavements.id', $request->pavement);
+            $queryTotals->where('pavements.id', $request->pavement);
         }
 
         $tuition = $query->paginate(10)->appends($request->input());
         $tuitionTotals = $queryTotals->first();
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $view = view('monthlyPayment.tuition_data', compact(['tuition', 'tuitionTotals']))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
             return response()->json(['html' => $view, 'pagination' => $pagination]);
         }
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements', 'tuitionTotals']));
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations', 'pavements', 'tuitionTotals']));
     }
 
-    public function tuitionAjax(Request $request){
+    public function tuitionAjax(Request $request)
+    {
 
         if (!Auth::user()->hasPermissionTo('view_tution')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -132,7 +141,8 @@ class MonthlyPaymentController extends Controller
         $pavements = $this->pavement->where('status', 'A')->get();
 
         $query = DB::table('contracts')
-                    ->selectRaw('monthly_payments.id,
+            ->selectRaw(
+                'monthly_payments.id,
                     contracts.name_contractor,
                     monthly_payments.due_date,
                     monthly_payments.total_payable,
@@ -142,77 +152,77 @@ class MonthlyPaymentController extends Controller
                     GROUP_CONCAT(stores.name) as stores,
                     GROUP_CONCAT(stores.id) as id_stores,
                     GROUP_CONCAT(distinct pavements.name) as pavements'
-                    )
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->Join('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C')
-                    ->groupByRaw('monthly_payments.id')
-                    ->orderBy('monthly_payments.due_date', 'desc')
-                    ->orderBy('pavements', 'asc')
-                    ->orderBy('stores', 'asc');
+            )
+            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+            ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->Join('pavements', 'stores.id_pavement', '=', 'pavements.id')
+            ->where('monthly_payments.id_monthly_status', '<>', 'C')
+            ->groupByRaw('monthly_payments.id')
+            ->orderBy('monthly_payments.due_date', 'desc')
+            ->orderBy('pavements', 'asc')
+            ->orderBy('stores', 'asc');
 
         $queryTotals = DB::table('contracts')
-                    ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
+            ->selectRaw('sum(monthly_payments.total_payable) as total_payable,
                                  sum(monthly_payments.amount_paid) as amount_paid,
                                  sum(monthly_payments.balance_value) as balance_value')
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C');
+            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+            ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+            ->where('monthly_payments.id_monthly_status', '<>', 'C');
 
-        if(Auth::user()->user_type_service_order === 'U'){
+        if (Auth::user()->user_type_service_order === 'U') {
             $query->where('id_physical_person', Auth::user()->id_physical_people);
             $queryTotals->where('id_physical_person', Auth::user()->id_physical_people);
         }
-        if($request->contractor){
+        if ($request->contractor) {
             $query->where('contracts.name_contractor', 'like', "%$request->contractor%");
             $queryTotals->where('contracts.name_contractor', 'like', "%$request->contractor%");
         }
-        if($request->due_date){
+        if ($request->due_date) {
             $query->where('monthly_payments.due_date', $request->due_date);
             $queryTotals->where('monthly_payments.due_date', $request->due_date);
         }
-        if($request->store){
+        if ($request->store) {
             $query->where('stores.name', 'like', "%$request->store%");
             $queryTotals->where('stores.name', 'like', "%$request->store%");
 
             // $query->where('stores.name', '=', "$request->store");
             // $queryTotals->where('stores.name', '=', "$request->store");
         }
-        if($request->pavement){
-            $query->where('pavements.id',$request->pavement);
-            $queryTotals->where('pavements.id',$request->pavement);
+        if ($request->pavement) {
+            $query->where('pavements.id', $request->pavement);
+            $queryTotals->where('pavements.id', $request->pavement);
         }
 
         $tuition = $query->paginate(10)->appends($request->input());
         $tuitionTotals = $queryTotals->first();
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $view = view('monthlyPayment.tuition_data', compact(['tuition', 'tuitionTotals']))->render();
             $pagination = view('monthlyPayment.pagination', compact('tuition'))->render();
             return response()->json(['html' => $view, 'pagination' => $pagination]);
         }
 
-        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations','pavements','tuitionTotals']));
-
+        return view('monthlyPayment.tuition', compact(['tuition', 'typesPayments', 'typesCancellations', 'pavements', 'tuitionTotals']));
     }
 
     /**
      * Show the form for creating a new resource.
      */
 
-    public function createGenerateRetroactiveMonthlyPayment(){
+    public function createGenerateRetroactiveMonthlyPayment()
+    {
         if (!Auth::user()->hasPermissionTo('generate_retroactive_monthly_payment')) {
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
         $contracts = $this->contract->whereNotNull('dt_signature')
-                                    ->whereNull('dt_cancellation')
-                                    ->whereNull('ds_cancellation_reason')
-                                    ->orderBy('name_contractor')
-                                    ->get();
+            ->whereNull('dt_cancellation')
+            ->whereNull('ds_cancellation_reason')
+            ->orderBy('name_contractor')
+            ->get();
         return view('monthlyPayment.retroactiveMonthlyFeeRequest', compact(['contracts']));
     }
 
@@ -237,17 +247,17 @@ class MonthlyPaymentController extends Controller
         //                             ->get();
 
         $query = DB::table('contracts')
-                            ->selectRaw('distinct contracts.id')
-                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
-                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
-                            ->whereNotNull('dt_signature')
-                            ->whereNull('dt_cancellation')
-                            ->whereNull('ds_cancellation_reason');
+            ->selectRaw('distinct contracts.id')
+            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->whereNotNull('dt_signature')
+            ->whereNull('dt_cancellation')
+            ->whereNull('ds_cancellation_reason');
 
-        if($request->pavement){
+        if ($request->pavement) {
             $query->where('stores.id_pavement', '=', $request->pavement);
         }
-        if($request->contract){
+        if ($request->contract) {
             $query->where('contracts.id', '=', $request->contract);
         }
 
@@ -255,16 +265,16 @@ class MonthlyPaymentController extends Controller
 
         /**Percorrendo todos os contratos para gerar a mensalidade*/
         try {
-            if($request->due_date < date('Y-m-d') ){
+            if ($request->due_date < date('Y-m-d')) {
                 return redirect()->route('monthly.index')->with('alert', 'Não é permitida gerar mensalidade em lote com data retroativa!');
-            }else{
+            } else {
                 foreach ($contracts as $contract) {
                     $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
                     $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->first();
 
                     $monthlyPayment = $this->monthlyPayment;
 
-                    if(empty($tution)){
+                    if (empty($tution)) {
                         $monthlyPayment->due_date = $request->due_date;
                         $monthlyPayment->dt_payday = null;
                         $monthlyPayment->dt_cancellation = null;
@@ -304,35 +314,36 @@ class MonthlyPaymentController extends Controller
                         ]);
                     }
                 }
-                return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento '.date('d/m/Y', strtotime($request->due_date)).' foram geradas com sucesso!');
+                return redirect()->route('monthly.index')->with('status', 'Mensalidades do vencimento ' . date('d/m/Y', strtotime($request->due_date)) . ' foram geradas com sucesso!');
             }
         } catch (\Throwable $th) {
-                return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
+            return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro' . $th);
         }
     }
 
-    public function generateRetroactiveMonthlyPayment(RetroactiveMonthlyFeeRequest $request){
+    public function generateRetroactiveMonthlyPayment(RetroactiveMonthlyFeeRequest $request)
+    {
         if (!Auth::user()->hasPermissionTo('generate_retroactive_monthly_payment')) {
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
         $query = DB::table('contracts')
-                            ->selectRaw('distinct contracts.id')
-                            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
-                            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
-                            ->whereNotNull('dt_signature')
-                            ->whereNull('dt_cancellation')
-                            ->whereNull('ds_cancellation_reason')
-                            ->where('contracts.id', '=', $request->contract);
+            ->selectRaw('distinct contracts.id')
+            ->join('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->join('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->whereNotNull('dt_signature')
+            ->whereNull('dt_cancellation')
+            ->whereNull('ds_cancellation_reason')
+            ->where('contracts.id', '=', $request->contract);
 
         $contract = $query->first();
 
         try {
             $price_store = $this->contractStore->where('id_contract', $contract->id)->sum('store_price');
-            $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->where('id_monthly_status','<>','C')->first();
+            $tution = $this->monthlyPayment->where('id_contract', $contract->id)->where('due_date', $request->due_date)->where('id_monthly_status', '<>', 'C')->first();
             $monthlyPayment = $this->monthlyPayment;
 
-            if(empty($tution)){
+            if (empty($tution)) {
                 $monthlyPayment->due_date = $request->due_date;
                 $monthlyPayment->dt_payday = null;
                 $monthlyPayment->dt_cancellation = null;
@@ -370,13 +381,13 @@ class MonthlyPaymentController extends Controller
                     'create_user' => Auth::user()->name,
                     'update_user' => null
                 ]);
-                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('status', 'Mensalidade do vencimento '.date('d/m/Y', strtotime($request->due_date)).' do contrato - '. $contract->id .' gerada com sucesso!');
+                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('status', 'Mensalidade do vencimento ' . date('d/m/Y', strtotime($request->due_date)) . ' do contrato - ' . $contract->id . ' gerada com sucesso!');
             }
-            if(($tution)){
-                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('alert', 'Já existe mensalidade com o vencimento '.date('d/m/Y', strtotime($request->due_date)).' para o contrato - '. $contract->id .', por gentileza verificar!');
+            if (($tution)) {
+                return redirect()->route('monthly.createGenerateRetroactiveMonthlyPayment')->with('alert', 'Já existe mensalidade com o vencimento ' . date('d/m/Y', strtotime($request->due_date)) . ' para o contrato - ' . $contract->id . ', por gentileza verificar!');
             }
         } catch (\Throwable $th) {
-            return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro'.$th);
+            return redirect()->route('monthly.index')->with('error', 'Ops, ocorreu um erro' . $th);
         }
     }
 
@@ -412,7 +423,8 @@ class MonthlyPaymentController extends Controller
         //
     }
 
-    public function monthlyPaymentContract($id_contract, Request $request){
+    public function monthlyPaymentContract($id_contract, Request $request)
+    {
 
         if (!Auth::user()->hasPermissionTo('monthly_payment_contract')) {
             return redirect()->route('physical.contractPerson', $id_contract)->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
@@ -423,7 +435,8 @@ class MonthlyPaymentController extends Controller
         $contract = $this->contract->where('id', $id_contract)->first();
 
         $query = DB::table('contracts')
-                            ->selectRaw('contracts.name_contractor,
+            ->selectRaw(
+                'contracts.name_contractor,
                             monthly_payments.id,
                             monthly_payments.due_date,
                             monthly_payments.total_payable,
@@ -433,48 +446,49 @@ class MonthlyPaymentController extends Controller
                             GROUP_CONCAT(stores.name) as stores,
                             GROUP_CONCAT(stores.id) as id_stores,
                             pavements.name as pavements'
-                            )
-                            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                            ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                            ->where('contracts.id','=', $id_contract)
-                            ->groupByRaw('monthly_payments.id, pavements.name')
-                            ->orderBy('pavements', 'asc')
-                            ->orderBy('stores', 'asc');
+            )
+            ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+            ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+            ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+            ->where('contracts.id', '=', $id_contract)
+            ->groupByRaw('monthly_payments.id, pavements.name')
+            ->orderBy('pavements', 'asc')
+            ->orderBy('stores', 'asc');
 
-        if($request->due_date){
+        if ($request->due_date) {
             $query->where('monthly_payments.due_date', $request->due_date);
         }
 
         $tuition = $query->paginate(10)->appends($request->input());
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $view = view('monthlyPayment.monthlyPaymentContract.tuition_contract', compact('tuition'))->render();
             $pagination = view('monthlyPayment.monthlyPaymentContract.pagination', compact('tuition'))->render();
             return response()->json(['html' => $view, 'pagination' => $pagination]);
         }
 
-        return view('monthlyPayment.monthlyPaymentContract', compact(['tuition', 'contract','typesPayments','typesCancellations']));
+        return view('monthlyPayment.monthlyPaymentContract', compact(['tuition', 'contract', 'typesPayments', 'typesCancellations']));
     }
 
-    public function lowerMonthlyFee(Request $request){
+    public function lowerMonthlyFee(Request $request)
+    {
         if (!Auth::user()->hasPermissionTo('lower_monthly_payment')) {
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly)->first();
-            $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status','A')->first();
+            $typePayment = $this->typePayment->where('value', $request->id_payment)->where('status', 'A')->first();
 
             //dd($request->amount_paid);
 
-            $amount_paid = str_replace('.','', $request->amount_paid);
-            $amount_paid = str_replace(',','.', $amount_paid);
+            $amount_paid = str_replace('.', '', $request->amount_paid);
+            $amount_paid = str_replace(',', '.', $amount_paid);
             $amount_paid = doubleval($amount_paid);
 
-            if($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P'){
-                if($monthlyPayment->balance_value >= $amount_paid){
+            if ($monthlyPayment->id_monthly_status === 'A' || $monthlyPayment->id_monthly_status === 'P') {
+                if ($monthlyPayment->balance_value >= $amount_paid) {
                     $lowerMonthlyFee = $this->lowerMonthlyFee;
 
                     $lowerMonthlyFee->create([
@@ -498,7 +512,7 @@ class MonthlyPaymentController extends Controller
 
                     $balance = $monthlyPayment->balance_value - $amount_paid;
 
-                    if($balance > 0){
+                    if ($balance > 0) {
                         $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
                         $monthlyPayment->balance_value = $balance;
                         $monthlyPayment->id_monthly_status = 'P';
@@ -507,7 +521,7 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
-                    if($balance === 0.0 ){
+                    if ($balance === 0.0) {
                         $monthlyPayment->dt_payday = $request->dt_payday;
                         $monthlyPayment->amount_paid = $monthlyPayment->amount_paid + $amount_paid;
                         $monthlyPayment->balance_value = $balance;
@@ -517,26 +531,27 @@ class MonthlyPaymentController extends Controller
                         $monthlyPayment->update_user = Auth::user()->name;
                         $monthlyPayment->save();
                     }
-                }else{
+                } else {
                     return response()->json(['alert' => 'Valor a receber é maior que valor de saldo!']);
                 }
             }
-            return response()->json(['status' => 'Baixa da mensalidade: '.$monthlyPayment->id.' realizada com sucesso!']);
+            return response()->json(['status' => 'Baixa da mensalidade: ' . $monthlyPayment->id . ' realizada com sucesso!']);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'Ops, ocorreu um erro inesperado!']);
         }
     }
 
-    public function cancelTuition(Request $request){
+    public function cancelTuition(Request $request)
+    {
         if (!Auth::user()->hasPermissionTo('cancel_monthly_payment')) {
             return redirect()->route('monthly.index')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
 
         try {
             $monthlyPayment = $this->monthlyPayment->where('id', $request->id_monthly_cancel)->first();
-            $typeCancellation = $this->typeCancellation->where('value',$request->id_cancellation)->where('status', 'A')->first();
+            $typeCancellation = $this->typeCancellation->where('value', $request->id_cancellation)->where('status', 'A')->first();
 
-            if($monthlyPayment->id_monthly_status === 'A'){
+            if ($monthlyPayment->id_monthly_status === 'A') {
                 $monthlyPayment->dt_cancellation = $request->dt_cancellation;
                 $monthlyPayment->id_type_cancellation = $typeCancellation->value;
                 $monthlyPayment->type_cancellation = $typeCancellation->description;
@@ -553,7 +568,8 @@ class MonthlyPaymentController extends Controller
         }
     }
 
-    public function view_lower_monthly_fees($id_monthly){
+    public function view_lower_monthly_fees($id_monthly)
+    {
         $lowerMonthlyFees = $this->lowerMonthlyFee->where('id_monthly_payment', $id_monthly)->get();
 
         return response()->json(['lowers' => $lowerMonthlyFees]);
@@ -561,7 +577,8 @@ class MonthlyPaymentController extends Controller
         // return view('monthlyPayment.lowerMonthly_free.monthly_fee_reductions', compact('lowerMonthlyFees'));
     }
 
-    public function reverse_monthly_payment(Request $request){
+    public function reverse_monthly_payment(Request $request)
+    {
         if (!Auth::user()->hasPermissionTo('reverse_monthly_payment')) {
             return redirect()->route('dashboard')->with('alert', 'Sem permissão para realizar a ação, procure o administrador do sistema!');
         }
@@ -571,7 +588,7 @@ class MonthlyPaymentController extends Controller
         // criando baixa de estorno
         try {
             $lowerMonthlyFee = LowerMonthlyFee::create([
-                'amount_paid' => -($lowerMonthlyPayment->amount_paid),
+                'amount_paid' => - ($lowerMonthlyPayment->amount_paid),
                 'id_type_payment' => null,
                 'type_payment' => null,
                 'id_chargeback_low' => null,
@@ -598,7 +615,7 @@ class MonthlyPaymentController extends Controller
             $lowerMonthlyPayment->save();
 
             //atualizando valores e status da mensalidade
-            if($balance > 0 && $balance < $monthlyPayment->total_payable){
+            if ($balance > 0 && $balance < $monthlyPayment->total_payable) {
                 $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
                 $monthlyPayment->balance_value = $balance;
                 $monthlyPayment->id_monthly_status = 'P';
@@ -606,7 +623,7 @@ class MonthlyPaymentController extends Controller
                 $monthlyPayment->update_user = Auth::user()->name;
                 $monthlyPayment->save();
             }
-            if($balance === $monthlyPayment->total_payable){
+            if ($balance === $monthlyPayment->total_payable) {
                 $monthlyPayment->dt_payday = $request->dt_payday;
                 $monthlyPayment->amount_paid = $monthlyPayment->amount_paid - $lowerMonthlyPayment->amount_paid;
                 $monthlyPayment->balance_value = $balance;
@@ -622,52 +639,126 @@ class MonthlyPaymentController extends Controller
         }
     }
 
-    public function UpdateFineAmount(){
+    public function UpdateFineAmount()
+    {
+        try {
+
+            $tuitions = DB::table('contracts')
+                ->selectRaw('monthly_payments.id as id_mensaly,
+                 monthly_payments.fine_value as fine_value,
+                 monthly_payments.balance_value as balance_value,
+                 monthly_payments.total_payable as total_payable,
+                 stores.type as type,
+                 monthly_payments.due_date as due_date,
+                 monthly_payments.id_contract')
+                ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                ->distinct()
+                ->where('monthly_payments.due_date', '<', now()->toDateString())
+                ->where('monthly_payments.id_monthly_status', '=', 'A')
+                ->where('monthly_payments.fine_value', '=', 0)
+                ->where('monthly_payments.id', '=', 5006)
+                ->get();
+
+            DB::transaction(function () use ($tuitions) {
+
+                foreach ($tuitions as $mensaly) {
+
+                    if ($mensaly->fine_value == 0) {
+
+                        $stores = DB::table('contract_stores')
+                            ->select('stores.type')
+                            ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                            ->where('contract_stores.id_contract', '=', $mensaly->id_contract)
+                            ->get();
+
+                        // Soma a multa de todas as lojas do contrato
+                        $fine = $stores->sum(function ($store) {
+                            return match ((int) $store->type) {
+                                1 => 20,
+                                2 => 10,
+                                default => 0
+                            };
+                        });
+
+                        if ($fine > 0) {
+
+                            DB::table('monthly_payments')
+                                ->where('id', '=', $mensaly->id_mensaly)
+                                ->update([
+                                    'fine_value' => $mensaly->fine_value + $fine,
+                                    'total_payable' => $mensaly->total_payable + $fine,
+                                    'balance_value' => $mensaly->balance_value + $fine,
+                                    'update_user' => Auth::user()->name,
+                                    'updated_at' => now()
+                                ]);
+                            DB::commit();
+                        }
+                    }
+                }
+            });
+
+             return redirect()->route('dashboard')->with('status', 'Multas geradas com sucesso!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('dashboard')->with('error', $th->getMessage());
+        }
+
+        //dd($tutions->toArray());
+    }
+
+
+    public function UpdateFineAmountReverse()
+    {
 
         try {
             DB::beginTransaction();
 
             $tutions = DB::table('contracts')
-                    ->selectRaw('monthly_payments.id as id_mensaly,
+                ->selectRaw(
+                    'monthly_payments.id as id_mensaly,
                                  monthly_payments.fine_value as fine_value,
                                  monthly_payments.balance_value as balance_value,
                                  monthly_payments.total_payable as total_payable,
                                  stores.type as type,
                                  monthly_payments.due_date as due_date'
-                                )
-                    ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
-                    ->leftJoin('contract_stores','contracts.id', '=', 'contract_stores.id_contract')
-                    ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
-                    ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
-                    ->distinct()
-                    ->where('monthly_payments.due_date', '<', now()->toDateString())
-                    ->where('monthly_payments.id_monthly_status', '=', 'A')
-                    ->where('monthly_payments.id_monthly_status', '<>', 'C')
-                    ->where('monthly_payments.fine_value', '=', 0)
-                    ->get();
+                )
+                ->rightJoin('monthly_payments', 'contracts.id', '=', 'monthly_payments.id_contract')
+                ->leftJoin('contract_stores', 'contracts.id', '=', 'contract_stores.id_contract')
+                ->leftJoin('stores', 'contract_stores.id_store', '=', 'stores.id')
+                ->leftJoin('pavements', 'stores.id_pavement', '=', 'pavements.id')
+                ->distinct()
+                ->where('monthly_payments.due_date', '<', now()->toDateString())
+                ->where('monthly_payments.id_monthly_status', '=', 'A')
+                ->where('monthly_payments.id_monthly_status', '<>', 'C')
+                ->where('monthly_payments.fine_value', '>', 0)
+                ->get();
 
-            foreach($tutions as $mensaly){
-                if($mensaly->type == 1 && $mensaly->fine_value == 0){
+            foreach ($tutions as $mensaly) {
+                if ($mensaly->type == 1 && $mensaly->fine_value > 0) {
                     DB::table('monthly_payments')->where('id', '=', $mensaly->id_mensaly)
-                    ->update([
-                        'fine_value' => 20,
-                        'total_payable' => $mensaly->total_payable + 20,
-                        'balance_value' => $mensaly->balance_value + 20
-                    ]);
+                        ->update([
+                            'fine_value' => $mensaly->fine_value - $mensaly->fine_value,
+                            'total_payable' => $mensaly->total_payable - $mensaly->fine_value,
+                            'balance_value' => $mensaly->balance_value - $mensaly->fine_value
+                        ]);
                 }
-                if($mensaly->type == 2 && $mensaly->fine_value == 0){
+                if ($mensaly->type == 2 && $mensaly->fine_value > 0) {
                     DB::table('monthly_payments')->where('id', '=', $mensaly->id_mensaly)
-                    ->update([
-                        'fine_value' => 10,
-                        'total_payable' => $mensaly->total_payable + 10,
-                        'balance_value' => $mensaly->balance_value + 10
-                    ]);
+                        ->update([
+                            'fine_value' => $mensaly->fine_value - $mensaly->fine_value,
+                            'total_payable' => $mensaly->total_payable - $mensaly->fine_value,
+                            'balance_value' => $mensaly->balance_value - $mensaly->fine_value
+                        ]);
                 }
 
                 DB::commit();
             }
 
             return redirect()->route('dashboard')->with('status', 'Multas geradas com sucesso!');
+
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('dashboard')->with('error', $th->getMessage());
